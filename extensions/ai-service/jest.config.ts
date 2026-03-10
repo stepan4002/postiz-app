@@ -19,6 +19,8 @@ const config: Config = {
   testEnvironment: 'node',
   moduleNameMapper: {
     '^@social/ai-service$': '<rootDir>/src/index.ts',
+    '^@gitroom/nestjs-libraries/(.*)$': '<rootDir>/../../libraries/nestjs-libraries/src/$1',
+    '^@gitroom/helpers/(.*)$': '<rootDir>/../../libraries/helpers/src/$1',
   },
   testTimeout: 10000,
 };

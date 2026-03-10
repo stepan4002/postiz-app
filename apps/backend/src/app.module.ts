@@ -23,6 +23,8 @@ import { CompanyContextModule } from '@social/company-context';
 import { MultiCompanyModule } from '@social/multi-company';
 // SOCIAL COMMAND CENTRE — Phase 2 Plan 03: Credential management, OAuth brand context, token health
 import { CredentialManagementModule } from '@social/credential-management';
+// SOCIAL COMMAND CENTRE -- Phase 3: AI Service Layer
+import { AIServiceModule } from '@social/ai-service';
 
 @Global()
 @Module({
@@ -36,6 +38,8 @@ import { CredentialManagementModule } from '@social/credential-management';
     MultiCompanyModule,
     // SOCIAL COMMAND CENTRE — Phase 2 Plan 03: Credential management, OAuth brand context, token health
     CredentialManagementModule,
+    // SOCIAL COMMAND CENTRE -- Phase 3: AI Service Layer
+    AIServiceModule,
     ApiModule,
     PublicApiModule,
     AgentModule,
