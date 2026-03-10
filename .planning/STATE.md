@@ -125,9 +125,9 @@ progress:
 
 ## Current Phase
 
-**Phase 4: Media Library & Processing** — In Progress (Plan 01 of 4 complete)
+**Phase 4: Media Library & Processing** — In Progress (Plan 02 of 4 complete)
 
-**Stopped at:** Completed 04-media-library-processing/04-01-PLAN.md
+**Stopped at:** Completed 04-media-library-processing/04-02-PLAN.md
 
 ## Phase Status
 
@@ -193,6 +193,9 @@ progress:
 | forcePathStyle: true in MinioStorage | S3Client requires forcePathStyle: true for MinIO — prevents virtual-hosted-style URL generation (bucket.endpoint.com) which MinIO doesn't support without custom DNS | 2026-03-10 |
 | MINIO_* env vars distinct from S3_* | MINIO_ENDPOINT/ACCESS_KEY/SECRET_KEY/BUCKET/PUBLIC_URL kept separate from legacy S3_* vars — clear Phase 4 config separation, no ambiguity | 2026-03-10 |
 | uploadBufferToMinio standalone export | Exported as utility function (not method) — Plan 02/03 thumbnail and variant pipelines use it directly with S3Client without full IUploadProvider | 2026-03-10 |
+| uuid pre-generation for mediaId | Generate mediaId before DB insert so MinIO key includes mediaId prefix without two-step create-then-update flow | 2026-03-10 |
+| CompanyMediaRepository isolation contract | findByCompany always filters companyId + deletedAt IS NULL; tag filtering via Prisma { has: tag } on String[]; isolation is explicit and testable | 2026-03-10 |
+| S3Client inline in service uploadAndRecord | S3Client created inside service method (not injected) to allow jest.mock(uploadBufferToMinio) to intercept uploads cleanly in unit tests | 2026-03-10 |
 
 ## Blockers
 
