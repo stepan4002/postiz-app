@@ -90,6 +90,17 @@ All custom code lives in `extensions/` — upstream files are modified only when
 
 ---
 
+## libraries/nestjs-libraries/src/database/prisma/schema.prisma (Phase 2 addition)
+
+- **Phase:** 2 (Plan 01)
+- **Date:** 2026-03-10
+- **Change:** Added 3 fields to the Integration model inside a clearly marked Phase 2 block: `lastRefreshedAt DateTime?`, `consecutiveFailures Int @default(0)`, `tokenEncrypted Boolean @default(false)`; created migration `20260310000002_integration_token_health`
+- **Reason:** Token health tracking fields required for credential refresh job (Plan 02) and health API (Plan 04); `tokenEncrypted` flag tracks which Integration tokens have been migrated to AES-256-GCM encryption
+- **Upstream risk:** MEDIUM — upstream may add fields to Integration; our block is clearly marked and at end of field list before relations; re-apply after merge
+- **Watch for:** Upstream adding fields named `lastRefreshedAt`, `consecutiveFailures`, or `tokenEncrypted`; upstream changing the Integration model structure significantly
+
+---
+
 ## apps/frontend/src/components/new-layout/layout.component.tsx
 
 - **Phase:** 1 (Plan 05)
