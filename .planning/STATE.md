@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 06-scheduling-publishing-engine/06-03-PLAN.md
+last_updated: "2026-03-10T23:35:54.706Z"
+progress:
+  total_phases: 8
+  completed_phases: 5
+  total_plans: 29
+  completed_plans: 26
+  percent: 90
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 06-scheduling-publishing-engine/06-01-PLAN.md
 last_updated: "2026-03-10T23:26:18.363Z"
 progress:
-  total_phases: 8
+  [█████████░] 90%
   completed_phases: 5
   total_plans: 29
   completed_plans: 25
@@ -242,9 +257,9 @@ progress:
 
 ## Current Phase
 
-**Phase 6: Scheduling & Publishing Engine** — In Progress (1 of 5 plans done)
+**Phase 6: Scheduling & Publishing Engine** — In Progress (3 of 5 plans done)
 
-**Stopped at:** Completed 06-scheduling-publishing-engine/06-01-PLAN.md
+**Stopped at:** Completed 06-scheduling-publishing-engine/06-03-PLAN.md
 
 ## Phase Status
 
@@ -356,6 +371,8 @@ None currently.
 | Phase 05 P05 | 4min | 2 tasks | 6 files |
 | Phase 05 P04 | 5min | 2 tasks | 7 files |
 | Phase 06 P01 | 12min | 2 tasks | 14 files |
+| Phase 06 P03 | 18min | 2 tasks | 12 files |
+| Phase 06 P03 | 18min | 2 tasks | 12 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -410,10 +427,21 @@ None currently.
 | consecutiveFailures on PostVariant | Mirrors Phase 2 token health pattern — consistent failure tracking vocabulary across the system | 2026-03-10 |
 | PublishAttempt dual FK | variantId + postId FKs on PublishAttempt — enables efficient audit queries by both variant and parent post | 2026-03-10 |
 
+## Key Decisions Made (Phase 06 Plan 03)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| platformAccountId in PublishParams | Page-scoped adapters (Instagram, Facebook, LinkedIn) need account/page ID separate from accessToken — added as optional field to PublishParams | 2026-03-10 |
+| BaseAdapter.classifyError() single authority | Error classification (rate_limit/transient/permanent) shared via BaseAdapter — not duplicated across adapters | 2026-03-10 |
+| Instagram text-only = permanent error | Meta Business API requires media — returning permanent/non-retryable avoids infinite retry loops | 2026-03-10 |
+| X OAuth 1.0a composite token split | XAdapter splits 'token:secret' accessToken on first colon to extract oauth_token and oauth_token_secret | 2026-03-10 |
+| AdapterRegistry eager instantiation | All 4 adapters instantiated in constructor — clean and predictable for MVP scale | 2026-03-10 |
+| LinkedIn x-restli-id as post URN | LinkedIn returns post URN in x-restli-id response header — used as platformPostId | 2026-03-10 |
+
 ## Session Continuity
 
-Last session: 2026-03-10T23:32:00Z
-Stopped at: Completed 06-scheduling-publishing-engine/06-01-PLAN.md
+Last session: 2026-03-10T23:46:00Z
+Stopped at: Completed 06-scheduling-publishing-engine/06-03-PLAN.md
 Resume file: None
 
 ## Project Reference
