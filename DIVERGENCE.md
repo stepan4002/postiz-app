@@ -123,6 +123,17 @@ All custom code lives in `extensions/` — upstream files are modified only when
 
 ---
 
+## libraries/nestjs-libraries/src/upload/upload.factory.ts (Phase 4 addition)
+
+- **Phase:** 4 (Plan 01)
+- **Date:** 2026-03-10
+- **Change:** Added `import { MinioStorage } from '@social/media-library'` and `case 's3'` to `UploadFactory.createStorage()`, instantiating MinioStorage from MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_BUCKET, MINIO_PUBLIC_URL env vars
+- **Reason:** UploadFactory is the upstream mechanism for swapping storage backends; adding the `s3` case here is the only supported integration point without rewriting the factory
+- **Upstream risk:** LOW — upstream may add other storage cases but will not conflict with `case 's3'`; re-apply after merge by adding the s3 case and MinioStorage import
+- **Watch for:** Upstream adding their own S3/MinIO implementation with different variable names; upstream changing the switch-case to a different pattern
+
+---
+
 ## apps/frontend/src/components/new-layout/layout.component.tsx
 
 - **Phase:** 1 (Plan 05)

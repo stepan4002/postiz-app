@@ -9,7 +9,7 @@
     "target": "es2017",
     "sourceMap": true,
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node", "multer"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "src/**/__tests__/**/*.spec.ts"]

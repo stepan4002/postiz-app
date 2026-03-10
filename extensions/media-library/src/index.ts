@@ -12,4 +12,4 @@ export * from './types';
 export * from './processing/platform-specs';
 
 // MinIO storage provider (wired in UploadFactory as STORAGE_PROVIDER=s3)
-// Storage exports added in Task 2 (after minio.storage.ts is created)
+export * from './storage/minio.storage';
