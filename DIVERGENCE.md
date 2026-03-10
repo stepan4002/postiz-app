@@ -89,3 +89,14 @@ All custom code lives in `extensions/` — upstream files are modified only when
 - **Watch for:** Upstream adding route prefixes or global route guards that might conflict with /api/companies routes
 
 ---
+
+## apps/frontend/src/components/new-layout/layout.component.tsx
+
+- **Phase:** 1 (Plan 05)
+- **Date:** 2026-03-10
+- **Change:** Added import of `CompanySwitcher` and `CompanyProvider` from `@gitroom/frontend/components/company-switcher`; added `<CompanySwitcher />` to the header nav area (before StreakComponent); wrapped `{children}` in `<CompanyProvider>`; added `items-center` to the header flex div
+- **Reason:** CompanySwitcher must appear in the header to give operators access to company switching; CompanyProvider must wrap children so all page components can access the current company via `useCompany()` hook
+- **Upstream risk:** MEDIUM — upstream may modify the header layout or add new items to the nav bar; our additions are localized to two areas (header nav div and children wrapper); re-add after merge by finding `<StreakComponent />` insertion point and `{children}` wrapping point
+- **Watch for:** Upstream restructuring the `LayoutComponent` header area; upstream renaming or moving layout.component.tsx; upstream changing the children rendering pattern
+
+---

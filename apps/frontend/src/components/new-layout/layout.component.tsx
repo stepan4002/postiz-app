@@ -40,6 +40,7 @@ import { StreakComponent } from '@gitroom/frontend/components/layout/streak.comp
 import { PreConditionComponent } from '@gitroom/frontend/components/layout/pre-condition.component';
 import { AttachToFeedbackIcon } from '@gitroom/frontend/components/new-layout/sentry.feedback.component';
 import { FirstBillingComponent } from '@gitroom/frontend/components/billing/first.billing.component';
+import { CompanySwitcher, CompanyProvider } from '@gitroom/frontend/components/company-switcher';
 
 const jakartaSans = Plus_Jakarta_Sans({
   weight: ['600', '500', '700'],
@@ -115,7 +116,9 @@ export const LayoutComponent = ({ children }: { children: ReactNode }) => {
                       <div className="text-[24px] font-[600] flex flex-1">
                         <Title />
                       </div>
-                      <div className="flex gap-[20px] text-textItemBlur">
+                      <div className="flex gap-[20px] text-textItemBlur items-center">
+                        <CompanySwitcher />
+                        <div className="w-[1px] h-[20px] bg-blockSeparator" />
                         <StreakComponent />
                         <div className="w-[1px] h-[20px] bg-blockSeparator" />
                         <OrganizationSelector />
@@ -130,7 +133,9 @@ export const LayoutComponent = ({ children }: { children: ReactNode }) => {
                         <NotificationComponent />
                       </div>
                     </div>
-                    <div className="flex flex-1 gap-[1px]">{children}</div>
+                    <CompanyProvider>
+                      <div className="flex flex-1 gap-[1px]">{children}</div>
+                    </CompanyProvider>
                   </div>
                 </div>
               )}
