@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-10T17:12:28.793Z"
+stopped_at: Completed 03-ai-service-layer/03-01-PLAN.md
+last_updated: "2026-03-10T17:50:18.022Z"
 progress:
   total_phases: 8
   completed_phases: 2
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 15
+  completed_plans: 12
 ---
 
 ---
@@ -51,9 +51,9 @@ progress:
 
 ## Current Phase
 
-**Phase 3: AI Service Layer** — Ready to plan
+**Phase 3: AI Service Layer** — In Progress (Plan 01 of 4 complete)
 
-**Stopped at:** Phase 3 context gathered
+**Stopped at:** Completed 03-ai-service-layer/03-01-PLAN.md
 
 ## Phase Status
 
@@ -61,7 +61,7 @@ progress:
 |-------|------|--------|
 | 1 | Fork & Foundation | complete |
 | 2 | Credential Management & OAuth | complete |
-| 3 | AI Service Layer | not_started |
+| 3 | AI Service Layer | in_progress |
 | 4 | Media Library & Processing | not_started |
 | 5 | Content Generation Pipeline | not_started |
 | 6 | Scheduling & Publishing Engine | not_started |
@@ -104,6 +104,10 @@ progress:
 | Native fetch for OAuth start POST | useFetch uses relative URLs; OAuth start redirect needs external social provider URL, so native fetch('/api/credentials/oauth/start') is correct | 2026-03-10 |
 | ENCRYPTION_KEY in Required Settings | TokenEncryptionService throws at NestJS startup if missing — truly required not optional; placed above optional settings in .env.example | 2026-03-10 |
 | META_APP_ID separate from FACEBOOK_APP_ID | Meta Business API (Instagram + Facebook) uses its own app credentials; FACEBOOK_APP_ID kept for upstream Postiz legacy OAuth flow backward compatibility | 2026-03-10 |
+| BrandVoiceInput local interface | Local interface in brand-voice-prompt.builder.ts avoids importing Prisma types into extension package — self-contained and testable without DB | 2026-03-10 |
+| ollama/* prefix matching for cost | calculateCostUsd checks model.startsWith('ollama/') as fallback — covers all Ollama variants without enumerating them, returns 0 | 2026-03-10 |
+| English omitted from brand voice prompt | Language directive only emitted for non-English (language !== 'en') — English is the assumed default, reduces token usage | 2026-03-10 |
+| AIConfig unique per company | AIConfig has @unique on companyId (one config per company); AICostLog is append-only with no updatedAt field | 2026-03-10 |
 
 ## Blockers
 
@@ -124,6 +128,7 @@ None currently.
 | 02    | 04   | 15min    | 2     | 4     |
 | 02    | 05   | 15min    | 1     | 4     |
 | 02    | 06   | 10min    | 1     | 1     |
+| 03    | 01   | 25min    | 2     | 15    |
 
 ## Key Decisions Made (Plan 06)
 
@@ -135,9 +140,9 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T17:12:28.789Z
-Stopped at: Phase 2 complete, ready to plan Phase 3: AI Service Layer
-Resume file: .planning/phases/03-ai-service-layer/03-CONTEXT.md
+Last session: 2026-03-10T17:55:00.000Z
+Stopped at: Completed 03-ai-service-layer/03-01-PLAN.md
+Resume file: .planning/phases/03-ai-service-layer/03-02-PLAN.md
 
 ## Project Reference
 
@@ -148,4 +153,4 @@ See: .planning/PROJECT.md (updated 2026-03-10)
 
 ## Next Action
 
-Plan Phase 3: AI Service Layer.
+Execute Phase 3 Plan 02: AI Provider Implementations (OpenAI, Anthropic, Ollama).
