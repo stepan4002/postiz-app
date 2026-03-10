@@ -144,8 +144,8 @@ Plans:
 - [x] 05-01-PLAN.md — Extension scaffold, Prisma models (ContentPost/PostVariant), type contracts, prompt templates
 - [x] 05-02-PLAN.md — ContentPostService generation pipeline, confidence gating logic, repository
 - [x] 05-03-PLAN.md — ReviewQueueService, controllers, ContentGenerationModule wiring, AppModule registration
-- [ ] 05-04-PLAN.md — Frontend: CreatePostForm input workflow with media picker, platform selector, generation results
-- [ ] 05-05-PLAN.md — Frontend: Review Queue UI with approve/reject/regenerate/edit actions
+- [x] 05-04-PLAN.md — Frontend: CreatePostForm input workflow with media picker, platform selector, generation results
+- [x] 05-05-PLAN.md — Frontend: Review Queue UI with approve/reject/regenerate/edit actions
 
 ---
 
@@ -170,6 +170,15 @@ Plans:
 **Requirements covered:** R9.1-R9.5, R10.1-R10.8, NF2.1, NF4.3, NF4.5
 
 **Estimated complexity:** HIGH (state machine, 4 platform adapters, retry logic)
+
+**Plans:** 5 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Extension scaffold, type contracts, state machine, Prisma migration
+- [ ] 06-02-PLAN.md — Schedule resolver service, timezone handling, scheduler tick cron
+- [ ] 06-03-PLAN.md — Platform adapter layer (Instagram, Facebook, LinkedIn, X) with error classification
+- [ ] 06-04-PLAN.md — Publishing worker, retry logic, attempt logger, controllers, module wiring
+- [ ] 06-05-PLAN.md — Frontend: scheduling calendar UI, schedule form, failed posts panel
 
 ---
 
