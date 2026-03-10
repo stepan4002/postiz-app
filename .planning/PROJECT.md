@@ -12,15 +12,14 @@ One person can efficiently operate 100+ social posts per week across dozens of a
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Evaluate and select the best open-source self-hosted social media management base project — Phase 1
+- ✓ Self-hosted Docker-based deployment on VPS — Phase 1 (Docker Compose with PostgreSQL, Redis, MinIO)
+- ✓ Multi-company data model (5-15 companies, each with multiple brands/accounts) — Phase 1 (Company→Brand→BrandVoice/SocialAccount hierarchy)
+- ✓ All integrations via official compliant APIs (no scraping, no TOS violations) — Phase 2 (OAuth flows via official APIs)
 
 ### Active
 
-- [ ] Evaluate and select the best open-source self-hosted social media management base project
-- [ ] Self-hosted Docker-based deployment on VPS
-- [ ] Multi-company data model (5-15 companies, each with multiple brands/accounts)
 - [ ] Platform support: Instagram, Facebook, LinkedIn, X, TikTok, Pinterest, Google Business, YouTube Shorts
-- [ ] All integrations via official compliant APIs (no scraping, no TOS violations)
 - [ ] AI content generation pipeline (flexible provider: OpenAI, Anthropic, local models)
 - [ ] AI vision: understand images/videos to generate captions, hashtags, CTAs
 - [ ] Per-company brand voice, tone, and language configuration
@@ -88,9 +87,13 @@ Primary open-source candidates to evaluate:
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Reuse open-source base vs build from scratch | Faster path to working system, community maintenance | — Pending (base selection phase) |
-| AI provider abstraction | Future-proof, cost optimisation, avoid vendor lock-in | — Pending |
-| Multi-company model approach | Extend base project's data model vs separate layer | — Pending |
+| Reuse open-source base vs build from scratch | Faster path to working system, community maintenance | Postiz selected — Phase 1 |
+| AI provider abstraction | Future-proof, cost optimisation, avoid vendor lock-in | — Pending (Phase 3) |
+| Multi-company model approach | Extend base project's data model vs separate layer | Company→Brand→BrandVoice hierarchy in Prisma — Phase 1 |
+| Extension zone pattern | All custom code isolated in extensions/ pnpm workspace | Prevents upstream merge conflicts — Phase 1 |
+| Token encryption | AES-256-GCM with per-call IV, ENCRYPTION_KEY env var | Tokens encrypted at rest — Phase 2 |
+| OAuth brand context | Redis brand:{state} key with 600s TTL for OAuth flow | Links OAuth callbacks to correct brand — Phase 2 |
+| Proactive token refresh | Cron job refreshes tokens at 75% lifetime, alerts on 3rd failure | Prevents silent credential expiry — Phase 2 |
 
 ---
-*Last updated: 2026-03-10 after initialization*
+*Last updated: 2026-03-10 after Phase 2*
