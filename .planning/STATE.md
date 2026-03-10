@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 02-credential-management-oauth/02-05-PLAN.md
-last_updated: "2026-03-10T17:15:00.000Z"
+stopped_at: Completed 02-credential-management-oauth/02-06-PLAN.md
+last_updated: "2026-03-10T17:30:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 2
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 11
+  completed_plans: 11
   percent: 100
 ---
 
@@ -23,9 +23,9 @@ progress:
 
 ## Current Phase
 
-**Phase 2: Credential Management & OAuth** — COMPLETE (all 5 plans done)
+**Phase 2: Credential Management & OAuth** — COMPLETE (all 6 plans done, including gap-closure plan 06)
 
-**Stopped at:** Completed 02-credential-management-oauth/02-05-PLAN.md
+**Stopped at:** Completed 02-credential-management-oauth/02-06-PLAN.md
 
 ## Phase Status
 
@@ -95,7 +95,16 @@ None currently.
 | 02    | 03   | 25min    | 2     | 9     |
 | 02    | 04   | 15min    | 2     | 4     |
 | 02    | 05   | 15min    | 1     | 4     |
+| 02    | 06   | 10min    | 1     | 1     |
+
+## Key Decisions Made (Plan 06)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| Batch integration fetch for brand-connections | Single findMany with id IN array instead of N+1 per-SocialAccount lookup | 2026-03-10 |
+| TokenHealthService DI in OAuthBrandController | Injected as 4th constructor param; module already has it in providers — no module.ts changes | 2026-03-10 |
+| MVP_PLATFORMS at controller module scope | Const array defined at top of controller file as single source of truth for backend | 2026-03-10 |
 
 ## Next Action
 
-Phase 2 complete. Begin Phase 3: AI Service Layer.
+Phase 2 fully complete (including gap-closure plan 06). Begin Phase 3: AI Service Layer.
