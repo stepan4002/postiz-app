@@ -16,6 +16,8 @@ One person can efficiently operate 100+ social posts per week across dozens of a
 - ✓ Self-hosted Docker-based deployment on VPS — Phase 1 (Docker Compose with PostgreSQL, Redis, MinIO)
 - ✓ Multi-company data model (5-15 companies, each with multiple brands/accounts) — Phase 1 (Company→Brand→BrandVoice/SocialAccount hierarchy)
 - ✓ All integrations via official compliant APIs (no scraping, no TOS violations) — Phase 2 (OAuth flows via official APIs)
+- ✓ Media library management: per-company upload, storage, tag filtering, grid UI — Phase 4 (MinIO S3 storage, Uppy multipart upload, company-scoped endpoints)
+- ✓ Media processing: resize per platform, thumbnail generation, variant pipeline — Phase 4 (sharp-based processing, platform-specific specs for Instagram/Facebook/LinkedIn/X)
 
 ### Active
 
@@ -27,8 +29,8 @@ One person can efficiently operate 100+ social posts per week across dozens of a
 - [ ] Content types: product, brand story, educational, seasonal, offer, testimonial, behind-the-scenes
 - [ ] Content repurposing: blog to posts, product to posts, review to testimonial, promo to variants
 - [ ] Platform-specific caption adaptation (length, style, hashtags, CTAs)
-- [ ] Media library management: per-company, per-campaign, per-season folders
-- [ ] Media processing: resize per platform, add logos, create carousels, quote cards, thumbnails
+- [ ] Media library management: per-campaign, per-season folders (per-company done Phase 4)
+- [ ] Media processing: add logos, create carousels, quote cards (resize/thumbnails done Phase 4)
 - [ ] Video processing: clip long videos to shorts, add subtitles
 - [ ] Scheduling engine with per-company posting rules, windows, and frequency
 - [ ] Publishing engine: auto-publish, retry failures, log everything
@@ -94,6 +96,9 @@ Primary open-source candidates to evaluate:
 | Token encryption | AES-256-GCM with per-call IV, ENCRYPTION_KEY env var | Tokens encrypted at rest — Phase 2 |
 | OAuth brand context | Redis brand:{state} key with 600s TTL for OAuth flow | Links OAuth callbacks to correct brand — Phase 2 |
 | Proactive token refresh | Cron job refreshes tokens at 75% lifetime, alerts on 3rd failure | Prevents silent credential expiry — Phase 2 |
+| Media storage via MinIO S3 | MinioStorage with forcePathStyle, UploadFactory case 's3', Uppy multipart presigned URLs | Self-hosted media pipeline — Phase 4 |
+| @Cron media processing | 30s cron poller, 5 jobs/batch, per-job error isolation; migrate to Temporal in Phase 6 | Simpler than BullMQ — Phase 4 |
+| Company-scoped media isolation | All queries filter companyId, slug→id in controller, company-scoped S3 paths | Data isolation contract — Phase 4 |
 
 ---
-*Last updated: 2026-03-10 after Phase 2*
+*Last updated: 2026-03-10 after Phase 4*
