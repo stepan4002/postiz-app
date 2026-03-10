@@ -51,13 +51,13 @@ Plans:
 
 **Estimated complexity:** HIGH (4 OAuth providers, token lifecycle management)
 
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 Plans:
-- [ ] 02-01-PLAN.md — Extension package scaffold, AES-256-GCM encryption service, Prisma migration
-- [ ] 02-02-PLAN.md — Token health state calculator and proactive refresh cron job
-- [ ] 02-03-PLAN.md — OAuth brand-context controller and CredentialManagementModule wiring
-- [ ] 02-04-PLAN.md — Token health API endpoint and dashboard alert UI components
+- [x] 02-01-PLAN.md — Extension package scaffold, AES-256-GCM encryption service, Prisma migration
+- [x] 02-02-PLAN.md — Token health state calculator and proactive refresh cron job
+- [x] 02-03-PLAN.md — OAuth brand-context controller and CredentialManagementModule wiring
+- [x] 02-04-PLAN.md — Token health API endpoint and dashboard alert UI components
 - [ ] 02-05-PLAN.md — Brand connect panel UI and end-to-end verification
 
 ---

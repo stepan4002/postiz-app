@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 02-credential-management-oauth/02-04-PLAN.md
-last_updated: "2026-03-10T16:39:00.000Z"
+stopped_at: Completed 02-credential-management-oauth/02-03-PLAN.md
+last_updated: "2026-03-10T16:53:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 1
@@ -23,9 +23,9 @@ progress:
 
 ## Current Phase
 
-**Phase 2: Credential Management & OAuth** — IN PROGRESS (Plan 04/5 complete)
+**Phase 2: Credential Management & OAuth** — IN PROGRESS (Plans 01, 02, 03, 04 complete)
 
-**Stopped at:** Completed 02-credential-management-oauth/02-04-PLAN.md
+**Stopped at:** Completed 02-credential-management-oauth/02-03-PLAN.md
 
 ## Phase Status
 
@@ -71,6 +71,8 @@ progress:
 | Frontend type isolation | TokenHealthState defined locally in frontend — avoids importing @social/credential-management (NestJS deps break frontend bundler) | 2026-03-10 |
 | SocialAccount join by integrationId | Health endpoint joins SocialAccount by integrationId FK — more reliable than platform string match for brand context | 2026-03-10 |
 | TokenHealthController module wiring | Controller file created in Plan 04; Plan 03 handles module registration — prevents write conflicts between parallel plans | 2026-03-10 |
+| Factory providers for interface constructors | useFactory pattern in CredentialManagementModule to wire interface-typed services without re-writing; clean testability preserved | 2026-03-10 |
+| OAuth brand context Redis key | brand:{state} TTL 600s alongside standard login:{state} and organization:{state} keys; 600s match social provider auth session lifetime | 2026-03-10 |
 
 ## Blockers
 
@@ -87,8 +89,9 @@ None currently.
 | 01    | 05   | 5min     | 2     | 6     |
 | 02    | 01   | 15min    | 2     | 9     |
 | 02    | 02   | 15min    | 2     | 7     |
+| 02    | 03   | 25min    | 2     | 9     |
 | 02    | 04   | 15min    | 2     | 4     |
 
 ## Next Action
 
-Phase 2 Plan 04 complete. Continue Phase 2: execute 02-05-PLAN.md (final plan in phase 2).
+Phase 2 Plan 03 complete (executed out of order after 04). Continue Phase 2: execute 02-05-PLAN.md (final plan in phase 2).
