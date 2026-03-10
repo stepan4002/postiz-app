@@ -30,6 +30,7 @@ model Company {
   organizations   Organization[]
   aiConfig        AIConfig?
   aiCostLogs      AICostLog[]
+  media           Media[]
 }
 
 model Brand {
@@ -328,15 +329,54 @@ model Media {
   thumbnail          String?
   alt                String?
   thumbnailTimestamp Int?
+  // SOCIAL COMMAND CENTRE — Phase 4: Media Library Processing
+  companyId          String?
+  width              Int?
+  height             Int?
+  format             String?
+  tags               String[]            @default([])
   organization       Organization        @relation(fields: [organizationId], references: [id])
+  company            Company?            @relation(fields: [companyId], references: [id])
   agencies           SocialMediaAgency[]
   userPicture        User[]
   oauthApps          OAuthApp[]
+  variants           MediaVariant[]
 
   @@index([name])
   @@index([organizationId])
   @@index([type])
+  @@index([companyId])
+  @@index([companyId, createdAt])
 }
+
+// SOCIAL COMMAND CENTRE — Phase 4: Media Library Processing
+model MediaVariant {
+  id        String   @id @default(uuid())
+  mediaId   String
+  platform  String
+  width     Int
+  height    Int
+  path      String
+  fileSize  Int
+  createdAt DateTime @default(now())
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([mediaId, platform, width, height])
+  @@index([mediaId])
+}
+
+model MediaProcessingJob {
+  id        String   @id @default(uuid())
+  mediaId   String
+  platforms String[]
+  status    String   @default("pending")
+  error     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+}
+// END Phase 4 Media Library models
 
 model SocialMediaAgency {
   id               String                   @id @default(uuid())

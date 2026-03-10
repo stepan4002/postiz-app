@@ -36,7 +36,8 @@
       "@social/multi-company": ["extensions/multi-company/src/index.ts"],
       "@social/company-context": ["extensions/company-context/src/index.ts"],
       "@social/credential-management": ["extensions/credential-management/src/index.ts"],
-      "@social/ai-service": ["extensions/ai-service/src/index.ts"]
+      "@social/ai-service": ["extensions/ai-service/src/index.ts"],
+      "@social/media-library": ["extensions/media-library/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
