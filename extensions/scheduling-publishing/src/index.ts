@@ -42,3 +42,4 @@ export { AdapterRegistry } from './adapters/adapter-registry';
 // Scheduling services
 export { SchedulingRepository } from './scheduling/scheduling.repository';
 export { ScheduleResolverService } from './scheduling/schedule-resolver.service';
+export { SchedulerTickJob } from './scheduling/scheduler-tick.job';
