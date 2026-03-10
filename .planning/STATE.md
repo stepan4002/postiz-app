@@ -2,14 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
-status: unknown
-stopped_at: Completed 01-fork-and-foundation/01-04-PLAN.md
-last_updated: "2026-03-10T15:00:00.000Z"
+status: complete
+stopped_at: Completed 01-fork-and-foundation/01-05-PLAN.md
+last_updated: "2026-03-10T14:55:00.000Z"
 progress:
   total_phases: 8
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
+  percent: 100
 ---
 
 # Project State: Social Command Centre
@@ -22,15 +23,15 @@ progress:
 
 ## Current Phase
 
-**Phase 1: Fork & Foundation** — IN PROGRESS (Plan 04/5 complete)
+**Phase 1: Fork & Foundation** — COMPLETE (Plan 05/5 complete)
 
-**Stopped at:** Completed 01-fork-and-foundation/01-04-PLAN.md
+**Stopped at:** Completed 01-fork-and-foundation/01-05-PLAN.md
 
 ## Phase Status
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Fork & Foundation | in_progress |
+| 1 | Fork & Foundation | complete |
 | 2 | Credential Management & OAuth | not_started |
 | 3 | AI Service Layer | not_started |
 | 4 | Media Library & Processing | not_started |
@@ -60,6 +61,8 @@ progress:
 | Seed idempotency | Seed script uses Prisma upsert on unique constraints (slug for Company, companyId+slug for Brand, brandId for BrandVoice, brandId+platform for SocialAccount) | 2026-03-10 |
 | Test isolation boundary | BrandService.findAllByCompany(companyId) is the formal isolation contract — integration tests prove Company A data never appears in Company B queries | 2026-03-10 |
 | Integration test state | company-isolation.spec.ts is TDD RED (requires Docker DB); company.service.spec.ts is TDD GREEN (15 tests, no DB needed) | 2026-03-10 |
+| Company switcher URL | ?c={slug} query param used for company scoping — avoids restructuring Postiz route tree; provides bookmarkable URLs without upstream disruption | 2026-03-10 |
+| CompanySwitcher dropdown | CSS-only group-hover dropdown matches OrganizationSelector pattern — consistent UI without extra React state | 2026-03-10 |
 
 ## Blockers
 
@@ -73,7 +76,8 @@ None currently.
 | 01    | 02   | 20min    | 2     | 10    |
 | 01    | 03   | 10min    | 2     | 19    |
 | 01    | 04   | 30min    | 1     | 4     |
+| 01    | 05   | 5min     | 2     | 6     |
 
 ## Next Action
 
-Execute Phase 1 Plan 05 (next available plan in Phase 1).
+Phase 1 complete. Begin Phase 2: Credential Management & OAuth.
