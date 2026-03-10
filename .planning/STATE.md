@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 02-credential-management-oauth/02-02-PLAN.md
-last_updated: "2026-03-10T16:24:00.000Z"
+stopped_at: Completed 02-credential-management-oauth/02-04-PLAN.md
+last_updated: "2026-03-10T16:39:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 1
   total_plans: 10
-  completed_plans: 7
-  percent: 70
+  completed_plans: 8
+  percent: 80
 ---
 
 # Project State: Social Command Centre
@@ -23,9 +23,9 @@ progress:
 
 ## Current Phase
 
-**Phase 2: Credential Management & OAuth** — IN PROGRESS (Plan 02/5 complete)
+**Phase 2: Credential Management & OAuth** — IN PROGRESS (Plan 04/5 complete)
 
-**Stopped at:** Completed 02-credential-management-oauth/02-02-PLAN.md
+**Stopped at:** Completed 02-credential-management-oauth/02-04-PLAN.md
 
 ## Phase Status
 
@@ -68,6 +68,9 @@ progress:
 | Interface injection for cross-package deps | IRefreshIntegrationService/INotificationService minimal interfaces in token.refresh.job.ts; avoids circular imports and enables unit testing without upstream package imports | 2026-03-10 |
 | JS-side 75% lifetime filtering | Prisma cannot compute tokenExpiration - 0.25*(tokenExpiration - createdAt) in WHERE; fetch non-expired candidates, filter in JS | 2026-03-10 |
 | Cron alert threshold logic | Alert on consecutiveFailures >= ALERT_THRESHOLD - 1 (before increment) to avoid DB re-read; fires on 3rd consecutive failure | 2026-03-10 |
+| Frontend type isolation | TokenHealthState defined locally in frontend — avoids importing @social/credential-management (NestJS deps break frontend bundler) | 2026-03-10 |
+| SocialAccount join by integrationId | Health endpoint joins SocialAccount by integrationId FK — more reliable than platform string match for brand context | 2026-03-10 |
+| TokenHealthController module wiring | Controller file created in Plan 04; Plan 03 handles module registration — prevents write conflicts between parallel plans | 2026-03-10 |
 
 ## Blockers
 
@@ -84,7 +87,8 @@ None currently.
 | 01    | 05   | 5min     | 2     | 6     |
 | 02    | 01   | 15min    | 2     | 9     |
 | 02    | 02   | 15min    | 2     | 7     |
+| 02    | 04   | 15min    | 2     | 4     |
 
 ## Next Action
 
-Phase 2 Plan 02 complete. Continue Phase 2: execute 02-03-PLAN.md (credential storage OAuth flow).
+Phase 2 Plan 04 complete. Continue Phase 2: execute 02-05-PLAN.md (final plan in phase 2).
