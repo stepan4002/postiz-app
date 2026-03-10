@@ -1,15 +1,25 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Logger,
+  Param,
   Post,
 } from '@nestjs/common';
 import { ioRedis } from '@gitroom/nestjs-libraries/redis/redis.service';
 import { IntegrationManager } from '@gitroom/nestjs-libraries/integrations/integration.manager';
 import { PrismaService } from '@gitroom/nestjs-libraries/database/prisma/prisma.service';
 import { CredentialService } from '../credential/credential.service';
+import { TokenHealthService } from '../health/token.health.service';
+
+/**
+ * MVP platforms supported in the brand connection panel.
+ * Each platform will appear in the BrandConnectionsResponse even if
+ * no SocialAccount exists for it.
+ */
+const MVP_PLATFORMS = ['instagram', 'facebook', 'linkedin', 'x'] as const;
 
 /**
  * OAuthBrandController
@@ -21,8 +31,9 @@ import { CredentialService } from '../credential/credential.service';
  *      new Integration to a SocialAccount on the brand
  *
  * Endpoints:
- *   POST /api/credentials/oauth/start    — initiate brand-scoped OAuth
- *   POST /api/credentials/oauth/callback — complete brand-scoped OAuth
+ *   POST /api/credentials/oauth/start             — initiate brand-scoped OAuth
+ *   POST /api/credentials/oauth/callback          — complete brand-scoped OAuth
+ *   GET  /api/credentials/brand-connections/:brandId — get per-platform connection state
  *
  * Redis key pattern: brand:{state} -> brandId, TTL 600s
  */
@@ -33,7 +44,8 @@ export class OAuthBrandController {
   constructor(
     private readonly integrationManager: IntegrationManager,
     private readonly credentialService: CredentialService,
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    private readonly tokenHealthService: TokenHealthService
   ) {}
 
   /**
@@ -264,5 +276,110 @@ export class OAuthBrandController {
     }
 
     return { success: true, integrationId: integration.id };
+  }
+
+  /**
+   * GET /api/credentials/brand-connections/:brandId
+   *
+   * Returns one entry per MVP platform indicating whether the brand has
+   * connected that platform and its current token health state.
+   *
+   * Query pattern:
+   * 1. Fetch all SocialAccounts for the brandId
+   * 2. For those with an integrationId, fetch the linked Integration
+   * 3. Compute TokenHealthState for each connected integration
+   * 4. Return exactly 4 entries (one per MVP platform), with connected=false
+   *    for platforms that have no SocialAccount, no integrationId, or
+   *    whose Integration has been soft-deleted.
+   *
+   * Returns: { connections: BrandConnection[] }
+   * Compatible with useBrandConnections.ts and BrandConnectionsResponse interface.
+   */
+  @Get('brand-connections/:brandId')
+  async getBrandConnections(
+    @Param('brandId') brandId: string
+  ): Promise<{ connections: Array<{
+    platform: string;
+    connected: boolean;
+    integrationId?: string;
+    health?: string;
+    displayName?: string;
+  }> }> {
+    // Fetch all SocialAccounts for this brand
+    // Cast to any: SocialAccount is a custom model not in standard Prisma generated types
+    const socialAccounts: Array<{
+      id: string;
+      brandId: string;
+      platform: string;
+      integrationId: string | null;
+      displayName: string | null;
+    }> = await (this.prisma as any).socialAccount.findMany({
+      where: { brandId },
+    });
+
+    // Build a map from platform → SocialAccount for O(1) lookup
+    const accountByPlatform = new Map<string, typeof socialAccounts[number]>();
+    for (const sa of socialAccounts) {
+      accountByPlatform.set(sa.platform, sa);
+    }
+
+    // Collect all integrationIds that need to be fetched
+    const integrationIds = socialAccounts
+      .map((sa) => sa.integrationId)
+      .filter((id): id is string => id !== null);
+
+    // Fetch all linked Integrations in one query
+    const integrations =
+      integrationIds.length > 0
+        ? await this.prisma.integration.findMany({
+            where: {
+              id: { in: integrationIds },
+              deletedAt: null,
+            },
+          })
+        : [];
+
+    // Build a map from integrationId → Integration for O(1) lookup
+    const integrationById = new Map<string, (typeof integrations)[number]>();
+    for (const integration of integrations) {
+      integrationById.set(integration.id, integration);
+    }
+
+    // Build one connection entry per MVP platform
+    const connections = MVP_PLATFORMS.map((platform) => {
+      const account = accountByPlatform.get(platform);
+
+      // No SocialAccount for this platform → not connected
+      if (!account || !account.integrationId) {
+        return { platform, connected: false as const };
+      }
+
+      // SocialAccount exists but Integration is missing or soft-deleted → not connected
+      const integration = integrationById.get(account.integrationId);
+      if (!integration) {
+        return { platform, connected: false as const };
+      }
+
+      // Compute health state using TokenHealthService
+      const health = this.tokenHealthService.getTokenHealth({
+        tokenExpiration: (integration as any).tokenExpiration ?? null,
+        refreshNeeded: (integration as any).refreshNeeded ?? false,
+        consecutiveFailures: (integration as any).consecutiveFailures ?? 0,
+      });
+
+      return {
+        platform,
+        connected: true as const,
+        integrationId: integration.id,
+        health,
+        displayName: account.displayName ?? integration.name ?? undefined,
+      };
+    });
+
+    this.logger.debug(
+      `getBrandConnections: brandId=${brandId} connections=${JSON.stringify(connections.map((c) => ({ platform: c.platform, connected: c.connected })))}`
+    );
+
+    return { connections };
   }
 }
