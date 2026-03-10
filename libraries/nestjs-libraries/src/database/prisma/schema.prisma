@@ -31,6 +31,7 @@ model Company {
   aiConfig        AIConfig?
   aiCostLogs      AICostLog[]
   media           Media[]
+  contentPosts    ContentPost[]
 }
 
 model Brand {
@@ -45,6 +46,7 @@ model Brand {
   company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   brandVoice     BrandVoice?
   socialAccounts SocialAccount[]
+  contentPosts   ContentPost[]
 
   @@unique([companyId, slug])
 }
@@ -80,14 +82,16 @@ model SocialAccount {
 
 // SOCIAL COMMAND CENTRE -- Phase 3: AI Service Layer
 model AIConfig {
-  id              String   @id @default(uuid())
-  companyId       String   @unique
-  defaultProvider String   @default("openai")
-  preferredModels Json     @default("{}")
-  weeklyBudgetUsd Float?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  id                  String   @id @default(uuid())
+  companyId           String   @unique
+  defaultProvider     String   @default("openai")
+  preferredModels     Json     @default("{}")
+  weeklyBudgetUsd     Float?
+  requireAllReview    Boolean  @default(false)
+  confidenceThreshold Float    @default(0.7)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  company             Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@index([companyId])
 }
@@ -377,6 +381,49 @@ model MediaProcessingJob {
   @@index([status, createdAt])
 }
 // END Phase 4 Media Library models
+
+// SOCIAL COMMAND CENTRE — Phase 5: Content Generation Pipeline
+model ContentPost {
+  id          String        @id @default(uuid())
+  companyId   String
+  brandId     String
+  mediaId     String?
+  brief       String?
+  contentType String
+  status      String        @default("DRAFT")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  brand       Brand         @relation(fields: [brandId], references: [id])
+  variants    PostVariant[]
+
+  @@index([companyId, status])
+  @@index([companyId, createdAt])
+  @@index([brandId])
+}
+
+model PostVariant {
+  id              String      @id @default(uuid())
+  postId          String
+  platform        String
+  caption         String
+  hashtags        String[]    @default([])
+  mediaVariantId  String?
+  confidenceScore Float
+  status          String
+  generatedBy     String
+  generatedAt     DateTime    @default(now())
+  reviewedBy      String?
+  reviewAction    String?
+  reviewedAt      DateTime?
+  originalCaption String?
+  post            ContentPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([platform, status])
+  @@index([confidenceScore])
+}
+// END Phase 5 Content Generation Pipeline models
 
 model SocialMediaAgency {
   id               String                   @id @default(uuid())

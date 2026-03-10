@@ -37,7 +37,9 @@
       "@social/company-context": ["extensions/company-context/src/index.ts"],
       "@social/credential-management": ["extensions/credential-management/src/index.ts"],
       "@social/ai-service": ["extensions/ai-service/src/index.ts"],
-      "@social/media-library": ["extensions/media-library/src/index.ts"]
+      "@social/media-library": ["extensions/media-library/src/index.ts"],
+      "@social/content-generation": ["extensions/content-generation/src"],
+      "@social/content-generation/*": ["extensions/content-generation/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
