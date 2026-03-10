@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 06-scheduling-publishing-engine/06-01-PLAN.md
+last_updated: "2026-03-10T23:26:18.363Z"
+progress:
+  total_phases: 8
+  completed_phases: 5
+  total_plans: 29
+  completed_plans: 25
+  percent: 86
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 05-content-generation-pipeline/05-04-PLAN.md
 last_updated: "2026-03-10T22:32:59.056Z"
 progress:
-  total_phases: 8
+  [█████████░] 86%
   completed_phases: 5
   total_plans: 24
   completed_plans: 24
@@ -227,9 +242,9 @@ progress:
 
 ## Current Phase
 
-**Phase 5: Content Generation Pipeline** — In Progress (4 of 5 plans done)
+**Phase 6: Scheduling & Publishing Engine** — In Progress (1 of 5 plans done)
 
-**Stopped at:** Completed 05-content-generation-pipeline/05-04-PLAN.md
+**Stopped at:** Completed 06-scheduling-publishing-engine/06-01-PLAN.md
 
 ## Phase Status
 
@@ -240,7 +255,7 @@ progress:
 | 3 | AI Service Layer | complete |
 | 4 | Media Library & Processing | complete |
 | 5 | Content Generation Pipeline | complete |
-| 6 | Scheduling & Publishing Engine | not_started |
+| 6 | Scheduling & Publishing Engine | in_progress |
 | 7 | Analytics & Dashboard | not_started |
 | 8 | Production Hardening & Deployment | not_started |
 
@@ -340,6 +355,7 @@ None currently.
 | Phase 05 P03 | 6min | 2 tasks | 8 files |
 | Phase 05 P05 | 4min | 2 tasks | 6 files |
 | Phase 05 P04 | 5min | 2 tasks | 7 files |
+| Phase 06 P01 | 12min | 2 tasks | 14 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -384,10 +400,20 @@ None currently.
 | TokenHealthService DI in OAuthBrandController | Injected as 4th constructor param; module already has it in providers — no module.ts changes | 2026-03-10 |
 | MVP_PLATFORMS at controller module scope | Const array defined at top of controller file as single source of truth for backend | 2026-03-10 |
 
+## Key Decisions Made (Phase 06 Plan 01)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| STALE vs FAILED distinction | STALE=publish window expired before any publish attempt (SCHEDULED->STALE); FAILED=platform API error during publishing (PUBLISHING->FAILED) — distinct dashboard surfaces | 2026-03-10 |
+| PlatformAdapter.apiVersion field | NF4.5 API version pinning — each adapter declares which API version it targets; breaking changes require bumping the version | 2026-03-10 |
+| ContentPostStatus extended in content.types.ts | Types extended directly in our extension code (not upstream) — avoids re-export indirection | 2026-03-10 |
+| consecutiveFailures on PostVariant | Mirrors Phase 2 token health pattern — consistent failure tracking vocabulary across the system | 2026-03-10 |
+| PublishAttempt dual FK | variantId + postId FKs on PublishAttempt — enables efficient audit queries by both variant and parent post | 2026-03-10 |
+
 ## Session Continuity
 
-Last session: 2026-03-10
-Stopped at: Phase 5 complete, ready to plan Phase 6
+Last session: 2026-03-10T23:32:00Z
+Stopped at: Completed 06-scheduling-publishing-engine/06-01-PLAN.md
 Resume file: None
 
 ## Project Reference
