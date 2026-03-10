@@ -138,7 +138,7 @@ Plans:
 
 **Estimated complexity:** HIGH (AI pipeline + review workflow + UI)
 
-**Plans:** 3/5 plans executed
+**Plans:** 5/5 plans complete
 
 Plans:
 - [x] 05-01-PLAN.md — Extension scaffold, Prisma models (ContentPost/PostVariant), type contracts, prompt templates

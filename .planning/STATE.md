@@ -3,10 +3,40 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 05-content-generation-pipeline/05-04-PLAN.md
+last_updated: "2026-03-10T22:23:41.944Z"
+progress:
+  total_phases: 8
+  completed_phases: 5
+  total_plans: 24
+  completed_plans: 24
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
+stopped_at: Completed 05-content-generation-pipeline/05-05-PLAN.md
+last_updated: "2026-03-10T22:23:09.368Z"
+progress:
+  [██████████] 100%
+  completed_phases: 5
+  total_plans: 24
+  completed_plans: 24
+  percent: 96
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 05-content-generation-pipeline/05-03-PLAN.md
 last_updated: "2026-03-10T22:13:52Z"
 progress:
-  total_phases: 8
+  [██████████] 96%
   completed_phases: 4
   total_plans: 24
   completed_plans: 22
@@ -183,9 +213,9 @@ progress:
 
 ## Current Phase
 
-**Phase 5: Content Generation Pipeline** — In Progress (3 of 5 plans done)
+**Phase 5: Content Generation Pipeline** — Complete (5 of 5 plans done)
 
-**Stopped at:** Completed 05-content-generation-pipeline/05-03-PLAN.md
+**Stopped at:** Completed 05-content-generation-pipeline/05-05-PLAN.md
 
 ## Phase Status
 
@@ -195,7 +225,7 @@ progress:
 | 2 | Credential Management & OAuth | complete |
 | 3 | AI Service Layer | complete |
 | 4 | Media Library & Processing | complete |
-| 5 | Content Generation Pipeline | in_progress |
+| 5 | Content Generation Pipeline | complete |
 | 6 | Scheduling & Publishing Engine | not_started |
 | 7 | Analytics & Dashboard | not_started |
 | 8 | Production Hardening & Deployment | not_started |
@@ -294,6 +324,8 @@ None currently.
 | Phase 05 P01 | 25min | 2 tasks | 12 files |
 | Phase 05 P02 | 10min | 2 tasks | 7 files |
 | Phase 05 P03 | 6min | 2 tasks | 8 files |
+| Phase 05 P05 | 4min | 2 tasks | 6 files |
+| Phase 05 P04 | 5min | 2 tasks | 7 files |
 
 ## Key Decisions Made (Phase 05 Plan 03)
 
@@ -313,6 +345,15 @@ None currently.
 | PostVariant.hashtags as String[] | PostgreSQL native array avoids JSON serialization overhead, enables native Prisma array queries | 2026-03-10 |
 | AIConfig requireAllReview + confidenceThreshold | Per-company policy for auto-approval vs manual review; default 0.7 threshold | 2026-03-10 |
 
+## Key Decisions Made (Phase 05 Plan 05)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| useReviewAction no SWR | useState+useFetch only for mutations — mutations don't need caching; caller calls SWR mutate() after each action | 2026-03-10 |
+| companySlug from useCompany context | Reads ?c= URL param via existing CompanyContext — consistent with company-switcher pattern across the app | 2026-03-10 |
+| Per-variant editingVariantId state | Only one variant editable at a time via editingVariantId — prevents conflicting concurrent edits | 2026-03-10 |
+| Platform badge colors | instagram=pink, facebook=blue, linkedin=sky, x=gray — follows social platform brand conventions | 2026-03-10 |
+
 ## Key Decisions Made (Plan 06)
 
 | Decision | Outcome | Date |
@@ -323,9 +364,9 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T22:13:52Z
-Stopped at: Completed 05-content-generation-pipeline/05-03-PLAN.md
-Resume file: .planning/phases/05-content-generation-pipeline/05-04-PLAN.md
+Last session: 2026-03-10T22:23:35.667Z
+Stopped at: Completed 05-content-generation-pipeline/05-05-PLAN.md
+Resume file: None
 
 ## Project Reference
 
