@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { CredentialRepository } from './credential.repository';
 import { TokenEncryptionService } from '../encryption/token.encryption.service';
 
@@ -69,11 +70,10 @@ export class TokenRefreshJob {
   ) {}
 
   /**
-   * Main cron method. Called every 10 minutes.
-   *
-   * @Cron decorator is applied when wired into NestJS module in Plan 03
-   * to avoid importing @nestjs/schedule here (keeps unit tests simple).
+   * Main cron method. Runs every 10 minutes.
+   * Wired with @Cron decorator in Plan 03 (CredentialManagementModule registration).
    */
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async refreshExpiringTokens(): Promise<void> {
     // Guard: only run in contexts where RUN_CRON is set (orchestrator/worker)
     if (!process.env.RUN_CRON) {

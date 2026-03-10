@@ -34,7 +34,8 @@
       "@gitroom/orchestrator/*": ["apps/orchestrator/src/*"],
       "@gitroom/extension/*": ["apps/extension/src/*"],
       "@social/multi-company": ["extensions/multi-company/src/index.ts"],
-      "@social/company-context": ["extensions/company-context/src/index.ts"]
+      "@social/company-context": ["extensions/company-context/src/index.ts"],
+      "@social/credential-management": ["extensions/credential-management/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

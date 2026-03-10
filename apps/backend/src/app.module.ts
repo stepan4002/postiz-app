@@ -21,6 +21,8 @@ import { ioRedis } from '@gitroom/nestjs-libraries/redis/redis.service';
 import { CompanyContextModule } from '@social/company-context';
 // SOCIAL COMMAND CENTRE — Phase 1 Plan 03: Company/Brand/BrandVoice CRUD API
 import { MultiCompanyModule } from '@social/multi-company';
+// SOCIAL COMMAND CENTRE — Phase 2 Plan 03: Credential management, OAuth brand context, token health
+import { CredentialManagementModule } from '@social/credential-management';
 
 @Global()
 @Module({
@@ -32,6 +34,8 @@ import { MultiCompanyModule } from '@social/multi-company';
     CompanyContextModule,
     // SOCIAL COMMAND CENTRE — Phase 1 Plan 03: Company/Brand/BrandVoice CRUD API
     MultiCompanyModule,
+    // SOCIAL COMMAND CENTRE — Phase 2 Plan 03: Credential management, OAuth brand context, token health
+    CredentialManagementModule,
     ApiModule,
     PublicApiModule,
     AgentModule,

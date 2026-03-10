@@ -101,6 +101,28 @@ All custom code lives in `extensions/` — upstream files are modified only when
 
 ---
 
+## apps/backend/src/app.module.ts (Phase 2 Plan 03 addition)
+
+- **Phase:** 2 (Plan 03)
+- **Date:** 2026-03-10
+- **Change:** Added `import { CredentialManagementModule } from '@social/credential-management'` and added `CredentialManagementModule` to the `@Module` imports array after `MultiCompanyModule`
+- **Reason:** CredentialManagementModule registers all credential management services (TokenEncryptionService, CredentialService, CredentialRepository, TokenHealthService, TokenRefreshJob) and controllers (OAuthBrandController, TokenHealthController) for Phase 2 functionality
+- **Upstream risk:** MEDIUM — upstream regularly adds imports to AppModule; re-add our CredentialManagementModule import after merge; ensure it stays after MultiCompanyModule (depends on brand/socialAccount schema)
+- **Watch for:** Upstream adding conflicting cron scheduling (ScheduleModule) or competing /api/credentials route prefixes; upstream adding OAuth-related modules that might overlap
+
+---
+
+## tsconfig.base.json (Phase 2 Plan 03 addition)
+
+- **Phase:** 2 (Plan 03)
+- **Date:** 2026-03-10
+- **Change:** Added `"@social/credential-management": ["extensions/credential-management/src/index.ts"]` to `compilerOptions.paths`
+- **Reason:** TypeScript path alias enables `import { ... } from '@social/credential-management'` in AppModule and other consumers
+- **Upstream risk:** LOW — upstream adds new `@gitroom/*` path entries; re-add our entry after merge
+- **Watch for:** Upstream restructuring the `paths` object
+
+---
+
 ## apps/frontend/src/components/new-layout/layout.component.tsx
 
 - **Phase:** 1 (Plan 05)
