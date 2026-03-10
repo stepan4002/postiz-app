@@ -23,13 +23,14 @@
 
 **Estimated complexity:** HIGH (data model is foundational, fork strategy critical)
 
-**Plans:** 4 plans
+**Plans:** 5 plans
 
 Plans:
 - [ ] 01-01-PLAN.md — Fork Postiz v2.20.1, Docker dev environment, extension architecture scaffolding
 - [ ] 01-02-PLAN.md — Prisma schema (Company/Brand/BrandVoice/SocialAccount) and company-context middleware
-- [ ] 01-03-PLAN.md — Company/Brand/BrandVoice CRUD API, seed data, and isolation tests
-- [ ] 01-04-PLAN.md — Company switcher UI component with URL-scoped routing
+- [ ] 01-03-PLAN.md — Company/Brand/BrandVoice CRUD API and seed data
+- [ ] 01-04-PLAN.md — Automated company data isolation tests (TDD)
+- [ ] 01-05-PLAN.md — Company switcher UI component with URL-scoped routing
 
 ---
 
