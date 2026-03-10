@@ -213,9 +213,9 @@ progress:
 
 ## Current Phase
 
-**Phase 5: Content Generation Pipeline** — Complete (5 of 5 plans done)
+**Phase 5: Content Generation Pipeline** — In Progress (4 of 5 plans done)
 
-**Stopped at:** Completed 05-content-generation-pipeline/05-05-PLAN.md
+**Stopped at:** Completed 05-content-generation-pipeline/05-04-PLAN.md
 
 ## Phase Status
 
@@ -327,6 +327,14 @@ None currently.
 | Phase 05 P05 | 4min | 2 tasks | 6 files |
 | Phase 05 P04 | 5min | 2 tasks | 7 files |
 
+## Key Decisions Made (Phase 05 Plan 04)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| import.meta cast via any | (import.meta as any)?.env?.VITE_MINIO_PUBLIC_URL — tsconfig types=["node"] lacks Vite ImportMeta; cast preserves runtime Vite env behavior | 2026-03-10 |
+| GenerateResult re-exported from hook | Type defined in use-generate-post.ts, re-exported for use in GenerationResult component — single source of truth | 2026-03-10 |
+| MediaPicker dual-mode in single component | Both library selection and inline upload live in one component — simpler UX, single SWR mutate call refreshes grid after upload | 2026-03-10 |
+
 ## Key Decisions Made (Phase 05 Plan 03)
 
 | Decision | Outcome | Date |
@@ -364,9 +372,9 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T22:23:35.667Z
-Stopped at: Completed 05-content-generation-pipeline/05-05-PLAN.md
-Resume file: None
+Last session: 2026-03-10T22:22:00Z
+Stopped at: Completed 05-content-generation-pipeline/05-04-PLAN.md
+Resume file: .planning/phases/05-content-generation-pipeline/05-05-PLAN.md
 
 ## Project Reference
 
