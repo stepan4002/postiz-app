@@ -28,6 +28,8 @@ model Company {
   updatedAt       DateTime       @updatedAt
   brands          Brand[]
   organizations   Organization[]
+  aiConfig        AIConfig?
+  aiCostLogs      AICostLog[]
 }
 
 model Brand {
@@ -73,6 +75,37 @@ model SocialAccount {
   brand         Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
 
   @@unique([brandId, platform])
+}
+
+// SOCIAL COMMAND CENTRE -- Phase 3: AI Service Layer
+model AIConfig {
+  id              String   @id @default(uuid())
+  companyId       String   @unique
+  defaultProvider String   @default("openai")
+  preferredModels Json     @default("{}")
+  weeklyBudgetUsd Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+}
+
+model AICostLog {
+  id               String   @id @default(uuid())
+  companyId        String
+  postId           String?
+  provider         String
+  model            String
+  taskType         String
+  inputTokens      Int
+  outputTokens     Int
+  estimatedCostUsd Float
+  createdAt        DateTime @default(now())
+  company          Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, createdAt])
+  @@index([companyId, taskType])
 }
 
 // ============================================================================
