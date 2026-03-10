@@ -57,6 +57,17 @@ All custom code lives in `extensions/` — upstream files are modified only when
 
 ---
 
+## apps/backend/src/app.module.ts
+
+- **Phase:** 1 (Plan 02)
+- **Date:** 2026-03-10
+- **Change:** Added `import { CompanyContextModule } from '@social/company-context'` and added `CompanyContextModule` to the `@Module` imports array before `ApiModule`
+- **Reason:** CompanyContextModule must be registered in AppModule to activate the ClsModule global context and the CompanyContextMiddleware that auto-scopes Prisma queries by company
+- **Upstream risk:** MEDIUM — upstream regularly adds imports to AppModule; re-add our CompanyContextModule import and ensure it stays before ApiModule after merge
+- **Watch for:** Upstream adding conflicting CLS or middleware registrations; upstream reordering imports that might break global ClsModule initialization
+
+---
+
 ## libraries/nestjs-libraries/src/database/prisma/schema.prisma
 
 - **Phase:** 1 (Plan 02)

@@ -17,12 +17,17 @@ import { TemporalRegisterMissingSearchAttributesModule } from '@gitroom/nestjs-l
 import { InfiniteWorkflowRegisterModule } from '@gitroom/nestjs-libraries/temporal/infinite.workflow.register';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { ioRedis } from '@gitroom/nestjs-libraries/redis/redis.service';
+// SOCIAL COMMAND CENTRE — Phase 1 Plan 02: company context CLS + Prisma scoping
+import { CompanyContextModule } from '@social/company-context';
 
 @Global()
 @Module({
   imports: [
     SentryModule.forRoot(),
     DatabaseModule,
+    // SOCIAL COMMAND CENTRE — must be imported before ApiModule so ClsModule is global
+    // and CLS context is available in all request handlers
+    CompanyContextModule,
     ApiModule,
     PublicApiModule,
     AgentModule,
