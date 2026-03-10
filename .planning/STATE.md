@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 06-scheduling-publishing-engine/06-02-PLAN.md
+last_updated: "2026-03-10T23:40:45.744Z"
+progress:
+  total_phases: 8
+  completed_phases: 5
+  total_plans: 29
+  completed_plans: 27
+  percent: 93
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 06-scheduling-publishing-engine/06-03-PLAN.md
 last_updated: "2026-03-10T23:35:54.706Z"
 progress:
-  total_phases: 8
+  [█████████░] 93%
   completed_phases: 5
   total_plans: 29
   completed_plans: 26
@@ -257,9 +272,9 @@ progress:
 
 ## Current Phase
 
-**Phase 6: Scheduling & Publishing Engine** — In Progress (3 of 5 plans done)
+**Phase 6: Scheduling & Publishing Engine** — In Progress (2 of 5 plans done)
 
-**Stopped at:** Completed 06-scheduling-publishing-engine/06-03-PLAN.md
+**Stopped at:** Completed 06-scheduling-publishing-engine/06-02-PLAN.md
 
 ## Phase Status
 
@@ -373,6 +388,7 @@ None currently.
 | Phase 06 P01 | 12min | 2 tasks | 14 files |
 | Phase 06 P03 | 18min | 2 tasks | 12 files |
 | Phase 06 P03 | 18min | 2 tasks | 12 files |
+| Phase 06 P02 | 18min | 2 tasks | 6 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -417,6 +433,15 @@ None currently.
 | TokenHealthService DI in OAuthBrandController | Injected as 4th constructor param; module already has it in providers — no module.ts changes | 2026-03-10 |
 | MVP_PLATFORMS at controller module scope | Const array defined at top of controller file as single source of truth for backend | 2026-03-10 |
 
+## Key Decisions Made (Phase 06 Plan 02)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| dayjs require() not import * | CJS interop in Jest environment requires const dayjs = require('dayjs') — import * as dayjs doesn't yield callable function | 2026-03-11 |
+| schedulePost UTC getter extraction | Uses getUTCHours() to extract wall-clock values from Date — consistent across system timezones; callers pass new Date('...Z') where UTC values = intended local time | 2026-03-11 |
+| SchedulerTickJob scope limited to status transitions | Job only does SCHEDULED->PUBLISHING or STALE; platform API calls are PublishingWorkerJob (Plan 04) responsibility — clean separation of concerns | 2026-03-11 |
+| BATCH_SIZE=50 in scheduler tick | Prevents overwhelming platform APIs with large batches; 50 per minute = 3000/hour capacity | 2026-03-11 |
+
 ## Key Decisions Made (Phase 06 Plan 01)
 
 | Decision | Outcome | Date |
@@ -440,8 +465,8 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T23:46:00Z
-Stopped at: Completed 06-scheduling-publishing-engine/06-03-PLAN.md
+Last session: 2026-03-11T00:38:54Z
+Stopped at: Completed 06-scheduling-publishing-engine/06-02-PLAN.md
 Resume file: None
 
 ## Project Reference
