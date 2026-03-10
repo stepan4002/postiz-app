@@ -18,17 +18,19 @@ One person can efficiently operate 100+ social posts per week across dozens of a
 - ✓ All integrations via official compliant APIs (no scraping, no TOS violations) — Phase 2 (OAuth flows via official APIs)
 - ✓ Media library management: per-company upload, storage, tag filtering, grid UI — Phase 4 (MinIO S3 storage, Uppy multipart upload, company-scoped endpoints)
 - ✓ Media processing: resize per platform, thumbnail generation, variant pipeline — Phase 4 (sharp-based processing, platform-specific specs for Instagram/Facebook/LinkedIn/X)
+- ✓ AI content generation pipeline (flexible provider: OpenAI, Anthropic, local models) — Phase 5 (ContentPostService 9-step pipeline via AIProviderRouter)
+- ✓ AI vision: understand images/videos to generate captions, hashtags, CTAs — Phase 5 (executeImageAnalysis → caption → platform adaptation)
+- ✓ Content types: product, brand story, educational, seasonal, offer, testimonial, behind-the-scenes — Phase 5 (7 content type prompt modifiers)
+- ✓ Platform-specific caption adaptation (length, style, hashtags, CTAs) — Phase 5 (PLATFORM_CAPTION_NORMS for Instagram/Facebook/LinkedIn/X)
+- ✓ AI confidence gating: low-confidence content flagged for human review before publishing — Phase 5 (confidence scoring + threshold gating per company)
+- ✓ Input workflow: upload images/videos + optional text/source info, AI generates everything — Phase 5 (CreatePostForm with media picker, brief, and generation results)
 
 ### Active
 
 - [ ] Platform support: Instagram, Facebook, LinkedIn, X, TikTok, Pinterest, Google Business, YouTube Shorts
-- [ ] AI content generation pipeline (flexible provider: OpenAI, Anthropic, local models)
-- [ ] AI vision: understand images/videos to generate captions, hashtags, CTAs
 - [ ] Per-company brand voice, tone, and language configuration
 - [ ] Multi-language content: 4+ languages with localisation and translation
-- [ ] Content types: product, brand story, educational, seasonal, offer, testimonial, behind-the-scenes
 - [ ] Content repurposing: blog to posts, product to posts, review to testimonial, promo to variants
-- [ ] Platform-specific caption adaptation (length, style, hashtags, CTAs)
 - [ ] Media library management: per-campaign, per-season folders (per-company done Phase 4)
 - [ ] Media processing: add logos, create carousels, quote cards (resize/thumbnails done Phase 4)
 - [ ] Video processing: clip long videos to shorts, add subtitles
@@ -43,8 +45,6 @@ One person can efficiently operate 100+ social posts per week across dozens of a
 - [ ] Enquiry categorisation: sales, complaint, question, partnership, spam
 - [ ] Content gap detection (e.g. "this brand hasn't posted on LinkedIn for 10 days")
 - [ ] Personal dashboard: today's tasks, failures, top performers, companies needing attention, content ready for review, pending replies
-- [ ] AI confidence gating: low-confidence content flagged for human review before publishing
-- [ ] Input workflow: upload images/videos + optional text/source info, AI generates everything
 
 ### Out of Scope
 
@@ -99,6 +99,10 @@ Primary open-source candidates to evaluate:
 | Media storage via MinIO S3 | MinioStorage with forcePathStyle, UploadFactory case 's3', Uppy multipart presigned URLs | Self-hosted media pipeline — Phase 4 |
 | @Cron media processing | 30s cron poller, 5 jobs/batch, per-job error isolation; migrate to Temporal in Phase 6 | Simpler than BullMQ — Phase 4 |
 | Company-scoped media isolation | All queries filter companyId, slug→id in controller, company-scoped S3 paths | Data isolation contract — Phase 4 |
+| Content generation as extension | @social/content-generation extension package in extensions/ workspace — consistent with Phase 1 extension zone pattern | Phase 5 |
+| ContentType as union type | TypeScript union (not Prisma enum) — stored as string in DB, avoids enum migration friction | Phase 5 |
+| Confidence gating per company | AIConfig.confidenceThreshold + requireAllReview — company-level control over auto-approval | Phase 5 |
+| Review queue audit trail | reviewedBy, reviewAction, reviewedAt, originalCaption stored directly on PostVariant — full traceability | Phase 5 |
 
 ---
-*Last updated: 2026-03-10 after Phase 4*
+*Last updated: 2026-03-10 after Phase 5*
