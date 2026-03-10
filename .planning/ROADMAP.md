@@ -82,6 +82,14 @@ Plans:
 
 **Estimated complexity:** HIGH (3 provider implementations, cost tracking, prompt engineering)
 
+**Plans:** 4 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Extension package scaffold, Prisma models, interface contracts, BrandVoice prompt builder
+- [ ] 03-02-PLAN.md — Provider implementations (OpenAI, Anthropic, Ollama)
+- [ ] 03-03-PLAN.md — AIConfig service, cost logger, budget circuit breaker
+- [ ] 03-04-PLAN.md — Provider router, AIServiceModule wiring, AppModule registration
+
 ---
 
 ## Phase 4: Media Library & Processing
