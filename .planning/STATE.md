@@ -4,6 +4,20 @@ milestone: v2.20
 milestone_name: milestone
 status: in_progress
 stopped_at: Completed 04-media-library-processing/04-04-PLAN.md
+last_updated: "2026-03-10T20:55:22.735Z"
+progress:
+  total_phases: 8
+  completed_phases: 4
+  total_plans: 19
+  completed_plans: 19
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
+stopped_at: Completed 04-media-library-processing/04-04-PLAN.md
 last_updated: "2026-03-10T20:27:03.353Z"
 progress:
   total_phases: 8
