@@ -138,12 +138,12 @@ Plans:
 
 **Estimated complexity:** HIGH (AI pipeline + review workflow + UI)
 
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 Plans:
-- [ ] 05-01-PLAN.md — Extension scaffold, Prisma models (ContentPost/PostVariant), type contracts, prompt templates
-- [ ] 05-02-PLAN.md — ContentPostService generation pipeline, confidence gating logic, repository
-- [ ] 05-03-PLAN.md — ReviewQueueService, controllers, ContentGenerationModule wiring, AppModule registration
+- [x] 05-01-PLAN.md — Extension scaffold, Prisma models (ContentPost/PostVariant), type contracts, prompt templates
+- [x] 05-02-PLAN.md — ContentPostService generation pipeline, confidence gating logic, repository
+- [x] 05-03-PLAN.md — ReviewQueueService, controllers, ContentGenerationModule wiring, AppModule registration
 - [ ] 05-04-PLAN.md — Frontend: CreatePostForm input workflow with media picker, platform selector, generation results
 - [ ] 05-05-PLAN.md — Frontend: Review Queue UI with approve/reject/regenerate/edit actions
 

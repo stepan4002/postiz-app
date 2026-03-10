@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 05-content-generation-pipeline/05-02-PLAN.md
-last_updated: "2026-03-10T22:04:23.109Z"
+stopped_at: Completed 05-content-generation-pipeline/05-03-PLAN.md
+last_updated: "2026-03-10T22:13:52Z"
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 24
-  completed_plans: 21
-  percent: 88
+  completed_plans: 22
+  percent: 92
 ---
 
 ---
@@ -183,9 +183,9 @@ progress:
 
 ## Current Phase
 
-**Phase 5: Content Generation Pipeline** — In Progress (2 of 5 plans done)
+**Phase 5: Content Generation Pipeline** — In Progress (3 of 5 plans done)
 
-**Stopped at:** Completed 05-content-generation-pipeline/05-02-PLAN.md
+**Stopped at:** Completed 05-content-generation-pipeline/05-03-PLAN.md
 
 ## Phase Status
 
@@ -293,6 +293,16 @@ None currently.
 | Phase 04 P04 | 35min | 2 tasks | 12 files |
 | Phase 05 P01 | 25min | 2 tasks | 12 files |
 | Phase 05 P02 | 10min | 2 tasks | 7 files |
+| Phase 05 P03 | 6min | 2 tasks | 8 files |
+
+## Key Decisions Made (Phase 05 Plan 03)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| Audit trail on PostVariant | reviewedBy, reviewAction, reviewedAt, originalCaption stored directly on PostVariant fields | 2026-03-10 |
+| reject() post status | Sets to DRAFT (not REJECTED) — post available for re-generation via regenerate() | 2026-03-10 |
+| editVariant sibling check | Reads all variants for same postId after update; updates parent post only if ALL are APPROVED | 2026-03-10 |
+| ContentGenerationModule exports for Phase 6 | ContentPostService + ContentPostRepository + ReviewQueueService exported — scheduling engine needs all three | 2026-03-10 |
 
 ## Key Decisions Made (Phase 05 Plan 01)
 
@@ -313,9 +323,9 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T22:04:23.105Z
-Stopped at: Completed 05-content-generation-pipeline/05-02-PLAN.md
-Resume file: .planning/phases/05-content-generation-pipeline/05-03-PLAN.md
+Last session: 2026-03-10T22:13:52Z
+Stopped at: Completed 05-content-generation-pipeline/05-03-PLAN.md
+Resume file: .planning/phases/05-content-generation-pipeline/05-04-PLAN.md
 
 ## Project Reference
 
