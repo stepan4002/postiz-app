@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 02-credential-management-oauth/02-03-PLAN.md
-last_updated: "2026-03-10T16:53:00.000Z"
+stopped_at: Completed 02-credential-management-oauth/02-05-PLAN.md
+last_updated: "2026-03-10T17:15:00.000Z"
 progress:
   total_phases: 8
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 10
-  completed_plans: 8
-  percent: 80
+  completed_plans: 10
+  percent: 100
 ---
 
 # Project State: Social Command Centre
@@ -23,16 +23,16 @@ progress:
 
 ## Current Phase
 
-**Phase 2: Credential Management & OAuth** — IN PROGRESS (Plans 01, 02, 03, 04 complete)
+**Phase 2: Credential Management & OAuth** — COMPLETE (all 5 plans done)
 
-**Stopped at:** Completed 02-credential-management-oauth/02-03-PLAN.md
+**Stopped at:** Completed 02-credential-management-oauth/02-05-PLAN.md
 
 ## Phase Status
 
 | Phase | Name | Status |
 |-------|------|--------|
 | 1 | Fork & Foundation | complete |
-| 2 | Credential Management & OAuth | in_progress |
+| 2 | Credential Management & OAuth | complete |
 | 3 | AI Service Layer | not_started |
 | 4 | Media Library & Processing | not_started |
 | 5 | Content Generation Pipeline | not_started |
@@ -73,6 +73,9 @@ progress:
 | TokenHealthController module wiring | Controller file created in Plan 04; Plan 03 handles module registration — prevents write conflicts between parallel plans | 2026-03-10 |
 | Factory providers for interface constructors | useFactory pattern in CredentialManagementModule to wire interface-typed services without re-writing; clean testability preserved | 2026-03-10 |
 | OAuth brand context Redis key | brand:{state} TTL 600s alongside standard login:{state} and organization:{state} keys; 600s match social provider auth session lifetime | 2026-03-10 |
+| Native fetch for OAuth start POST | useFetch uses relative URLs; OAuth start redirect needs external social provider URL, so native fetch('/api/credentials/oauth/start') is correct | 2026-03-10 |
+| ENCRYPTION_KEY in Required Settings | TokenEncryptionService throws at NestJS startup if missing — truly required not optional; placed above optional settings in .env.example | 2026-03-10 |
+| META_APP_ID separate from FACEBOOK_APP_ID | Meta Business API (Instagram + Facebook) uses its own app credentials; FACEBOOK_APP_ID kept for upstream Postiz legacy OAuth flow backward compatibility | 2026-03-10 |
 
 ## Blockers
 
@@ -91,7 +94,8 @@ None currently.
 | 02    | 02   | 15min    | 2     | 7     |
 | 02    | 03   | 25min    | 2     | 9     |
 | 02    | 04   | 15min    | 2     | 4     |
+| 02    | 05   | 15min    | 1     | 4     |
 
 ## Next Action
 
-Phase 2 Plan 03 complete (executed out of order after 04). Continue Phase 2: execute 02-05-PLAN.md (final plan in phase 2).
+Phase 2 complete. Begin Phase 3: AI Service Layer.
