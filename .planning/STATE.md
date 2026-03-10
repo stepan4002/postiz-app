@@ -3,13 +3,28 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Phase 4 planned, ready for execution
-last_updated: "2026-03-10T18:54:25.218Z"
+stopped_at: Completed 04-media-library-processing/04-02-PLAN.md
+last_updated: "2026-03-10T19:29:15.382Z"
 progress:
   total_phases: 8
   completed_phases: 3
   total_plans: 19
-  completed_plans: 15
+  completed_plans: 17
+  percent: 89
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
+stopped_at: Completed 04-media-library-processing/04-01-PLAN.md
+last_updated: "2026-03-10T19:28:03.815Z"
+progress:
+  [█████████░] 89%
+  completed_phases: 3
+  total_plans: 19
+  completed_plans: 16
 ---
 
 ---
@@ -110,9 +125,9 @@ progress:
 
 ## Current Phase
 
-**Phase 3: AI Service Layer** — Complete (All 4 plans done)
+**Phase 4: Media Library & Processing** — In Progress (Plan 01 of 4 complete)
 
-**Stopped at:** Phase 4 planned, ready for execution
+**Stopped at:** Completed 04-media-library-processing/04-01-PLAN.md
 
 ## Phase Status
 
@@ -121,7 +136,7 @@ progress:
 | 1 | Fork & Foundation | complete |
 | 2 | Credential Management & OAuth | complete |
 | 3 | AI Service Layer | complete |
-| 4 | Media Library & Processing | not_started |
+| 4 | Media Library & Processing | in_progress |
 | 5 | Content Generation Pipeline | not_started |
 | 6 | Scheduling & Publishing Engine | not_started |
 | 7 | Analytics & Dashboard | not_started |
@@ -175,6 +190,9 @@ progress:
 | AIProviderRouter PrismaService injection | AIProviderRouter injects PrismaService directly (as any) for BrandVoice lookup — consistent with (this.prisma as any) pattern from Plan 03 | 2026-03-10 |
 | Module test with explicit providers | AIServiceModule test uses explicit provider list instead of Test.createTestingModule({ imports }) — @Global PrismaService not available in isolated test context | 2026-03-10 |
 | AiConfigController double registration | Controller in both controllers[] and providers[] via useFactory in AIServiceModule — NestJS requires both for routing + DI injection | 2026-03-10 |
+| forcePathStyle: true in MinioStorage | S3Client requires forcePathStyle: true for MinIO — prevents virtual-hosted-style URL generation (bucket.endpoint.com) which MinIO doesn't support without custom DNS | 2026-03-10 |
+| MINIO_* env vars distinct from S3_* | MINIO_ENDPOINT/ACCESS_KEY/SECRET_KEY/BUCKET/PUBLIC_URL kept separate from legacy S3_* vars — clear Phase 4 config separation, no ambiguity | 2026-03-10 |
+| uploadBufferToMinio standalone export | Exported as utility function (not method) — Plan 02/03 thumbnail and variant pipelines use it directly with S3Client without full IUploadProvider | 2026-03-10 |
 
 ## Blockers
 
@@ -199,6 +217,8 @@ None currently.
 | 03    | 02   | 20min    | 2     | 7     |
 | 03    | 03   | 15min    | 2     | 7     |
 | 03    | 04   | 9min     | 3     | 9     |
+| Phase 04 P01 | 7min | 2 tasks | 14 files |
+| Phase 04 P02 | 25min | 2 tasks | 8 files |
 
 ## Key Decisions Made (Plan 06)
 
@@ -210,16 +230,16 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T18:54:25.215Z
+Last session: 2026-03-10T19:29:15.378Z
 Stopped at: Completed 03-ai-service-layer/03-04-PLAN.md
-Resume file: .planning/phases/04-media-library-processing/04-01-PLAN.md
+Resume file: None
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-03-10)
 
 **Core value:** One person can efficiently operate 100+ social posts per week across dozens of accounts and 4+ languages
-**Current focus:** Phase 3 — AI Service Layer
+**Current focus:** Phase 4 — Media Library & Processing
 
 ## Next Action
 
