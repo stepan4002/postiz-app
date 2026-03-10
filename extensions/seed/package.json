@@ -1,0 +1,15 @@
+{
+  "name": "@social/seed",
+  "version": "1.0.0",
+  "description": "Database seed scripts for Social Command Centre dev/test data",
+  "main": "seed.ts",
+  "license": "AGPL-3.0",
+  "private": true,
+  "dependencies": {
+    "@prisma/client": "6.5.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "5.5.4"
+  }
+}

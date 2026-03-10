@@ -1,3 +1,4 @@
 packages:
   - apps/*
   - libraries/*
+  - extensions/**    # CUSTOM: extension zone for Social Command Centre packages — see DIVERGENCE.md

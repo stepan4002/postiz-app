@@ -1,0 +1,58 @@
+# DIVERGENCE.md — Upstream Modification Log
+
+This file tracks every modification made to upstream Postiz files.
+All custom code lives in `extensions/` — upstream files are modified only when absolutely necessary.
+
+**Format:**
+- **Phase:** Which project phase introduced the change
+- **Date:** When the change was made
+- **Change:** What was modified and how
+- **Reason:** Why the upstream file had to be touched
+- **Upstream risk:** Risk level if upstream changes the same area
+- **Watch for:** What to check when merging upstream updates
+
+---
+
+## pnpm-workspace.yaml
+
+- **Phase:** 1
+- **Date:** 2026-03-10
+- **Change:** Added `extensions/**` to the `packages` array alongside `apps/*` and `libraries/*`
+- **Reason:** pnpm workspaces require all package roots to be listed; adding `extensions/` as the custom code directory requires this one-line addition
+- **Upstream risk:** LOW — upstream rarely modifies pnpm-workspace.yaml; adding back our line after merge is trivial
+- **Watch for:** Upstream adding new package directories that might conflict with glob ordering
+
+---
+
+## tsconfig.base.json
+
+- **Phase:** 1
+- **Date:** 2026-03-10
+- **Change:** Added `@social/multi-company` and `@social/company-context` path aliases to `compilerOptions.paths`
+- **Reason:** TypeScript path aliases enable `import { ... } from '@social/multi-company'` across the monorepo without fragile relative paths
+- **Upstream risk:** LOW — upstream adds new `@gitroom/*` path entries; simply re-add `@social/*` entries after merge
+- **Watch for:** Upstream restructuring the `paths` object or changing `baseUrl`
+
+---
+
+## .env.example
+
+- **Phase:** 1
+- **Date:** 2026-03-10
+- **Change:** Added S3/MinIO environment variables (`S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_REGION`) and updated `STORAGE_PROVIDER` comment
+- **Reason:** MinIO is not included in upstream Postiz by default; Phase 4 media pipeline requires S3-compatible storage; documenting env vars here ensures developers know what to set
+- **Upstream risk:** LOW — upstream may add new env vars but not the same S3 variable names
+- **Watch for:** Upstream adding official S3/MinIO support (PR #1125) which may use different variable names
+
+---
+
+## package.json
+
+- **Phase:** 1
+- **Date:** 2026-03-10
+- **Change:** Modified `dev:docker` script path to `docker/docker-compose.dev.yaml`; added `dev:docker:down`, `prisma:migrate`, `prisma:generate`, `prisma:seed` convenience scripts
+- **Reason:** Custom Docker Compose lives in `docker/` subdirectory (not root); additional prisma migrate commands needed for proper migration history; seed script references extension zone
+- **Upstream risk:** MEDIUM — upstream regularly modifies package.json scripts; re-apply our script additions after merge
+- **Watch for:** Upstream changing existing `dev:docker` script, adding conflicting script names, or changing prisma version used in scripts
+
+---

@@ -32,7 +32,9 @@
       "@gitroom/react/*": ["libraries/react-shared-libraries/src/*"],
       "@gitroom/plugins/*": ["libraries/plugins/src/*"],
       "@gitroom/orchestrator/*": ["apps/orchestrator/src/*"],
-      "@gitroom/extension/*": ["apps/extension/src/*"]
+      "@gitroom/extension/*": ["apps/extension/src/*"],
+      "@social/multi-company": ["extensions/multi-company/src/index.ts"],
+      "@social/company-context": ["extensions/company-context/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

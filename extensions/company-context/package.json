@@ -1,0 +1,14 @@
+{
+  "name": "@social/company-context",
+  "version": "1.0.0",
+  "description": "Company context NestJS module: Prisma $extends factory and CLS middleware for per-request company scoping",
+  "main": "src/index.ts",
+  "license": "AGPL-3.0",
+  "private": true,
+  "dependencies": {
+    "@nestjs/common": "^10.0.2",
+    "@nestjs/core": "^10.0.2",
+    "nestjs-cls": "^4.0.0",
+    "reflect-metadata": "^0.1.13"
+  }
+}
