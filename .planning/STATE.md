@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 03-ai-service-layer/03-03-PLAN.md
+last_updated: "2026-03-10T17:59:48.854Z"
+progress:
+  total_phases: 8
+  completed_phases: 2
+  total_plans: 15
+  completed_plans: 13
+  percent: 87
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 03-ai-service-layer/03-01-PLAN.md
 last_updated: "2026-03-10T17:50:18.022Z"
 progress:
-  total_phases: 8
+  [█████████░] 87%
   completed_phases: 2
   total_plans: 15
   completed_plans: 12
@@ -51,9 +66,9 @@ progress:
 
 ## Current Phase
 
-**Phase 3: AI Service Layer** — In Progress (Plan 01 of 4 complete)
+**Phase 3: AI Service Layer** — In Progress (Plan 03 of 4 complete)
 
-**Stopped at:** Completed 03-ai-service-layer/03-01-PLAN.md
+**Stopped at:** Completed 03-ai-service-layer/03-03-PLAN.md
 
 ## Phase Status
 
@@ -108,6 +123,9 @@ progress:
 | ollama/* prefix matching for cost | calculateCostUsd checks model.startsWith('ollama/') as fallback — covers all Ollama variants without enumerating them, returns 0 | 2026-03-10 |
 | English omitted from brand voice prompt | Language directive only emitted for non-English (language !== 'en') — English is the assumed default, reduces token usage | 2026-03-10 |
 | AIConfig unique per company | AIConfig has @unique on companyId (one config per company); AICostLog is append-only with no updatedAt field | 2026-03-10 |
+| Non-blocking AICostLogger | AICostLogger catches all DB errors and console.warns — cost logging must never block AI call flow | 2026-03-10 |
+| Budget UTC weekly window | BudgetCircuitBreaker uses dayjs().utc().startOf('week') for consistent UTC window preventing timezone-dependent resets | 2026-03-10 |
+| Null budget = unlimited | weeklyBudgetUsd: null = unlimited — early return avoids unnecessary aggregate query | 2026-03-10 |
 
 ## Blockers
 
@@ -129,6 +147,7 @@ None currently.
 | 02    | 05   | 15min    | 1     | 4     |
 | 02    | 06   | 10min    | 1     | 1     |
 | 03    | 01   | 25min    | 2     | 15    |
+| 03    | 03   | 15min    | 2     | 7     |
 
 ## Key Decisions Made (Plan 06)
 
@@ -140,9 +159,9 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T17:55:00.000Z
-Stopped at: Completed 03-ai-service-layer/03-01-PLAN.md
-Resume file: .planning/phases/03-ai-service-layer/03-02-PLAN.md
+Last session: 2026-03-10T18:08:00.000Z
+Stopped at: Completed 03-ai-service-layer/03-03-PLAN.md
+Resume file: .planning/phases/03-ai-service-layer/03-04-PLAN.md
 
 ## Project Reference
 
@@ -153,4 +172,4 @@ See: .planning/PROJECT.md (updated 2026-03-10)
 
 ## Next Action
 
-Execute Phase 3 Plan 02: AI Provider Implementations (OpenAI, Anthropic, Ollama).
+Execute Phase 3 Plan 04: AIServiceModule — wire AIConfigService, AICostLogger, BudgetCircuitBreaker, and provider router into NestJS module.
