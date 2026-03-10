@@ -22,12 +22,12 @@ Deliver a working self-hosted system where one operator can: connect social acco
 - **R1.5:** [x] Health checks on all Docker services with restart policies — completed 01-01
 
 ### R2: Multi-Company Data Model
-- **R2.1:** Company entity with name, slug, settings, timezone, languages
-- **R2.2:** Brand entity (1-N per Company) with brand identity fields
-- **R2.3:** BrandVoice entity per Brand: tone descriptors, target audience, preferred hashtags, blacklisted words, sample posts, language
-- **R2.4:** SocialAccount entity per Brand with platform type and reference to PlatformCredential
-- **R2.5:** `company_id` foreign key on all company-owned tables (posts, media, analytics, credentials, schedules)
-- **R2.6:** Row-level scoping — all queries filtered by `company_id`; no cross-company data leakage
+- **R2.1:** [x] Company entity with name, slug, settings, timezone, languages — completed 01-02
+- **R2.2:** [x] Brand entity (1-N per Company) with brand identity fields — completed 01-02
+- **R2.3:** [x] BrandVoice entity per Brand: tone descriptors, target audience, preferred hashtags, blacklisted words, sample posts, language — completed 01-02
+- **R2.4:** [x] SocialAccount entity per Brand with platform type and reference to PlatformCredential — completed 01-02
+- **R2.5:** [x] `company_id` foreign key on all company-owned tables — Phase 1: Organization.companyId + Brand/BrandVoice/SocialAccount; remaining upstream tables (posts, media, analytics, credentials, schedules) deferred to their respective phases per plan design — completed 01-02 (partial, by design)
+- **R2.6:** [x] Row-level scoping — all queries filtered by `company_id`; Prisma $extends factory auto-injects companyId into all Brand/BrandVoice/SocialAccount queries — completed 01-02
 - **R2.7:** Company switcher in UI — all views scoped to selected company
 - **R2.8:** Automated isolation tests: Company A cannot see Company B's data
 
