@@ -12,7 +12,13 @@ import {
   DeleteObjectCommand,
   HeadBucketCommand,
   CreateBucketCommand,
+  CreateMultipartUploadCommand,
+  UploadPartCommand,
+  ListPartsCommand,
+  CompleteMultipartUploadCommand,
+  AbortMultipartUploadCommand,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import mime from 'mime-types';
 import { IUploadProvider } from '@gitroom/nestjs-libraries/upload/upload.interface';
 import { makeId } from '@gitroom/nestjs-libraries/services/make.is';
@@ -164,6 +170,91 @@ export class MinioStorage implements IUploadProvider {
    */
   get client(): S3Client {
     return this._client;
+  }
+
+  /**
+   * Initiate a multipart upload for the Uppy S3 multipart flow.
+   * Returns { uploadId, key } consumed by Uppy's createMultipartUpload callback.
+   */
+  async createMultipartUpload(
+    key: string,
+    contentType: string
+  ): Promise<{ uploadId: string; key: string }> {
+    const command = new CreateMultipartUploadCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      ContentType: contentType,
+    });
+    const response = await this._client.send(command);
+    return {
+      uploadId: response.UploadId!,
+      key: response.Key!,
+    };
+  }
+
+  /**
+   * Generate a presigned URL for uploading a single part.
+   * Returns { url } consumed by Uppy's signPart callback.
+   */
+  async signPart(
+    key: string,
+    uploadId: string,
+    partNumber: number
+  ): Promise<{ url: string }> {
+    const command = new UploadPartCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      UploadId: uploadId,
+      PartNumber: partNumber,
+    });
+    const url = await getSignedUrl(this._client, command, { expiresIn: 3600 });
+    return { url };
+  }
+
+  /**
+   * List parts already uploaded for a multipart upload.
+   * Returns array of part objects consumed by Uppy's listParts callback.
+   */
+  async listParts(key: string, uploadId: string): Promise<any[]> {
+    const command = new ListPartsCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      UploadId: uploadId,
+    });
+    const response = await this._client.send(command);
+    return response.Parts ?? [];
+  }
+
+  /**
+   * Complete a multipart upload.
+   * Returns { location } (the public URL of the assembled object).
+   */
+  async completeMultipartUpload(
+    key: string,
+    uploadId: string,
+    parts: Array<{ PartNumber: number; ETag: string }>
+  ): Promise<{ location: string }> {
+    const command = new CompleteMultipartUploadCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      UploadId: uploadId,
+      MultipartUpload: { Parts: parts },
+    });
+    await this._client.send(command);
+    const location = `${this.publicUrl}/${key}`;
+    return { location };
+  }
+
+  /**
+   * Abort an in-progress multipart upload, freeing stored parts.
+   */
+  async abortMultipartUpload(key: string, uploadId: string): Promise<void> {
+    const command = new AbortMultipartUploadCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      UploadId: uploadId,
+    });
+    await this._client.send(command);
   }
 }
 

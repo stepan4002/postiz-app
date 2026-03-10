@@ -25,6 +25,8 @@ import { MultiCompanyModule } from '@social/multi-company';
 import { CredentialManagementModule } from '@social/credential-management';
 // SOCIAL COMMAND CENTRE -- Phase 3: AI Service Layer
 import { AIServiceModule } from '@social/ai-service';
+// SOCIAL COMMAND CENTRE — Phase 4: Media Library & Processing
+import { MediaLibraryModule } from '@social/media-library';
 
 @Global()
 @Module({
@@ -40,6 +42,8 @@ import { AIServiceModule } from '@social/ai-service';
     CredentialManagementModule,
     // SOCIAL COMMAND CENTRE -- Phase 3: AI Service Layer
     AIServiceModule,
+    // SOCIAL COMMAND CENTRE — Phase 4: Media Library & Processing
+    MediaLibraryModule,
     ApiModule,
     PublicApiModule,
     AgentModule,

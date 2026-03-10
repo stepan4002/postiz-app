@@ -134,6 +134,28 @@ All custom code lives in `extensions/` — upstream files are modified only when
 
 ---
 
+## apps/backend/src/app.module.ts (Phase 4 Plan 04 addition)
+
+- **Phase:** 4 (Plan 04)
+- **Date:** 2026-03-10
+- **Change:** Added `import { MediaLibraryModule } from '@social/media-library'` and added `MediaLibraryModule` to the `@Module` imports array after `AIServiceModule`
+- **Reason:** MediaLibraryModule registers all media library services (MinioStorage, CompanyMediaService, CompanyMediaRepository, MediaProcessingService, MediaProcessingJob, PlatformMediaValidator) and controllers (CompanyMediaController) for Phase 4 functionality
+- **Upstream risk:** MEDIUM — upstream regularly adds imports to AppModule; re-add our MediaLibraryModule import after merge; ensure it stays after AIServiceModule
+- **Watch for:** Upstream adding conflicting media or storage modules; upstream adding routes that conflict with /api/companies/:slug/media
+
+---
+
+## libraries/react-shared-libraries/src/helpers/uppy.upload.ts (Phase 4 Plan 04 addition)
+
+- **Phase:** 4 (Plan 04)
+- **Date:** 2026-03-10
+- **Change:** Added `case 's3'` to `getUppyUploadPlugin()` switch statement — uses same `AwsS3Multipart` plugin pattern as the `cloudflare` case but points to `/companies/${companySlug}/media/multipart/:endpoint` routes
+- **Reason:** Uppy needs an S3-compatible multipart upload path for MinIO; the `s3` case mirrors the cloudflare case's presigned URL flow but uses company-scoped MinIO endpoints
+- **Upstream risk:** LOW — upstream may update the switch statement but will not conflict with `case 's3'`; re-apply after merge by adding the s3 case
+- **Watch for:** Upstream adding their own S3/MinIO Uppy integration with a different case name
+
+---
+
 ## apps/frontend/src/components/new-layout/layout.component.tsx
 
 - **Phase:** 1 (Plan 05)

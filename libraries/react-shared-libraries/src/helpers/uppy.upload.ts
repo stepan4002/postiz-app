@@ -18,12 +18,33 @@ const fetchUploadApiEndpoint = async (
   return res.json();
 };
 
+const fetchS3MultipartEndpoint = async (
+  fetch: any,
+  companySlug: string,
+  endpoint: string,
+  data: any
+) => {
+  const res = await fetch(
+    `/companies/${companySlug}/media/multipart/${endpoint}`,
+    {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return res.json();
+};
+
 // Define the factory to return appropriate Uppy configuration
 export const getUppyUploadPlugin = (
   provider: string,
   fetch: any,
   backendUrl: string,
-  transloadit: string[] = []
+  transloadit: string[] = [],
+  companySlug: string = ''
 ) => {
   switch (provider) {
     case 'transloadit':
@@ -90,6 +111,65 @@ export const getUppyUploadPlugin = (
               file,
               ...props,
             }),
+        },
+      };
+    case 's3':
+      // MinIO S3-compatible multipart upload via company-scoped presigned URL endpoints.
+      // Mirrors the cloudflare case pattern with AwsS3Multipart plugin.
+      return {
+        plugin: AwsS3Multipart,
+        options: {
+          shouldUseMultipart: (file: any) => true,
+          endpoint: '',
+          createMultipartUpload: async (file: any) => {
+            let fileHash = '';
+            const contentType = file.type;
+
+            // Skip hash calculation for files larger than 100MB
+            if (file.size <= 100 * 1024 * 1024) {
+              try {
+                const arrayBuffer = await new Response(file.data).arrayBuffer();
+                fileHash = sha256(Buffer.from(arrayBuffer));
+              } catch (error) {
+                console.warn(
+                  'Failed to calculate file hash, proceeding without hash:',
+                  error
+                );
+                fileHash = '';
+              }
+            }
+
+            return fetchS3MultipartEndpoint(
+              fetch,
+              companySlug,
+              'create-multipart-upload',
+              { file, fileHash, contentType }
+            );
+          },
+          listParts: (file: any, props: any) =>
+            fetchS3MultipartEndpoint(fetch, companySlug, 'list-parts', {
+              file,
+              ...props,
+            }),
+          signPart: (file: any, props: any) =>
+            fetchS3MultipartEndpoint(fetch, companySlug, 'sign-part', {
+              file,
+              ...props,
+            }),
+          abortMultipartUpload: (file: any, props: any) =>
+            fetchS3MultipartEndpoint(
+              fetch,
+              companySlug,
+              'abort-multipart-upload',
+              { file, ...props }
+            ),
+          completeMultipartUpload: (file: any, props: any) =>
+            fetchS3MultipartEndpoint(
+              fetch,
+              companySlug,
+              'complete-multipart-upload',
+              { file, ...props }
+            ),
         },
       };
     case 'local':

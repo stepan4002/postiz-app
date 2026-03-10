@@ -16,6 +16,13 @@
  *   GET    /companies/:companySlug/media/:mediaId           — get single media with variants
  *   DELETE /companies/:companySlug/media/:mediaId           — soft-delete media
  *   POST   /companies/:companySlug/media/:mediaId/process   — queue variant generation
+ *
+ * Uppy S3 Multipart endpoints (used by uppy.upload.ts 's3' case):
+ *   POST   /companies/:companySlug/media/multipart/create-multipart-upload
+ *   POST   /companies/:companySlug/media/multipart/list-parts
+ *   POST   /companies/:companySlug/media/multipart/sign-part
+ *   POST   /companies/:companySlug/media/multipart/abort-multipart-upload
+ *   POST   /companies/:companySlug/media/multipart/complete-multipart-upload
  */
 import {
   Body,
@@ -36,6 +43,7 @@ import { memoryStorage } from 'multer';
 import { CompanyMediaService } from './company-media.service';
 import { UploadMediaDto } from './dtos/upload-media.dto';
 import { ListMediaQueryDto } from './dtos/list-media-query.dto';
+import { MinioStorage } from '../storage/minio.storage';
 
 @Controller('companies/:companySlug/media')
 export class CompanyMediaController {
@@ -43,7 +51,8 @@ export class CompanyMediaController {
 
   constructor(
     private readonly _companyMediaService: CompanyMediaService,
-    private readonly _prisma: any
+    private readonly _prisma: any,
+    private readonly _minioStorage: MinioStorage
   ) {}
 
   /**
@@ -153,6 +162,94 @@ export class CompanyMediaController {
       jobId: job.id,
       status: 'queued' as const,
     };
+  }
+
+  // -------------------------------------------------------------------------
+  // Uppy S3 Multipart endpoints
+  // Used by libraries/react-shared-libraries/src/helpers/uppy.upload.ts 's3' case
+  // fetchUploadApiEndpoint calls /companies/:companySlug/media/multipart/:endpoint
+  // -------------------------------------------------------------------------
+
+  /**
+   * POST /companies/:companySlug/media/multipart/create-multipart-upload
+   *
+   * Initiates a multipart upload in MinIO and returns { uploadId, key }.
+   */
+  @Post('multipart/create-multipart-upload')
+  async multipartCreateUpload(
+    @Param('companySlug') companySlug: string,
+    @Body('file') file: any,
+    @Body('fileHash') fileHash: string,
+    @Body('contentType') contentType: string
+  ) {
+    await this._resolveCompany(companySlug);
+    const { makeId } = await import('@gitroom/nestjs-libraries/services/make.is');
+    const ext = file?.name ? file.name.split('.').pop() || 'bin' : 'bin';
+    const key = `${makeId(20)}.${ext}`;
+    return this._minioStorage.createMultipartUpload(key, contentType || 'application/octet-stream');
+  }
+
+  /**
+   * POST /companies/:companySlug/media/multipart/list-parts
+   *
+   * Lists already-uploaded parts for a multipart upload.
+   */
+  @Post('multipart/list-parts')
+  async multipartListParts(
+    @Param('companySlug') companySlug: string,
+    @Body('key') key: string,
+    @Body('uploadId') uploadId: string
+  ) {
+    await this._resolveCompany(companySlug);
+    return this._minioStorage.listParts(key, uploadId);
+  }
+
+  /**
+   * POST /companies/:companySlug/media/multipart/sign-part
+   *
+   * Returns a presigned URL to upload a single part.
+   */
+  @Post('multipart/sign-part')
+  async multipartSignPart(
+    @Param('companySlug') companySlug: string,
+    @Body('key') key: string,
+    @Body('uploadId') uploadId: string,
+    @Body('partNumber') partNumber: number
+  ) {
+    await this._resolveCompany(companySlug);
+    return this._minioStorage.signPart(key, uploadId, partNumber);
+  }
+
+  /**
+   * POST /companies/:companySlug/media/multipart/abort-multipart-upload
+   *
+   * Aborts a multipart upload and frees uploaded parts.
+   */
+  @Post('multipart/abort-multipart-upload')
+  async multipartAbortUpload(
+    @Param('companySlug') companySlug: string,
+    @Body('key') key: string,
+    @Body('uploadId') uploadId: string
+  ) {
+    await this._resolveCompany(companySlug);
+    return this._minioStorage.abortMultipartUpload(key, uploadId);
+  }
+
+  /**
+   * POST /companies/:companySlug/media/multipart/complete-multipart-upload
+   *
+   * Completes the multipart upload, assembles the object in MinIO.
+   * Returns the public URL as { location }.
+   */
+  @Post('multipart/complete-multipart-upload')
+  async multipartCompleteUpload(
+    @Param('companySlug') companySlug: string,
+    @Body('key') key: string,
+    @Body('uploadId') uploadId: string,
+    @Body('parts') parts: Array<{ PartNumber: number; ETag: string }>
+  ) {
+    await this._resolveCompany(companySlug);
+    return this._minioStorage.completeMultipartUpload(key, uploadId, parts);
   }
 
   /**

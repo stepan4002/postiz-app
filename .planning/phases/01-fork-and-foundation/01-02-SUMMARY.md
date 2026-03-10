@@ -153,6 +153,16 @@ This will:
 - CompanyContextMiddleware is active on all routes — company slug in URL or `x-company-slug` header is enough to scope any request
 - DIVERGENCE.md tracks all changes for upstream merge safety
 
+## Self-Check: PASSED
+
+- FOUND: extensions/company-context/src/prisma-company.factory.ts
+- FOUND: extensions/company-context/src/company-context.middleware.ts
+- FOUND: extensions/company-context/src/company-context.module.ts
+- FOUND: libraries/nestjs-libraries/src/database/prisma/migrations/20260310000000_company_hierarchy/migration.sql
+- FOUND: .planning/phases/01-fork-and-foundation/01-02-SUMMARY.md
+- FOUND: commit 2b741b7e (feat(01-02): add Company hierarchy models)
+- FOUND: commit 40b55f35 (feat(01-02): implement company-context middleware)
+
 ---
 *Phase: 01-fork-and-foundation*
 *Completed: 2026-03-10*
