@@ -4,6 +4,20 @@ milestone: v2.20
 milestone_name: milestone
 status: in_progress
 stopped_at: Completed 03-ai-service-layer/03-04-PLAN.md
+last_updated: "2026-03-10T18:22:40.557Z"
+progress:
+  total_phases: 8
+  completed_phases: 3
+  total_plans: 15
+  completed_plans: 15
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
+stopped_at: Completed 03-ai-service-layer/03-04-PLAN.md
 last_updated: "2026-03-10T18:15:57.891Z"
 progress:
   total_phases: 8
