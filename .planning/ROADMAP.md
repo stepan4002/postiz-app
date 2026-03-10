@@ -85,10 +85,10 @@ Plans:
 **Plans:** 4/4 plans complete
 
 Plans:
-- [ ] 03-01-PLAN.md — Extension package scaffold, Prisma models, interface contracts, BrandVoice prompt builder
-- [ ] 03-02-PLAN.md — Provider implementations (OpenAI, Anthropic, Ollama)
-- [ ] 03-03-PLAN.md — AIConfig service, cost logger, budget circuit breaker
-- [ ] 03-04-PLAN.md — Provider router, AIServiceModule wiring, AppModule registration
+- [x] 03-01-PLAN.md — Extension package scaffold, Prisma models, interface contracts, BrandVoice prompt builder
+- [x] 03-02-PLAN.md — Provider implementations (OpenAI, Anthropic, Ollama)
+- [x] 03-03-PLAN.md — AIConfig service, cost logger, budget circuit breaker
+- [x] 03-04-PLAN.md — Provider router, AIServiceModule wiring, AppModule registration
 
 ---
 
@@ -114,7 +114,7 @@ Plans:
 - [x] 04-01-PLAN.md — Extension scaffold, MinIO storage provider, Prisma schema, type contracts
 - [x] 04-02-PLAN.md — Company-scoped media upload service with thumbnail + metadata extraction
 - [x] 04-03-PLAN.md — Async variant generation worker, cron job poller, platform validation
-- [ ] 04-04-PLAN.md — MediaLibraryModule wiring, frontend media library UI, end-to-end verification
+- [x] 04-04-PLAN.md — MediaLibraryModule wiring, frontend media library UI, end-to-end verification
 
 ---
 
@@ -137,6 +137,15 @@ Plans:
 **Requirements covered:** R5.1-R5.7, R6.1-R6.5
 
 **Estimated complexity:** HIGH (AI pipeline + review workflow + UI)
+
+**Plans:** 5 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Extension scaffold, Prisma models (ContentPost/PostVariant), type contracts, prompt templates
+- [ ] 05-02-PLAN.md — ContentPostService generation pipeline, confidence gating logic, repository
+- [ ] 05-03-PLAN.md — ReviewQueueService, controllers, ContentGenerationModule wiring, AppModule registration
+- [ ] 05-04-PLAN.md — Frontend: CreatePostForm input workflow with media picker, platform selector, generation results
+- [ ] 05-05-PLAN.md — Frontend: Review Queue UI with approve/reject/regenerate/edit actions
 
 ---
 
