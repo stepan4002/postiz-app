@@ -30,7 +30,7 @@ Plans:
 - [x] 01-02-PLAN.md — Prisma schema (Company/Brand/BrandVoice/SocialAccount) and company-context middleware
 - [x] 01-03-PLAN.md — Company/Brand/BrandVoice CRUD API and seed data
 - [x] 01-04-PLAN.md — Automated company data isolation tests (TDD)
-- [ ] 01-05-PLAN.md — Company switcher UI component with URL-scoped routing
+- [x] 01-05-PLAN.md — Company switcher UI component with URL-scoped routing
 
 ---
 
@@ -41,15 +41,24 @@ Plans:
 **Scope:**
 - PlatformCredential entity with AES-256 encrypted token storage
 - OAuth connect flows: Meta (Instagram + Facebook), LinkedIn, X
-- Account ↔ Brand ↔ Company linking in UI
+- Account <-> Brand <-> Company linking in UI
 - Proactive token refresh background job (refresh at 75% lifetime)
 - Token health tracking: last refreshed, expires at, failure count
-- Meta parent-child token management (user token → page tokens)
+- Meta parent-child token management (user token -> page tokens)
 - Token health alerts surfaced in dashboard
 
 **Requirements covered:** R3.1-R3.6, NF1.1
 
 **Estimated complexity:** HIGH (4 OAuth providers, token lifecycle management)
+
+**Plans:** 5 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Extension package scaffold, AES-256-GCM encryption service, Prisma migration
+- [ ] 02-02-PLAN.md — Token health state calculator and proactive refresh cron job
+- [ ] 02-03-PLAN.md — OAuth brand-context controller and CredentialManagementModule wiring
+- [ ] 02-04-PLAN.md — Token health API endpoint and dashboard alert UI components
+- [ ] 02-05-PLAN.md — Brand connect panel UI and end-to-end verification
 
 ---
 
