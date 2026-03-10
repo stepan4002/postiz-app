@@ -8,6 +8,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ============================================================================
+// SOCIAL COMMAND CENTRE — Custom Models (Phase 1, Plan 02)
+// All models below are additions to the upstream Postiz schema.
+// Do not remove or modify upstream models above this block.
+// ============================================================================
+
+model Company {
+  id              String         @id @default(uuid())
+  name            String
+  slug            String         @unique
+  timezone        String         @default("UTC")
+  defaultLanguage String         @default("en")
+  industry        String?
+  website         String?
+  logo            String?
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  brands          Brand[]
+  organizations   Organization[]
+}
+
+model Brand {
+  id             String          @id @default(uuid())
+  companyId      String
+  name           String
+  slug           String
+  logo           String?
+  description    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  brandVoice     BrandVoice?
+  socialAccounts SocialAccount[]
+
+  @@unique([companyId, slug])
+}
+
+model BrandVoice {
+  id                String   @id @default(uuid())
+  brandId           String   @unique
+  tone              String[]
+  targetAudience    String?
+  preferredHashtags String[] @default([])
+  blacklistedWords  String[] @default([])
+  samplePosts       String[] @default([])
+  language          String   @default("en")
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  brand             Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+}
+
+model SocialAccount {
+  id            String   @id @default(uuid())
+  brandId       String
+  platform      String
+  externalId    String?
+  displayName   String?
+  integrationId String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  brand         Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@unique([brandId, platform])
+}
+
+// ============================================================================
+// END SOCIAL COMMAND CENTRE Custom Models
+// ============================================================================
+
 model Organization {
   id                String              @id @default(uuid())
   name              String
@@ -20,6 +91,9 @@ model Organization {
   allowTrial        Boolean             @default(false)
   isTrailing        Boolean             @default(false)
   shortlink         ShortLinkPreference @default(ASK)
+  // SOCIAL COMMAND CENTRE — companyId FK (Phase 1, Plan 02; nullable for migration safety)
+  companyId         String?
+  company           Company?            @relation(fields: [companyId], references: [id])
   autoPost          AutoPost[]
   Comments          Comments[]
   credits           Credits[]
@@ -47,6 +121,7 @@ model Organization {
   @@index([apiKey])
   @@index([streakSince])
   @@index([paymentId])
+  @@index([companyId])
 }
 
 model Tags {

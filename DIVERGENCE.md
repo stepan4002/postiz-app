@@ -56,3 +56,14 @@ All custom code lives in `extensions/` — upstream files are modified only when
 - **Watch for:** Upstream changing existing `dev:docker` script, adding conflicting script names, or changing prisma version used in scripts
 
 ---
+
+## libraries/nestjs-libraries/src/database/prisma/schema.prisma
+
+- **Phase:** 1 (Plan 02)
+- **Date:** 2026-03-10
+- **Change:** Added Company, Brand, BrandVoice, SocialAccount models in a clearly marked block above the Organization model; added nullable `companyId` FK field + index to the Organization model; created initial migration `20260310000000_company_hierarchy`
+- **Reason:** Multi-company hierarchy required for data isolation — Company and Brand hierarchy are the foundation of all subsequent features; companyId on Organization links existing Postiz workspaces to the new company layer
+- **Upstream risk:** MEDIUM — upstream may add new models or modify existing ones; our models are in a self-contained named block; Organization field addition is the only inline change and is at the bottom of the field list to minimize merge conflicts
+- **Watch for:** Upstream adding any field named `companyId` to Organization; upstream adding models with names that conflict with Company/Brand/BrandVoice/SocialAccount; upstream schema format changes
+
+---
