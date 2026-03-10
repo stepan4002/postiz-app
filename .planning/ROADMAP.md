@@ -108,12 +108,12 @@ Plans:
 
 **Estimated complexity:** MEDIUM
 
-**Plans:** 2/4 plans executed
+**Plans:** 3/4 plans executed
 
 Plans:
-- [ ] 04-01-PLAN.md — Extension scaffold, MinIO storage provider, Prisma schema, type contracts
-- [ ] 04-02-PLAN.md — Company-scoped media upload service with thumbnail + metadata extraction
-- [ ] 04-03-PLAN.md — Async variant generation worker, cron job poller, platform validation
+- [x] 04-01-PLAN.md — Extension scaffold, MinIO storage provider, Prisma schema, type contracts
+- [x] 04-02-PLAN.md — Company-scoped media upload service with thumbnail + metadata extraction
+- [x] 04-03-PLAN.md — Async variant generation worker, cron job poller, platform validation
 - [ ] 04-04-PLAN.md — MediaLibraryModule wiring, frontend media library UI, end-to-end verification
 
 ---

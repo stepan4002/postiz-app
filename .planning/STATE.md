@@ -125,9 +125,9 @@ progress:
 
 ## Current Phase
 
-**Phase 4: Media Library & Processing** — In Progress (Plan 02 of 4 complete)
+**Phase 4: Media Library & Processing** — In Progress (Plan 03 of 4 complete)
 
-**Stopped at:** Completed 04-media-library-processing/04-02-PLAN.md
+**Stopped at:** Completed 04-media-library-processing/04-03-PLAN.md
 
 ## Phase Status
 
@@ -196,6 +196,10 @@ progress:
 | uuid pre-generation for mediaId | Generate mediaId before DB insert so MinIO key includes mediaId prefix without two-step create-then-update flow | 2026-03-10 |
 | CompanyMediaRepository isolation contract | findByCompany always filters companyId + deletedAt IS NULL; tag filtering via Prisma { has: tag } on String[]; isolation is explicit and testable | 2026-03-10 |
 | S3Client inline in service uploadAndRecord | S3Client created inside service method (not injected) to allow jest.mock(uploadBufferToMinio) to intercept uploads cleanly in unit tests | 2026-03-10 |
+| transformToByteArray for S3 download | AWS SDK v3 GetObjectCommand Body uses transformToByteArray() to convert stream to Uint8Array/Buffer for sharp input | 2026-03-10 |
+| PlatformMediaValidator no DB dependency | Pure validation logic — injectable without Prisma; consumed by Phase 6 publishing engine without DB overhead | 2026-03-10 |
+| instagram format alias in validator | 'jpg' normalized to 'jpeg' in format check — PLATFORM_MEDIA_SPECS lists both, sharp outputs 'jpeg' | 2026-03-10 |
+| MediaProcessingJob per-job error isolation | try/catch inside for loop — one job failure never blocks next jobs; matches Phase 2 TokenRefreshJob pattern | 2026-03-10 |
 
 ## Blockers
 
@@ -222,6 +226,7 @@ None currently.
 | 03    | 04   | 9min     | 3     | 9     |
 | Phase 04 P01 | 7min | 2 tasks | 14 files |
 | Phase 04 P02 | 25min | 2 tasks | 8 files |
+| 04    | 03   | 20min    | 2     | 6     |
 
 ## Key Decisions Made (Plan 06)
 
@@ -233,8 +238,8 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T19:29:15.378Z
-Stopped at: Completed 03-ai-service-layer/03-04-PLAN.md
+Last session: 2026-03-10T20:13:50Z
+Stopped at: Completed 04-media-library-processing/04-03-PLAN.md
 Resume file: None
 
 ## Project Reference

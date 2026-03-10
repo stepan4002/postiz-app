@@ -72,10 +72,10 @@ Deliver a working self-hosted system where one operator can: connect social acco
 - **R7.5:** Media metadata: dimensions, format, file size, upload date, tags
 
 ### R8: Media Processing
-- **R8.1:** Image resize per platform specifications (Instagram square/portrait/landscape, Facebook, LinkedIn, X dimensions)
-- **R8.2:** Processing runs as async BullMQ job (not in request thread)
-- **R8.3:** Processed variants stored alongside originals in MinIO
-- **R8.4:** Platform media validation before publish (check dimensions, file size, format against platform requirements)
+- [x] **R8.1:** Image resize per platform specifications (Instagram square/portrait/landscape, Facebook, LinkedIn, X dimensions)
+- [x] **R8.2:** Processing runs as async BullMQ job (not in request thread)
+- [x] **R8.3:** Processed variants stored alongside originals in MinIO
+- [x] **R8.4:** Platform media validation before publish (check dimensions, file size, format against platform requirements)
 
 ### R9: Scheduling Engine
 - **R9.1:** Post states: DRAFT → APPROVED → SCHEDULED → PUBLISHING → PUBLISHED / FAILED
@@ -123,14 +123,14 @@ Deliver a working self-hosted system where one operator can: connect social acco
 
 ### NF2: Reliability
 - **NF2.1:** Publishing worker retry with exponential backoff and jitter
-- **NF2.2:** Separate queue workers: media processing, AI generation, publishing, analytics — isolated pools
+- [x] **NF2.2:** Separate queue workers: media processing, AI generation, publishing, analytics — isolated pools
 - **NF2.3:** Docker restart policies on all services
 - **NF2.4:** Graceful degradation: if AI provider is down, posts can still be manually created and published
 
 ### NF3: Performance
 - **NF3.1:** Dashboard loads from pre-aggregated data (< 2s page load)
 - **NF3.2:** No live platform API calls in request path
-- **NF3.3:** Media processing async (never blocks web requests)
+- [x] **NF3.3:** Media processing async (never blocks web requests)
 - **NF3.4:** Database indexes on `company_id + created_at`, `company_id + platform + status`
 
 ### NF4: Maintainability
