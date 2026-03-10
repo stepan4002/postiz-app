@@ -30,3 +30,11 @@ export {
   assertTransition,
   getValidTransitions,
 } from './state-machine/post-state-machine';
+
+// Platform adapters
+export { BaseAdapter } from './adapters/base.adapter';
+export { InstagramAdapter } from './adapters/instagram.adapter';
+export { FacebookAdapter } from './adapters/facebook.adapter';
+export { LinkedInAdapter } from './adapters/linkedin.adapter';
+export { XAdapter } from './adapters/x.adapter';
+export { AdapterRegistry } from './adapters/adapter-registry';
