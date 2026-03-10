@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: completed
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-10T15:36:37.356Z"
+stopped_at: Completed 02-credential-management-oauth/02-01-PLAN.md
+last_updated: "2026-03-10T16:06:13.353Z"
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 10
+  completed_plans: 6
 ---
 
 ---
@@ -37,16 +37,16 @@ progress:
 
 ## Current Phase
 
-**Phase 1: Fork & Foundation** — COMPLETE (Plan 05/5 complete)
+**Phase 2: Credential Management & OAuth** — IN PROGRESS (Plan 01/5 complete)
 
-**Stopped at:** Phase 2 context gathered
+**Stopped at:** Completed 02-credential-management-oauth/02-01-PLAN.md
 
 ## Phase Status
 
 | Phase | Name | Status |
 |-------|------|--------|
 | 1 | Fork & Foundation | complete |
-| 2 | Credential Management & OAuth | not_started |
+| 2 | Credential Management & OAuth | in_progress |
 | 3 | AI Service Layer | not_started |
 | 4 | Media Library & Processing | not_started |
 | 5 | Content Generation Pipeline | not_started |
@@ -77,6 +77,8 @@ progress:
 | Integration test state | company-isolation.spec.ts is TDD RED (requires Docker DB); company.service.spec.ts is TDD GREEN (15 tests, no DB needed) | 2026-03-10 |
 | Company switcher URL | ?c={slug} query param used for company scoping — avoids restructuring Postiz route tree; provides bookmarkable URLs without upstream disruption | 2026-03-10 |
 | CompanySwitcher dropdown | CSS-only group-hover dropdown matches OrganizationSelector pattern — consistent UI without extra React state | 2026-03-10 |
+| Token encryption algorithm | AES-256-GCM with 12-byte random IV per call; SHA-256 key derivation from ENCRYPTION_KEY env var; throws at startup if missing | 2026-03-10 |
+| Token health schema | Integration model extended with lastRefreshedAt, consecutiveFailures, tokenEncrypted via manual migration 20260310000002 | 2026-03-10 |
 
 ## Blockers
 
@@ -91,7 +93,8 @@ None currently.
 | 01    | 03   | 10min    | 2     | 19    |
 | 01    | 04   | 30min    | 1     | 4     |
 | 01    | 05   | 5min     | 2     | 6     |
+| 02    | 01   | 15min    | 2     | 9     |
 
 ## Next Action
 
-Phase 1 complete. Begin Phase 2: Credential Management & OAuth.
+Phase 2 Plan 01 complete. Continue Phase 2: execute 02-02-PLAN.md (token refresh job).
