@@ -4,6 +4,20 @@ milestone: v2.20
 milestone_name: milestone
 status: in_progress
 stopped_at: Completed 05-content-generation-pipeline/05-04-PLAN.md
+last_updated: "2026-03-10T22:32:59.056Z"
+progress:
+  total_phases: 8
+  completed_phases: 5
+  total_plans: 24
+  completed_plans: 24
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
+stopped_at: Completed 05-content-generation-pipeline/05-04-PLAN.md
 last_updated: "2026-03-10T22:23:41.944Z"
 progress:
   total_phases: 8
