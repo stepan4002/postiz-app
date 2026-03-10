@@ -78,3 +78,14 @@ All custom code lives in `extensions/` — upstream files are modified only when
 - **Watch for:** Upstream adding any field named `companyId` to Organization; upstream adding models with names that conflict with Company/Brand/BrandVoice/SocialAccount; upstream schema format changes
 
 ---
+
+## apps/backend/src/app.module.ts (Plan 03 addition)
+
+- **Phase:** 1 (Plan 03)
+- **Date:** 2026-03-10
+- **Change:** Added `import { MultiCompanyModule } from '@social/multi-company'` and added `MultiCompanyModule` to the `@Module` imports array after `CompanyContextModule`
+- **Reason:** MultiCompanyModule registers the Company/Brand/BrandVoice REST endpoints; must be in AppModule to be active
+- **Upstream risk:** MEDIUM — upstream regularly adds imports to AppModule; re-add our MultiCompanyModule import after merge
+- **Watch for:** Upstream adding route prefixes or global route guards that might conflict with /api/companies routes
+
+---

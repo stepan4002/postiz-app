@@ -19,6 +19,8 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
 import { ioRedis } from '@gitroom/nestjs-libraries/redis/redis.service';
 // SOCIAL COMMAND CENTRE — Phase 1 Plan 02: company context CLS + Prisma scoping
 import { CompanyContextModule } from '@social/company-context';
+// SOCIAL COMMAND CENTRE — Phase 1 Plan 03: Company/Brand/BrandVoice CRUD API
+import { MultiCompanyModule } from '@social/multi-company';
 
 @Global()
 @Module({
@@ -28,6 +30,8 @@ import { CompanyContextModule } from '@social/company-context';
     // SOCIAL COMMAND CENTRE — must be imported before ApiModule so ClsModule is global
     // and CLS context is available in all request handlers
     CompanyContextModule,
+    // SOCIAL COMMAND CENTRE — Phase 1 Plan 03: Company/Brand/BrandVoice CRUD API
+    MultiCompanyModule,
     ApiModule,
     PublicApiModule,
     AgentModule,
