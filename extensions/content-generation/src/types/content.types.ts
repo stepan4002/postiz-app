@@ -14,10 +14,27 @@ export type ContentType =
 
 // ============================================================================
 // Status enums for ContentPost and PostVariant lifecycle
+// Extended in Phase 6 with scheduling/publishing/stale states
 // ============================================================================
-export type ContentPostStatus = 'DRAFT' | 'PENDING_REVIEW' | 'APPROVED' | 'SCHEDULED';
+export type ContentPostStatus =
+  | 'DRAFT'
+  | 'PENDING_REVIEW'
+  | 'APPROVED'
+  | 'SCHEDULED'
+  | 'PUBLISHING'
+  | 'PUBLISHED'
+  | 'FAILED'
+  | 'STALE';
 
-export type PostVariantStatus = 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED';
+export type PostVariantStatus =
+  | 'PENDING_REVIEW'
+  | 'APPROVED'
+  | 'REJECTED'
+  | 'SCHEDULED'
+  | 'PUBLISHING'
+  | 'PUBLISHED'
+  | 'FAILED'
+  | 'STALE';
 
 export type ReviewAction = 'approve' | 'edit_approve' | 'reject' | 'regenerate';
 

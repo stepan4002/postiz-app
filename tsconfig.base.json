@@ -39,7 +39,9 @@
       "@social/ai-service": ["extensions/ai-service/src/index.ts"],
       "@social/media-library": ["extensions/media-library/src/index.ts"],
       "@social/content-generation": ["extensions/content-generation/src"],
-      "@social/content-generation/*": ["extensions/content-generation/src/*"]
+      "@social/content-generation/*": ["extensions/content-generation/src/*"],
+      "@social/scheduling-publishing": ["extensions/scheduling-publishing/src/index.ts"],
+      "@social/scheduling-publishing/*": ["extensions/scheduling-publishing/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
