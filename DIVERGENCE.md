@@ -178,6 +178,17 @@ All custom code lives in `extensions/` — upstream files are modified only when
 
 ---
 
+## apps/backend/src/app.module.ts (Phase 6 Plan 04 addition)
+
+- **Phase:** 6 (Plan 04)
+- **Date:** 2026-03-11
+- **Change:** Added `import { SchedulingPublishingModule } from '@social/scheduling-publishing'` and added `SchedulingPublishingModule` to the `@Module` imports array after `ContentGenerationModule`
+- **Reason:** SchedulingPublishingModule registers all scheduling and publishing services (SchedulingRepository, PublishingRepository, ScheduleResolverService, AdapterRegistry, PublishAttemptLogger, PublishingService, SchedulerTickJob, PublishingWorkerJob) and controllers (SchedulingController, FailedPostsController) for Phase 6 functionality. Must be registered after ContentGenerationModule (depends on content post schema).
+- **Upstream risk:** MEDIUM — upstream regularly adds imports to AppModule; re-add our SchedulingPublishingModule import after merge; ensure it stays after ContentGenerationModule
+- **Watch for:** Upstream adding conflicting scheduling or publishing modules; upstream adding routes that conflict with /api/companies/:slug/posts/:id/schedule or /api/companies/:slug/failed-posts
+
+---
+
 ## apps/frontend/src/components/new-layout/layout.component.tsx
 
 - **Phase:** 1 (Plan 05)

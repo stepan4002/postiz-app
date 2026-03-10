@@ -29,6 +29,8 @@ import { AIServiceModule } from '@social/ai-service';
 import { MediaLibraryModule } from '@social/media-library';
 // SOCIAL COMMAND CENTRE -- Phase 5: Content Generation Pipeline
 import { ContentGenerationModule } from '@social/content-generation';
+// SOCIAL COMMAND CENTRE — Phase 6: Scheduling & Publishing Engine
+import { SchedulingPublishingModule } from '@social/scheduling-publishing';
 
 @Global()
 @Module({
@@ -48,6 +50,8 @@ import { ContentGenerationModule } from '@social/content-generation';
     MediaLibraryModule,
     // SOCIAL COMMAND CENTRE -- Phase 5: Content Generation Pipeline
     ContentGenerationModule,
+    // SOCIAL COMMAND CENTRE — Phase 6: Scheduling & Publishing Engine
+    SchedulingPublishingModule,
     ApiModule,
     PublicApiModule,
     AgentModule,

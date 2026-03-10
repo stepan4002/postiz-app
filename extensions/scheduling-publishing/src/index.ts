@@ -49,3 +49,10 @@ export { PublishAttemptLogger } from './publishing/publish-attempt-logger';
 export { PublishingRepository } from './publishing/publishing.repository';
 export { PublishingService } from './publishing/publishing.service';
 export { PublishingWorkerJob } from './publishing/publishing-worker.job';
+
+// Controllers
+export { SchedulingController } from './scheduling/scheduling.controller';
+export { FailedPostsController } from './publishing/failed-posts.controller';
+
+// Module
+export { SchedulingPublishingModule } from './scheduling-publishing.module';
