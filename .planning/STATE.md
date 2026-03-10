@@ -8,13 +8,15 @@
 
 ## Current Phase
 
-**Phase 1: Fork & Foundation** — NOT STARTED
+**Phase 1: Fork & Foundation** — IN PROGRESS (Plan 01/N complete)
+
+**Stopped at:** Completed 01-fork-and-foundation/01-01-PLAN.md
 
 ## Phase Status
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Fork & Foundation | not_started |
+| 1 | Fork & Foundation | in_progress |
 | 2 | Credential Management & OAuth | not_started |
 | 3 | AI Service Layer | not_started |
 | 4 | Media Library & Processing | not_started |
@@ -33,6 +35,9 @@
 | AI approach | Provider-agnostic (OpenAI, Anthropic, Ollama) | 2026-03-10 |
 | Media storage | MinIO (S3-compatible, self-hosted) | 2026-03-10 |
 | MVP platforms | Instagram, Facebook, LinkedIn, X | 2026-03-10 |
+| Fork strategy | Merged v2.20.1 via --allow-unrelated-histories; upstream branch pinned to tag | 2026-03-10 |
+| Dev compose | Lightweight stack: PostgreSQL + Redis + MinIO only, no Temporal until Phase 6 | 2026-03-10 |
+| Extension zone | All custom code in extensions/ pnpm workspace, never in apps/ or libraries/ | 2026-03-10 |
 
 ## Blockers
 
@@ -40,4 +45,4 @@ None currently.
 
 ## Next Action
 
-Plan and execute Phase 1: Fork Postiz, set up Docker dev environment, extend data model with multi-company hierarchy, establish extension architecture.
+Execute Phase 1 Plan 02: Multi-company data model (Prisma schema extensions, Company/Brand/BrandVoice/SocialAccount models, migrations).
