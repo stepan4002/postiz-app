@@ -34,6 +34,14 @@ export interface PublishParams {
   mediaBuffer?: Buffer;
   /** URL of the media to publish, if stored remotely */
   mediaUrl?: string;
+  /**
+   * Platform-specific account/page/user ID required by some adapters.
+   * - Instagram: IG User ID (for /media and /media_publish endpoints)
+   * - Facebook: Page ID (for /feed and /photos endpoints)
+   * - LinkedIn: Person/Organization URN ID
+   * - X: Not required (user context from token)
+   */
+  platformAccountId?: string;
 }
 
 /**
