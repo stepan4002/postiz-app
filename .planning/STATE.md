@@ -2,29 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
-status: completed
-stopped_at: Completed 02-credential-management-oauth/02-01-PLAN.md
-last_updated: "2026-03-10T16:06:13.353Z"
+status: in_progress
+stopped_at: Completed 02-credential-management-oauth/02-02-PLAN.md
+last_updated: "2026-03-10T16:24:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 1
   total_plans: 10
-  completed_plans: 6
----
-
----
-gsd_state_version: 1.0
-milestone: v2.20
-milestone_name: milestone
-status: complete
-stopped_at: Completed 01-fork-and-foundation/01-05-PLAN.md
-last_updated: "2026-03-10T14:55:00.000Z"
-progress:
-  total_phases: 8
-  completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  completed_plans: 7
+  percent: 70
 ---
 
 # Project State: Social Command Centre
@@ -37,9 +23,9 @@ progress:
 
 ## Current Phase
 
-**Phase 2: Credential Management & OAuth** — IN PROGRESS (Plan 01/5 complete)
+**Phase 2: Credential Management & OAuth** — IN PROGRESS (Plan 02/5 complete)
 
-**Stopped at:** Completed 02-credential-management-oauth/02-01-PLAN.md
+**Stopped at:** Completed 02-credential-management-oauth/02-02-PLAN.md
 
 ## Phase Status
 
@@ -79,6 +65,9 @@ progress:
 | CompanySwitcher dropdown | CSS-only group-hover dropdown matches OrganizationSelector pattern — consistent UI without extra React state | 2026-03-10 |
 | Token encryption algorithm | AES-256-GCM with 12-byte random IV per call; SHA-256 key derivation from ENCRYPTION_KEY env var; throws at startup if missing | 2026-03-10 |
 | Token health schema | Integration model extended with lastRefreshedAt, consecutiveFailures, tokenEncrypted via manual migration 20260310000002 | 2026-03-10 |
+| Interface injection for cross-package deps | IRefreshIntegrationService/INotificationService minimal interfaces in token.refresh.job.ts; avoids circular imports and enables unit testing without upstream package imports | 2026-03-10 |
+| JS-side 75% lifetime filtering | Prisma cannot compute tokenExpiration - 0.25*(tokenExpiration - createdAt) in WHERE; fetch non-expired candidates, filter in JS | 2026-03-10 |
+| Cron alert threshold logic | Alert on consecutiveFailures >= ALERT_THRESHOLD - 1 (before increment) to avoid DB re-read; fires on 3rd consecutive failure | 2026-03-10 |
 
 ## Blockers
 
@@ -94,7 +83,8 @@ None currently.
 | 01    | 04   | 30min    | 1     | 4     |
 | 01    | 05   | 5min     | 2     | 6     |
 | 02    | 01   | 15min    | 2     | 9     |
+| 02    | 02   | 15min    | 2     | 7     |
 
 ## Next Action
 
-Phase 2 Plan 01 complete. Continue Phase 2: execute 02-02-PLAN.md (token refresh job).
+Phase 2 Plan 02 complete. Continue Phase 2: execute 02-03-PLAN.md (credential storage OAuth flow).
