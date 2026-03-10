@@ -16,3 +16,13 @@ export * from './prompts/prompt-templates';
 // Types: PlatformNorms
 // Builders: buildPlatformAdaptationPrompt
 export * from './prompts/platform-norms';
+
+// Phase 5 Plan 02: Content generation pipeline
+// Service: ContentPostService (generate, regenerateForPost)
+export { ContentPostService } from './posts/content-post.service';
+
+// Repository: ContentPostRepository (createPost, createVariants, findByCompany, findById, deleteVariantsByPostId)
+export { ContentPostRepository } from './posts/content-post.repository';
+
+// Confidence gating: applyConfidenceGating, determinePostStatus
+export { applyConfidenceGating, determinePostStatus } from './posts/confidence-gating';

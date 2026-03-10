@@ -113,22 +113,36 @@ const MOCK_AI_CONFIG = {
 // Setup helpers
 // ============================================================================
 
-function setupHappyPath() {
+function setupHappyPath(scoreOverride?: number) {
+  const scoreResult = scoreOverride !== undefined
+    ? { ...MOCK_SCORE_RESULT, output: { score: scoreOverride } }
+    : MOCK_SCORE_RESULT;
+
   mockRepository.createPost.mockResolvedValue(MOCK_POST);
   mockRepository.createVariants.mockResolvedValue([
-    { id: 'variant-1', platform: 'instagram', status: 'APPROVED', confidenceScore: 0.85 },
-    { id: 'variant-2', platform: 'facebook', status: 'APPROVED', confidenceScore: 0.85 },
+    { id: 'variant-1', platform: 'instagram', status: 'APPROVED', confidenceScore: scoreResult.output.score },
+    { id: 'variant-2', platform: 'facebook', status: 'APPROVED', confidenceScore: scoreResult.output.score },
   ]);
   mockRepository.updatePostStatus.mockResolvedValue({ ...MOCK_POST, status: 'APPROVED' });
   mockAiConfigService.findByCompany.mockResolvedValue(MOCK_AI_CONFIG);
   mockPrisma.companyMedia.findUnique.mockResolvedValue({ id: MEDIA_ID, path: 'media/sneaker.jpg' });
   mockAiRouter.executeImageAnalysis.mockResolvedValue(MOCK_IMAGE_ANALYSIS_RESULT);
-  mockAiRouter.execute
-    .mockResolvedValueOnce(MOCK_CAPTION_RESULT)      // generateCaption
-    .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)   // adaptForPlatform instagram
-    .mockResolvedValueOnce(MOCK_SCORE_RESULT)         // scoreContent instagram
-    .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)   // adaptForPlatform facebook
-    .mockResolvedValueOnce(MOCK_SCORE_RESULT);        // scoreContent facebook
+  // Use taskType-based mock implementation to handle concurrent Promise.allSettled execution.
+  // Promise.allSettled runs both platform async functions concurrently, so mockResolvedValueOnce
+  // calls may be consumed in non-sequential order. Instead, use a stable implementation
+  // that dispatches based on the AICallContext.taskType.
+  mockAiRouter.execute.mockImplementation((context: any) => {
+    switch (context.taskType) {
+      case 'generateCaption':
+        return Promise.resolve(MOCK_CAPTION_RESULT);
+      case 'adaptForPlatform':
+        return Promise.resolve(MOCK_ADAPTATION_RESULT);
+      case 'scoreContent':
+        return Promise.resolve(scoreResult);
+      default:
+        return Promise.resolve(MOCK_ADAPTATION_RESULT);
+    }
+  });
   mockMediaProcessingService.generateVariants.mockResolvedValue(undefined);
 }
 
@@ -140,7 +154,7 @@ describe('ContentPostService', () => {
   let service: ContentPostService;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
     service = new ContentPostService(
       mockRepository as unknown as ContentPostRepository,
       mockAiRouter as any,
@@ -167,13 +181,7 @@ describe('ContentPostService', () => {
 
     it('should skip image analysis when mediaId is null (text-only post)', async () => {
       setupHappyPath();
-      mockAiRouter.execute
-        .mockReset()
-        .mockResolvedValueOnce(MOCK_CAPTION_RESULT)
-        .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)
-        .mockResolvedValueOnce(MOCK_SCORE_RESULT)
-        .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)
-        .mockResolvedValueOnce(MOCK_SCORE_RESULT);
+      // TEXT_DTO has no mediaId -- setupHappyPath already configures execute correctly
 
       await service.generate(COMPANY_ID, TEXT_DTO);
 
@@ -259,24 +267,36 @@ describe('ContentPostService', () => {
     });
 
     it('should use Promise.allSettled for parallel platform adaptation (partial failure handling)', async () => {
-      // One platform fails, the other succeeds
+      // One platform fails (facebook scoreContent fails), the other succeeds (instagram)
+      // Uses taskType-based mockImplementation + platform-specific failure injection
       mockRepository.createPost.mockResolvedValue(MOCK_POST);
       mockRepository.createVariants.mockResolvedValue([
         { id: 'variant-1', platform: 'instagram', status: 'APPROVED', confidenceScore: 0.85 },
       ]);
       mockRepository.updatePostStatus.mockResolvedValue({ ...MOCK_POST, status: 'APPROVED' });
       mockAiConfigService.findByCompany.mockResolvedValue(MOCK_AI_CONFIG);
-      mockPrisma.companyMedia.findUnique.mockResolvedValue(null); // no media
+      mockPrisma.companyMedia.findUnique.mockResolvedValue(null); // no media — skips image analysis
       mockMediaProcessingService.generateVariants.mockResolvedValue(undefined);
-      mockAiRouter.executeImageAnalysis.mockResolvedValue(MOCK_IMAGE_ANALYSIS_RESULT);
-      mockAiRouter.execute
-        .mockResolvedValueOnce(MOCK_CAPTION_RESULT)       // generateCaption
-        .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)    // instagram adapt - succeeds
-        .mockRejectedValueOnce(new Error('Platform error')) // instagram score - fails
-        .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)    // facebook adapt
-        .mockResolvedValueOnce(MOCK_SCORE_RESULT);         // facebook score
+      let facebookScoreCallCount = 0;
+      mockAiRouter.execute.mockImplementation((context: any) => {
+        if (context.taskType === 'generateCaption') {
+          return Promise.resolve(MOCK_CAPTION_RESULT);
+        }
+        if (context.taskType === 'adaptForPlatform') {
+          return Promise.resolve(MOCK_ADAPTATION_RESULT);
+        }
+        if (context.taskType === 'scoreContent') {
+          facebookScoreCallCount++;
+          // Fail on second scoreContent call (one of the platforms)
+          if (facebookScoreCallCount === 2) {
+            return Promise.reject(new Error('Platform score error'));
+          }
+          return Promise.resolve(MOCK_SCORE_RESULT);
+        }
+        return Promise.resolve(MOCK_ADAPTATION_RESULT);
+      });
 
-      // Should not throw even though one platform fails
+      // Should not throw even though one platform's scoring fails
       await expect(service.generate(COMPANY_ID, MEDIA_DTO)).resolves.toBeDefined();
     });
   });
@@ -328,15 +348,8 @@ describe('ContentPostService', () => {
     });
 
     it('should set post status to PENDING_REVIEW if any variant is PENDING_REVIEW', async () => {
-      setupHappyPath();
-      // Override score to be below threshold for all platforms
-      mockAiRouter.execute
-        .mockReset()
-        .mockResolvedValueOnce(MOCK_CAPTION_RESULT)
-        .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)
-        .mockResolvedValueOnce({ ...MOCK_SCORE_RESULT, output: { score: 0.5 } }) // below threshold
-        .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)
-        .mockResolvedValueOnce({ ...MOCK_SCORE_RESULT, output: { score: 0.5 } }); // below threshold
+      // Use scoreOverride to set score below threshold (0.5 < 0.7)
+      setupHappyPath(0.5);
 
       await service.generate(COMPANY_ID, MEDIA_DTO);
 
@@ -388,13 +401,7 @@ describe('ContentPostService', () => {
 
     it('should NOT call MediaProcessingService.generateVariants when mediaId is null', async () => {
       setupHappyPath();
-      mockAiRouter.execute
-        .mockReset()
-        .mockResolvedValueOnce(MOCK_CAPTION_RESULT)
-        .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)
-        .mockResolvedValueOnce(MOCK_SCORE_RESULT)
-        .mockResolvedValueOnce(MOCK_ADAPTATION_RESULT)
-        .mockResolvedValueOnce(MOCK_SCORE_RESULT);
+      // TEXT_DTO has no mediaId — setupHappyPath mockImplementation already handles this
 
       await service.generate(COMPANY_ID, TEXT_DTO);
 
