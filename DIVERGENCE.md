@@ -156,6 +156,17 @@ All custom code lives in `extensions/` — upstream files are modified only when
 
 ---
 
+## apps/backend/src/app.module.ts (Phase 5 Plan 03 addition)
+
+- **Phase:** 5 (Plan 03)
+- **Date:** 2026-03-10
+- **Change:** Added `import { ContentGenerationModule } from '@social/content-generation'` and added `ContentGenerationModule` to the `@Module` imports array after `MediaLibraryModule`
+- **Reason:** ContentGenerationModule registers all content generation services (ContentPostService, ContentPostRepository, ReviewQueueService) and controllers (ContentPostController, ReviewQueueController) for Phase 5 functionality. Must be registered after MediaLibraryModule because it depends on MediaProcessingService.
+- **Upstream risk:** MEDIUM — upstream regularly adds imports to AppModule; re-add our ContentGenerationModule import after merge; ensure it stays after MediaLibraryModule
+- **Watch for:** Upstream adding conflicting content generation or AI-related modules; upstream adding routes that conflict with /api/companies/:slug/posts or /api/companies/:slug/review-queue
+
+---
+
 ## apps/frontend/src/components/new-layout/layout.component.tsx
 
 - **Phase:** 1 (Plan 05)

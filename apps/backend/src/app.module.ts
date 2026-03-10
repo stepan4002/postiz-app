@@ -27,6 +27,8 @@ import { CredentialManagementModule } from '@social/credential-management';
 import { AIServiceModule } from '@social/ai-service';
 // SOCIAL COMMAND CENTRE — Phase 4: Media Library & Processing
 import { MediaLibraryModule } from '@social/media-library';
+// SOCIAL COMMAND CENTRE -- Phase 5: Content Generation Pipeline
+import { ContentGenerationModule } from '@social/content-generation';
 
 @Global()
 @Module({
@@ -44,6 +46,8 @@ import { MediaLibraryModule } from '@social/media-library';
     AIServiceModule,
     // SOCIAL COMMAND CENTRE — Phase 4: Media Library & Processing
     MediaLibraryModule,
+    // SOCIAL COMMAND CENTRE -- Phase 5: Content Generation Pipeline
+    ContentGenerationModule,
     ApiModule,
     PublicApiModule,
     AgentModule,

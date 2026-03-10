@@ -26,3 +26,14 @@ export { ContentPostRepository } from './posts/content-post.repository';
 
 // Confidence gating: applyConfidenceGating, determinePostStatus
 export { applyConfidenceGating, determinePostStatus } from './posts/confidence-gating';
+
+// Phase 5 Plan 03: Review queue and approval workflow
+// Service: ReviewQueueService (findPending, approve, reject, regenerate, editVariant)
+export { ReviewQueueService } from './review/review-queue.service';
+
+// Controllers: ContentPostController, ReviewQueueController
+export { ContentPostController } from './posts/content-post.controller';
+export { ReviewQueueController } from './review/review-queue.controller';
+
+// Module: ContentGenerationModule — NestJS module for registration in AppModule
+export { ContentGenerationModule } from './content-generation.module';
