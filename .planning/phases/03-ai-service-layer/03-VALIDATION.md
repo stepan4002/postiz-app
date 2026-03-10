@@ -38,16 +38,17 @@ created: 2026-03-10
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| TBD | 01 | 1 | R4.1 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | ❌ W0 | ⬜ pending |
-| TBD | 01 | 1 | R4.2 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | ❌ W0 | ⬜ pending |
-| TBD | 02 | 1 | R4.3 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | ❌ W0 | ⬜ pending |
-| TBD | 02 | 1 | R4.4 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | ❌ W0 | ⬜ pending |
-| TBD | 03 | 2 | R4.5 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | ❌ W0 | ⬜ pending |
-| TBD | 03 | 2 | R4.6 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | ❌ W0 | ⬜ pending |
-| TBD | 03 | 2 | R4.7 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | ❌ W0 | ⬜ pending |
-| TBD | 03 | 2 | NF4.4 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | ❌ W0 | ⬜ pending |
+| 01-T1 | 01 | 1 | R4.1, R4.5, R4.7 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | W0 | pending |
+| 01-T2 | 01 | 1 | R4.1, R4.5 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | W0 | pending |
+| 02-T1 | 02 | 2 | R4.2 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | W0 | pending |
+| 02-T2 | 02 | 2 | R4.2 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | W0 | pending |
+| 03-T1 | 03 | 2 | R4.4, R4.5, R4.6 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | W0 | pending |
+| 03-T2 | 03 | 2 | R4.6 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | W0 | pending |
+| 04-T1 | 04 | 3 | R4.3, R4.7, NF4.4 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | W0 | pending |
+| 04-T2 | 04 | 3 | NF4.4 | unit | `npx jest --config extensions/ai-service/jest.config.ts` | W0 | pending |
+| 04-T3 | 04 | 3 | R4.4 | compile | `cd extensions/ai-service && npx tsc --noEmit` | W0 | pending |
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+*Status: pending / green / red / flaky*
 
 ---
 
@@ -55,13 +56,16 @@ created: 2026-03-10
 
 - [ ] `extensions/ai-service/jest.config.ts` — jest config for extension package
 - [ ] `extensions/ai-service/src/__tests__/` — test directory structure
-- [ ] `extensions/ai-service/src/__tests__/ai-service.interface.spec.ts` — stubs for R4.1
-- [ ] `extensions/ai-service/src/__tests__/openai-provider.spec.ts` — stubs for R4.2
-- [ ] `extensions/ai-service/src/__tests__/anthropic-provider.spec.ts` — stubs for R4.3
-- [ ] `extensions/ai-service/src/__tests__/ollama-provider.spec.ts` — stubs for R4.4
-- [ ] `extensions/ai-service/src/__tests__/provider-router.spec.ts` — stubs for R4.5
-- [ ] `extensions/ai-service/src/__tests__/cost-tracking.spec.ts` — stubs for R4.6-R4.7
-- [ ] `extensions/ai-service/src/__tests__/brand-voice.spec.ts` — stubs for brand voice injection
+- [ ] `extensions/ai-service/src/__tests__/brand-voice-prompt.builder.spec.ts` — stubs for brand voice injection (Plan 01)
+- [ ] `extensions/ai-service/src/__tests__/model-costs.spec.ts` — stubs for cost calculation (Plan 01)
+- [ ] `extensions/ai-service/src/__tests__/openai.provider.spec.ts` — stubs for R4.2 OpenAI (Plan 02)
+- [ ] `extensions/ai-service/src/__tests__/anthropic.provider.spec.ts` — stubs for R4.2 Anthropic (Plan 02)
+- [ ] `extensions/ai-service/src/__tests__/ollama.provider.spec.ts` — stubs for R4.2 Ollama (Plan 02)
+- [ ] `extensions/ai-service/src/__tests__/ai-config.service.spec.ts` — stubs for R4.4 config (Plan 03)
+- [ ] `extensions/ai-service/src/__tests__/ai-cost-logger.spec.ts` — stubs for R4.5 cost logging (Plan 03)
+- [ ] `extensions/ai-service/src/__tests__/budget-circuit-breaker.spec.ts` — stubs for R4.6 budget (Plan 03)
+- [ ] `extensions/ai-service/src/__tests__/ai-provider.router.spec.ts` — stubs for R4.3 routing (Plan 04)
+- [ ] `extensions/ai-service/src/__tests__/ai-service.module.spec.ts` — stubs for module compilation (Plan 04)
 
 *If none: "Existing infrastructure covers all phase requirements."*
 
