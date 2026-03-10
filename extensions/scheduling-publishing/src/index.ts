@@ -38,3 +38,7 @@ export { FacebookAdapter } from './adapters/facebook.adapter';
 export { LinkedInAdapter } from './adapters/linkedin.adapter';
 export { XAdapter } from './adapters/x.adapter';
 export { AdapterRegistry } from './adapters/adapter-registry';
+
+// Scheduling services
+export { SchedulingRepository } from './scheduling/scheduling.repository';
+export { ScheduleResolverService } from './scheduling/schedule-resolver.service';
