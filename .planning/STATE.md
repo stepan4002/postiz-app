@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 04-media-library-processing/04-04-PLAN.md
+last_updated: "2026-03-10T20:27:03.353Z"
+progress:
+  total_phases: 8
+  completed_phases: 4
+  total_plans: 19
+  completed_plans: 19
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 04-media-library-processing/04-02-PLAN.md
 last_updated: "2026-03-10T19:29:15.382Z"
 progress:
-  total_phases: 8
+  [██████████] 100%
   completed_phases: 3
   total_plans: 19
   completed_plans: 17
@@ -125,9 +140,9 @@ progress:
 
 ## Current Phase
 
-**Phase 4: Media Library & Processing** — In Progress (Plan 03 of 4 complete)
+**Phase 4: Media Library & Processing** — Complete (all 4 plans done)
 
-**Stopped at:** Completed 04-media-library-processing/04-03-PLAN.md
+**Stopped at:** Completed 04-media-library-processing/04-04-PLAN.md
 
 ## Phase Status
 
@@ -136,7 +151,7 @@ progress:
 | 1 | Fork & Foundation | complete |
 | 2 | Credential Management & OAuth | complete |
 | 3 | AI Service Layer | complete |
-| 4 | Media Library & Processing | in_progress |
+| 4 | Media Library & Processing | complete |
 | 5 | Content Generation Pipeline | not_started |
 | 6 | Scheduling & Publishing Engine | not_started |
 | 7 | Analytics & Dashboard | not_started |
@@ -200,6 +215,10 @@ progress:
 | PlatformMediaValidator no DB dependency | Pure validation logic — injectable without Prisma; consumed by Phase 6 publishing engine without DB overhead | 2026-03-10 |
 | instagram format alias in validator | 'jpg' normalized to 'jpeg' in format check — PLATFORM_MEDIA_SPECS lists both, sharp outputs 'jpeg' | 2026-03-10 |
 | MediaProcessingJob per-job error isolation | try/catch inside for loop — one job failure never blocks next jobs; matches Phase 2 TokenRefreshJob pattern | 2026-03-10 |
+| MediaLibraryModule useFactory wiring | All 6 providers resolved via useFactory in MediaLibraryModule; ScheduleModule included for Cron; onModuleInit for bucket creation | 2026-03-10 |
+| Company-scoped Uppy S3 multipart endpoints | Uppy 's3' case routes to /companies/:slug/media/multipart/:endpoint — avoids Cloudflare R2 /media/:endpoint conflict; MinioStorage exposes 5 presigned URL methods | 2026-03-10 |
+| useMediaUpload FormData approach | Direct FormData to /companies/:slug/media/upload vs Uppy — server handles sharp pipeline; storageProvider type has no 's3' value; simpler | 2026-03-10 |
+| MediaGrid MinIO URL resolution | paths stored as S3 keys in DB; resolveMediaUrl prepends MINIO_PUBLIC_URL when path not http-prefixed | 2026-03-10 |
 
 ## Blockers
 
@@ -227,6 +246,8 @@ None currently.
 | Phase 04 P01 | 7min | 2 tasks | 14 files |
 | Phase 04 P02 | 25min | 2 tasks | 8 files |
 | 04    | 03   | 20min    | 2     | 6     |
+| 04    | 04   | 35min    | 2     | 12    |
+| Phase 04 P04 | 35min | 2 tasks | 12 files |
 
 ## Key Decisions Made (Plan 06)
 
@@ -238,8 +259,8 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T20:13:50Z
-Stopped at: Completed 04-media-library-processing/04-03-PLAN.md
+Last session: 2026-03-10T20:50:00Z
+Stopped at: Completed 04-media-library-processing/04-04-PLAN.md
 Resume file: None
 
 ## Project Reference
@@ -247,8 +268,8 @@ Resume file: None
 See: .planning/PROJECT.md (updated 2026-03-10)
 
 **Core value:** One person can efficiently operate 100+ social posts per week across dozens of accounts and 4+ languages
-**Current focus:** Phase 4 — Media Library & Processing
+**Current focus:** Phase 5 — Content Generation Pipeline
 
 ## Next Action
 
-Execute Phase 3 Plan 04: AIServiceModule — wire AIConfigService, AICostLogger, BudgetCircuitBreaker, and provider router into NestJS module.
+Execute Phase 5 Plan 01: Content generation pipeline foundation.
