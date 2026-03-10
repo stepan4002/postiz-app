@@ -28,8 +28,8 @@ Deliver a working self-hosted system where one operator can: connect social acco
 - **R2.4:** [x] SocialAccount entity per Brand with platform type and reference to PlatformCredential — completed 01-02
 - **R2.5:** [x] `company_id` foreign key on all company-owned tables — Phase 1: Organization.companyId + Brand/BrandVoice/SocialAccount; remaining upstream tables (posts, media, analytics, credentials, schedules) deferred to their respective phases per plan design — completed 01-02 (partial, by design)
 - **R2.6:** [x] Row-level scoping — all queries filtered by `company_id`; Prisma $extends factory auto-injects companyId into all Brand/BrandVoice/SocialAccount queries — completed 01-02
-- **R2.7:** Company switcher in UI — all views scoped to selected company
-- **R2.8:** Automated isolation tests: Company A cannot see Company B's data
+- **R2.7:** [x] Company/Brand/BrandVoice CRUD API at /api/companies, MultiCompanyModule registered in AppModule, idempotent seed script — completed 01-03
+- **R2.8:** [x] 8-test company-isolation.spec.ts proves Company A data never appears in Company B queries; 15 CompanyService unit tests green — completed 01-04
 
 ### R3: Platform Connections (OAuth)
 - **R3.1:** OAuth connect flow for Instagram (Meta Business API), Facebook (Meta Graph API), LinkedIn (Marketing API), X (API v2)

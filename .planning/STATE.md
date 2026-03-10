@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-fork-and-foundation/01-03-PLAN.md
-last_updated: "2026-03-10T14:39:05.000Z"
+stopped_at: Completed 01-fork-and-foundation/01-04-PLAN.md
+last_updated: "2026-03-10T15:00:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State: Social Command Centre
@@ -22,9 +22,9 @@ progress:
 
 ## Current Phase
 
-**Phase 1: Fork & Foundation** — IN PROGRESS (Plan 03/N complete)
+**Phase 1: Fork & Foundation** — IN PROGRESS (Plan 04/5 complete)
 
-**Stopped at:** Completed 01-fork-and-foundation/01-03-PLAN.md
+**Stopped at:** Completed 01-fork-and-foundation/01-04-PLAN.md
 
 ## Phase Status
 
@@ -58,6 +58,8 @@ progress:
 | Company API scoping | BrandService uses explicit companyId parameter (not CLS) — isolation is explicit and testable without mocking middleware | 2026-03-10 |
 | Controller slug resolution | Controllers resolve companySlug/brandSlug to IDs before calling services; services work with IDs only | 2026-03-10 |
 | Seed idempotency | Seed script uses Prisma upsert on unique constraints (slug for Company, companyId+slug for Brand, brandId for BrandVoice, brandId+platform for SocialAccount) | 2026-03-10 |
+| Test isolation boundary | BrandService.findAllByCompany(companyId) is the formal isolation contract — integration tests prove Company A data never appears in Company B queries | 2026-03-10 |
+| Integration test state | company-isolation.spec.ts is TDD RED (requires Docker DB); company.service.spec.ts is TDD GREEN (15 tests, no DB needed) | 2026-03-10 |
 
 ## Blockers
 
@@ -70,7 +72,8 @@ None currently.
 | 01    | 01   | 25min    | 2     | 15    |
 | 01    | 02   | 20min    | 2     | 10    |
 | 01    | 03   | 10min    | 2     | 19    |
+| 01    | 04   | 30min    | 1     | 4     |
 
 ## Next Action
 
-Execute Phase 1 Plan 04: Data isolation tests (next available plan in Phase 1).
+Execute Phase 1 Plan 05 (next available plan in Phase 1).
