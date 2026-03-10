@@ -167,6 +167,17 @@ All custom code lives in `extensions/` — upstream files are modified only when
 
 ---
 
+## libraries/nestjs-libraries/src/database/prisma/schema.prisma (Phase 6 addition)
+
+- **Phase:** 6 (Plan 01)
+- **Date:** 2026-03-10
+- **Change:** Extended ContentPost model with `scheduledAt DateTime?` and `publishAttempts PublishAttempt[]` relation; extended PostVariant model with 8 new scheduling/publishing fields (`scheduledAt`, `platformPostId`, `platformUrl`, `publishAttempts`, `consecutiveFailures`, `lastPublishError`, `publishedAt`, `publishWindowExpiresAt`) and 2 new indexes; created new `PublishAttempt` model for audit logging every publish attempt; created migration `20260310200000_scheduling_publishing`
+- **Reason:** Scheduling engine (Plan 02) needs scheduledAt on both ContentPost and PostVariant to track when posts should publish; platformPostId enables idempotency (R10.3); publishAttempts/consecutiveFailures mirror Phase 2 token health pattern; PublishAttempt provides full audit trail (R10.6) for debugging and dashboard display
+- **Upstream risk:** MEDIUM — upstream may add fields to ContentPost/PostVariant; our fields are clearly grouped with Phase 6 comments; re-apply after merge
+- **Watch for:** Upstream adding fields named `scheduledAt`, `platformPostId`, or `publishAttempts`; upstream adding models named `PublishAttempt`; upstream changing ContentPost/PostVariant model structure significantly
+
+---
+
 ## apps/frontend/src/components/new-layout/layout.component.tsx
 
 - **Phase:** 1 (Plan 05)

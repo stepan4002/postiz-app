@@ -384,18 +384,21 @@ model MediaProcessingJob {
 
 // SOCIAL COMMAND CENTRE — Phase 5: Content Generation Pipeline
 model ContentPost {
-  id          String        @id @default(uuid())
-  companyId   String
-  brandId     String
-  mediaId     String?
-  brief       String?
-  contentType String
-  status      String        @default("DRAFT")
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  brand       Brand         @relation(fields: [brandId], references: [id])
-  variants    PostVariant[]
+  id              String           @id @default(uuid())
+  companyId       String
+  brandId         String
+  mediaId         String?
+  brief           String?
+  contentType     String
+  status          String           @default("DRAFT")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  // SOCIAL COMMAND CENTRE — Phase 6: Scheduling & Publishing Engine
+  scheduledAt     DateTime?        // parent-level scheduled time (copied to all variants)
+  company         Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  brand           Brand            @relation(fields: [brandId], references: [id])
+  variants        PostVariant[]
+  publishAttempts PublishAttempt[]
 
   @@index([companyId, status])
   @@index([companyId, createdAt])
@@ -403,27 +406,60 @@ model ContentPost {
 }
 
 model PostVariant {
-  id              String      @id @default(uuid())
-  postId          String
-  platform        String
-  caption         String
-  hashtags        String[]    @default([])
-  mediaVariantId  String?
-  confidenceScore Float
-  status          String
-  generatedBy     String
-  generatedAt     DateTime    @default(now())
-  reviewedBy      String?
-  reviewAction    String?
-  reviewedAt      DateTime?
-  originalCaption String?
-  post            ContentPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id                     String           @id @default(uuid())
+  postId                 String
+  platform               String
+  caption                String
+  hashtags               String[]         @default([])
+  mediaVariantId         String?
+  confidenceScore        Float
+  status                 String
+  generatedBy            String
+  generatedAt            DateTime         @default(now())
+  reviewedBy             String?
+  reviewAction           String?
+  reviewedAt             DateTime?
+  originalCaption        String?
+  // SOCIAL COMMAND CENTRE — Phase 6: Scheduling & Publishing Engine
+  scheduledAt            DateTime?        // when this variant should be published
+  platformPostId         String?          // ID returned by platform after publish (R10.3 idempotency)
+  platformUrl            String?          // URL of the published post on the platform
+  publishAttempts        Int              @default(0)   // number of publish attempts made
+  consecutiveFailures    Int              @default(0)   // consecutive failures (same pattern as Phase 2 token health)
+  lastPublishError       String?          // last error message for dashboard display
+  publishedAt            DateTime?        // when the variant was successfully published
+  publishWindowExpiresAt DateTime?        // when the publish window closes (R10.8)
+  post                   ContentPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  publishAttemptLogs     PublishAttempt[]
 
   @@index([postId])
   @@index([platform, status])
   @@index([confidenceScore])
+  @@index([status, scheduledAt])           // for scheduler_tick query
+  @@index([platformPostId])                // for idempotency checks
 }
-// END Phase 5 Content Generation Pipeline models
+
+// SOCIAL COMMAND CENTRE — Phase 6: Publish Attempt audit log (R10.6)
+// Every publish attempt is logged here for debugging and dashboard display.
+model PublishAttempt {
+  id            String      @id @default(uuid())
+  variantId     String
+  postId        String
+  attemptNumber Int
+  timestamp     DateTime    @default(now())
+  success       Boolean
+  responseCode  Int?
+  responseBody  String?
+  error         String?
+  errorType     String?     // 'transient' | 'permanent' | 'rate_limit'
+  variant       PostVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  post          ContentPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([variantId])
+  @@index([postId])
+  @@index([timestamp])
+}
+// END Phase 5/6 Content Generation & Scheduling Pipeline models
 
 model SocialMediaAgency {
   id               String                   @id @default(uuid())
