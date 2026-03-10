@@ -4,6 +4,20 @@ milestone: v2.20
 milestone_name: milestone
 status: in_progress
 stopped_at: Completed 02-credential-management-oauth/02-06-PLAN.md
+last_updated: "2026-03-10T17:04:05.597Z"
+progress:
+  total_phases: 8
+  completed_phases: 2
+  total_plans: 11
+  completed_plans: 11
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
+stopped_at: Completed 02-credential-management-oauth/02-06-PLAN.md
 last_updated: "2026-03-10T17:30:00.000Z"
 progress:
   total_phases: 8
