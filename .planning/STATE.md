@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 03-ai-service-layer/03-04-PLAN.md
+last_updated: "2026-03-10T18:15:57.891Z"
+progress:
+  total_phases: 8
+  completed_phases: 3
+  total_plans: 15
+  completed_plans: 15
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 03-ai-service-layer/03-02-PLAN.md
 last_updated: "2026-03-10T18:01:50.267Z"
 progress:
-  total_phases: 8
+  [██████████] 100%
   completed_phases: 2
   total_plans: 15
   completed_plans: 14
@@ -81,9 +96,9 @@ progress:
 
 ## Current Phase
 
-**Phase 3: AI Service Layer** — In Progress (Plans 01, 02, 03 of 4 complete)
+**Phase 3: AI Service Layer** — Complete (All 4 plans done)
 
-**Stopped at:** Completed 03-ai-service-layer/03-02-PLAN.md
+**Stopped at:** Completed 03-ai-service-layer/03-04-PLAN.md
 
 ## Phase Status
 
@@ -91,7 +106,7 @@ progress:
 |-------|------|--------|
 | 1 | Fork & Foundation | complete |
 | 2 | Credential Management & OAuth | complete |
-| 3 | AI Service Layer | in_progress |
+| 3 | AI Service Layer | complete |
 | 4 | Media Library & Processing | not_started |
 | 5 | Content Generation Pipeline | not_started |
 | 6 | Scheduling & Publishing Engine | not_started |
@@ -143,6 +158,9 @@ progress:
 | Null budget = unlimited | weeklyBudgetUsd: null = unlimited — early return avoids unnecessary aggregate query | 2026-03-10 |
 | Anthropic zodOutputFormat Zod v3 fix | SDK's zodOutputFormat requires Zod v4 (z.toJSONSchema); built custom helper using zod-to-json-schema package for Zod v3 compatibility | 2026-03-10 |
 | Native fetch for Ollama | No maintained npm SDK for Ollama; native fetch keeps provider lightweight and testable via jest.spyOn | 2026-03-10 |
+| AIProviderRouter PrismaService injection | AIProviderRouter injects PrismaService directly (as any) for BrandVoice lookup — consistent with (this.prisma as any) pattern from Plan 03 | 2026-03-10 |
+| Module test with explicit providers | AIServiceModule test uses explicit provider list instead of Test.createTestingModule({ imports }) — @Global PrismaService not available in isolated test context | 2026-03-10 |
+| AiConfigController double registration | Controller in both controllers[] and providers[] via useFactory in AIServiceModule — NestJS requires both for routing + DI injection | 2026-03-10 |
 
 ## Blockers
 
@@ -166,6 +184,7 @@ None currently.
 | 03    | 01   | 25min    | 2     | 15    |
 | 03    | 02   | 20min    | 2     | 7     |
 | 03    | 03   | 15min    | 2     | 7     |
+| 03    | 04   | 9min     | 3     | 9     |
 
 ## Key Decisions Made (Plan 06)
 
@@ -177,9 +196,9 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-10T18:01:50.264Z
-Stopped at: Completed 03-ai-service-layer/03-02-PLAN.md
-Resume file: .planning/phases/03-ai-service-layer/03-04-PLAN.md
+Last session: 2026-03-10T18:13:44Z
+Stopped at: Completed 03-ai-service-layer/03-04-PLAN.md
+Resume file: None
 
 ## Project Reference
 
