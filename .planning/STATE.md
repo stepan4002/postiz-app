@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 06-scheduling-publishing-engine/06-04-PLAN.md
+last_updated: "2026-03-10T23:55:12.330Z"
+progress:
+  total_phases: 8
+  completed_phases: 5
+  total_plans: 29
+  completed_plans: 28
+  percent: 97
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 06-scheduling-publishing-engine/06-02-PLAN.md
 last_updated: "2026-03-10T23:40:45.744Z"
 progress:
-  total_phases: 8
+  [██████████] 97%
   completed_phases: 5
   total_plans: 29
   completed_plans: 27
@@ -272,9 +287,9 @@ progress:
 
 ## Current Phase
 
-**Phase 6: Scheduling & Publishing Engine** — In Progress (2 of 5 plans done)
+**Phase 6: Scheduling & Publishing Engine** — In Progress (4 of 5 plans done)
 
-**Stopped at:** Completed 06-scheduling-publishing-engine/06-02-PLAN.md
+**Stopped at:** Completed 06-scheduling-publishing-engine/06-04-PLAN.md
 
 ## Phase Status
 
@@ -389,6 +404,7 @@ None currently.
 | Phase 06 P03 | 18min | 2 tasks | 12 files |
 | Phase 06 P03 | 18min | 2 tasks | 12 files |
 | Phase 06 P02 | 18min | 2 tasks | 6 files |
+| Phase 06 P04 | 20min | 2 tasks | 10 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -463,10 +479,19 @@ None currently.
 | AdapterRegistry eager instantiation | All 4 adapters instantiated in constructor — clean and predictable for MVP scale | 2026-03-10 |
 | LinkedIn x-restli-id as post URN | LinkedIn returns post URN in x-restli-id response header — used as platformPostId | 2026-03-10 |
 
+## Key Decisions Made (Phase 06 Plan 04)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| Logging responsibility in worker not service | PublishingWorkerJob calls attemptLogger after getting result from PublishingService — single authority for attempt logging; service focuses only on publish execution | 2026-03-11 |
+| Backoff enforced via timestamp check | isInBackoffWindow() queries getAttemptsForVariant() to find last attempt timestamp; if elapsed < required backoff, skip tick | 2026-03-11 |
+| FailedPostsController includes STALE status | STALE posts surface alongside FAILED in dashboard — both require operator attention even though causes differ | 2026-03-11 |
+| Retry endpoint resets publishAttempts to 0 | Fresh retry restarts the 3-attempt counter and recalculates 4-hour publish window from now | 2026-03-11 |
+
 ## Session Continuity
 
-Last session: 2026-03-11T00:38:54Z
-Stopped at: Completed 06-scheduling-publishing-engine/06-02-PLAN.md
+Last session: 2026-03-11T00:53:00Z
+Stopped at: Completed 06-scheduling-publishing-engine/06-04-PLAN.md
 Resume file: None
 
 ## Project Reference
