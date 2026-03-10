@@ -22,14 +22,10 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
 import { PrismaService } from '@gitroom/nestjs-libraries/database/prisma/prisma.service';
 import { CompanyService } from '../company/company.service';
 import { BrandService } from '../brand/brand.service';
 import { BrandVoiceService } from '../brand-voice/brand-voice.service';
-import { CompanyModule } from '../company/company.module';
-import { BrandModule } from '../brand/brand.module';
-import { BrandVoiceModule } from '../brand-voice/brand-voice.module';
 
 // ---------------------------------------------------------------------------
 // Test data setup helpers
@@ -39,7 +35,7 @@ const COMPANY_A_SLUG = 'isolation-test-a';
 const COMPANY_B_SLUG = 'isolation-test-b';
 
 describe('Company Data Isolation', () => {
-  let app: INestApplication;
+  let module: TestingModule;
   let companyService: CompanyService;
   let brandService: BrandService;
   let brandVoiceService: BrandVoiceService;
@@ -54,14 +50,10 @@ describe('Company Data Isolation', () => {
   // -------------------------------------------------------------------------
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      // PrismaService provided directly (not via DatabaseModule to avoid heavyweight deps)
-      imports: [CompanyModule, BrandModule, BrandVoiceModule],
-      providers: [PrismaService],
+    module = await Test.createTestingModule({
+      // Flat providers — avoids NestJS module scoping issues with PrismaService
+      providers: [PrismaService, CompanyService, BrandService, BrandVoiceService],
     }).compile();
-
-    app = module.createNestApplication();
-    await app.init();
 
     companyService = module.get<CompanyService>(CompanyService);
     brandService = module.get<BrandService>(BrandService);
@@ -115,7 +107,7 @@ describe('Company Data Isolation', () => {
     await (prisma as any).company.deleteMany({
       where: { slug: { in: [COMPANY_A_SLUG, COMPANY_B_SLUG] } },
     });
-    await app.close();
+    await module.close();
   });
 
   // -------------------------------------------------------------------------
