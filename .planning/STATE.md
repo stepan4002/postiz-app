@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 07-analytics-dashboard/07-01-PLAN.md
-last_updated: "2026-03-11T00:56:05.767Z"
+stopped_at: Completed 07-analytics-dashboard/07-03-PLAN.md
+last_updated: "2026-03-11T01:01:21.436Z"
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 33
-  completed_plans: 30
+  completed_plans: 31
 ---
 
 ---
@@ -316,9 +316,9 @@ progress:
 
 ## Current Phase
 
-**Phase 6: Scheduling & Publishing Engine** — Complete (5 of 5 plans done)
+**Phase 7: Analytics & Dashboard** — In Progress (2 of 4 plans done)
 
-**Stopped at:** Completed 07-analytics-dashboard/07-01-PLAN.md
+**Stopped at:** Completed 07-analytics-dashboard/07-03-PLAN.md
 
 ## Phase Status
 
@@ -330,7 +330,7 @@ progress:
 | 4 | Media Library & Processing | complete |
 | 5 | Content Generation Pipeline | complete |
 | 6 | Scheduling & Publishing Engine | complete |
-| 7 | Analytics & Dashboard | not_started |
+| 7 | Analytics & Dashboard | in_progress |
 | 8 | Production Hardening & Deployment | not_started |
 
 ## Key Decisions Made
@@ -436,6 +436,8 @@ None currently.
 | Phase 06 P04 | 20min | 2 tasks | 10 files |
 | Phase 06 P05 | 15min | 1 tasks | 9 files |
 | Phase 07 P01 | 4min | 2 tasks | 8 files |
+| 07    | 03   | 8min     | 2     | 5     |
+| Phase 07 P03 | 8min | 2 tasks | 5 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -528,10 +530,18 @@ None currently.
 | DayView 6am-11pm slots | 18 hourly slots cover practical scheduling window without overwhelming the UI | 2026-03-11 |
 | useScheduleActions plain functions | Returns plain async functions (not SWR) — caller calls mutate() after each action, consistent with useReviewAction pattern | 2026-03-11 |
 
+## Key Decisions Made (Phase 07 Plan 03)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| FullDashboardData extends DashboardData | Adds scheduledPosts/failedPosts/pendingReview detail lists — base type only had topPosts; service returns full arrays for all 4 widgets | 2026-03-11 |
+| oldestComputedAt for cross-company freshness | getDashboardAllCompanies() uses min(computedAt) across caches to surface least-fresh entry to consumer | 2026-03-11 |
+| EMPTY_DASHBOARD zero-value constant | Returned when no cache computed yet — avoids null propagation to controller, prevents field omission bugs | 2026-03-11 |
+
 ## Session Continuity
 
-Last session: 2026-03-11T00:56:05.762Z
-Stopped at: Completed 06-scheduling-publishing-engine/06-05-PLAN.md
+Last session: 2026-03-11T01:01:14.794Z
+Stopped at: Completed 07-analytics-dashboard/07-03-PLAN.md
 Resume file: None
 
 ## Project Reference
