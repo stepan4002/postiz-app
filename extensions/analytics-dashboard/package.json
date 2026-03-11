@@ -1,0 +1,19 @@
+{
+  "name": "@social/analytics-dashboard",
+  "version": "1.0.0",
+  "description": "Analytics and dashboard extension for Social Command Centre: metrics ingestion, top performers, and dashboard cache",
+  "main": "src/index.ts",
+  "license": "AGPL-3.0",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "test": "jest --config jest.config.ts"
+  }
+}
