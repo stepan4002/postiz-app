@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 07-analytics-dashboard/07-05-PLAN.md
+last_updated: "2026-03-11T01:37:10.565Z"
+progress:
+  total_phases: 8
+  completed_phases: 7
+  total_plans: 34
+  completed_plans: 34
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 07-analytics-dashboard/07-04-PLAN.md
 last_updated: "2026-03-11T01:17:45.547Z"
 progress:
-  total_phases: 8
+  [██████████] 100%
   completed_phases: 7
   total_plans: 33
   completed_plans: 33
@@ -348,7 +363,7 @@ progress:
 
 **Phase 7: Analytics & Dashboard** — Complete (4 of 4 plans done)
 
-**Stopped at:** Completed 07-analytics-dashboard/07-04-PLAN.md
+**Stopped at:** Completed 07-analytics-dashboard/07-05-PLAN.md
 
 ## Phase Status
 
@@ -474,6 +489,7 @@ None currently.
 | Phase 07 P03 | 8min | 2 tasks | 5 files |
 | Phase 07 P02 | 7min | 2 tasks | 12 files |
 | Phase 07 P04 | 20min | 3 tasks | 15 files |
+| Phase 07 P05 | 8min | 2 tasks | 4 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -583,9 +599,16 @@ None currently.
 | Local DashboardResponse interface in frontend hook | Prevents importing @social/analytics-dashboard NestJS types into frontend bundle — avoids bundler errors | 2026-03-11 |
 | useDashboard 60s refresh interval | Near-real-time dashboard updates without overwhelming backend; cache pre-computed every 15 minutes by DashboardSummaryJob | 2026-03-11 |
 
+## Key Decisions Made (Phase 07 Plan 05)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| companyId nullable on PostVariant | Existing rows safe; backfill UPDATE in migration populates all existing rows from ContentPost before FK constraint is added | 2026-03-11 |
+| Company model gets postVariants relation | Prisma requires both sides of relation to be declared; Company.postVariants PostVariant[] added alongside PostVariant.company relation | 2026-03-11 |
+
 ## Session Continuity
 
-Last session: 2026-03-11T01:17:45.543Z
+Last session: 2026-03-11T01:37:10.561Z
 Stopped at: Completed 07-analytics-dashboard/07-03-PLAN.md
 Resume file: None
 

@@ -203,7 +203,7 @@ Plans:
 
 **Estimated complexity:** MEDIUM-HIGH
 
-**Plans:** 5 plans (4 complete + 1 gap closure)
+**Plans:** 5/5 plans complete
 
 Plans:
 - [x] 07-01-PLAN.md — Extension scaffold, type contracts, Prisma models (PostMetrics/DashboardCache), DB indexes
