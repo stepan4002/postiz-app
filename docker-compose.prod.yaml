@@ -1,0 +1,188 @@
+# docker-compose.prod.yaml — Production deployment (single-file, standalone)
+# Start with: docker compose -f docker-compose.prod.yaml up -d
+#
+# Network topology:
+#   - All services on internal Docker bridge network only
+#   - Only port 80 exposed to host (Traefik)
+#   - Port 80 only — Cloudflare terminates TLS on 443 and proxies to origin:80.
+#     Block direct port 80 access via firewall (ufw allow from Cloudflare IPs only).
+#     Set Cloudflare SSL mode to "Full" (not "Full (strict)") for HTTP origin.
+#
+# Required environment variables (set in .env or shell before running):
+#   DOMAIN=social.yourdomain.com
+#   JWT_SECRET=<random string>
+#   ENCRYPTION_KEY=<64-char hex key>
+#   POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB (if overriding defaults)
+#   MINIO_ROOT_USER, MINIO_ROOT_PASSWORD
+#   Social media API keys (see .env.example)
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  postgres-volume:
+    external: false
+  postiz-redis-data:
+    external: false
+  postiz-uploads:
+    external: false
+  minio-data:
+    external: false
+
+services:
+  # ─── Reverse Proxy ─────────────────────────────────────────────────────────
+  traefik:
+    image: traefik:v3.3
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      # Port 80 only — Cloudflare terminates TLS on 443 and proxies to origin:80.
+      # Block direct port 80 access via firewall (ufw allow from Cloudflare IPs only).
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yaml:/etc/traefik/traefik.yaml:ro
+    networks:
+      - internal
+
+  # ─── Application ───────────────────────────────────────────────────────────
+  postiz:
+    image: ghcr.io/gitroomhq/postiz-app:latest
+    container_name: postiz
+    restart: unless-stopped
+    environment:
+      # === Required Settings
+      MAIN_URL: 'https://${DOMAIN}'
+      FRONTEND_URL: 'https://${DOMAIN}'
+      NEXT_PUBLIC_BACKEND_URL: 'https://${DOMAIN}/api'
+      JWT_SECRET: '${JWT_SECRET}'
+      DATABASE_URL: 'postgresql://${POSTGRES_USER:-postiz-user}:${POSTGRES_PASSWORD:-postiz-password}@postiz-postgres:5432/${POSTGRES_DB:-postiz-db-local}'
+      REDIS_URL: 'redis://postiz-redis:6379'
+      BACKEND_INTERNAL_URL: 'http://postiz:3000'
+      IS_GENERAL: 'true'
+      DISABLE_REGISTRATION: 'true'
+      NODE_ENV: 'production'
+
+      # === Storage Settings (MinIO — self-hosted S3-compatible)
+      STORAGE_PROVIDER: '${STORAGE_PROVIDER:-local}'
+      UPLOAD_DIRECTORY: '/uploads'
+      NEXT_PUBLIC_UPLOAD_DIRECTORY: '/uploads'
+      MINIO_ENDPOINT: '${MINIO_ENDPOINT:-http://postiz-minio:9000}'
+      MINIO_ACCESS_KEY: '${MINIO_ROOT_USER:-postiz-minio}'
+      MINIO_SECRET_KEY: '${MINIO_ROOT_PASSWORD:-postiz-minio-password}'
+      MINIO_BUCKET: '${MINIO_BUCKET:-postiz}'
+      MINIO_PUBLIC_URL: '${MINIO_PUBLIC_URL:-http://postiz-minio:9000}'
+
+      # === Encryption
+      ENCRYPTION_KEY: '${ENCRYPTION_KEY}'
+
+      # === Social Media API Settings
+      X_API_KEY: '${X_API_KEY:-}'
+      X_API_SECRET: '${X_API_SECRET:-}'
+      LINKEDIN_CLIENT_ID: '${LINKEDIN_CLIENT_ID:-}'
+      LINKEDIN_CLIENT_SECRET: '${LINKEDIN_CLIENT_SECRET:-}'
+      REDDIT_CLIENT_ID: '${REDDIT_CLIENT_ID:-}'
+      REDDIT_CLIENT_SECRET: '${REDDIT_CLIENT_SECRET:-}'
+      GITHUB_CLIENT_ID: '${GITHUB_CLIENT_ID:-}'
+      GITHUB_CLIENT_SECRET: '${GITHUB_CLIENT_SECRET:-}'
+      THREADS_APP_ID: '${THREADS_APP_ID:-}'
+      THREADS_APP_SECRET: '${THREADS_APP_SECRET:-}'
+      FACEBOOK_APP_ID: '${FACEBOOK_APP_ID:-}'
+      FACEBOOK_APP_SECRET: '${FACEBOOK_APP_SECRET:-}'
+      META_APP_ID: '${META_APP_ID:-}'
+      META_APP_SECRET: '${META_APP_SECRET:-}'
+      YOUTUBE_CLIENT_ID: '${YOUTUBE_CLIENT_ID:-}'
+      YOUTUBE_CLIENT_SECRET: '${YOUTUBE_CLIENT_SECRET:-}'
+      TIKTOK_CLIENT_ID: '${TIKTOK_CLIENT_ID:-}'
+      TIKTOK_CLIENT_SECRET: '${TIKTOK_CLIENT_SECRET:-}'
+      PINTEREST_CLIENT_ID: '${PINTEREST_CLIENT_ID:-}'
+      PINTEREST_CLIENT_SECRET: '${PINTEREST_CLIENT_SECRET:-}'
+      DISCORD_CLIENT_ID: '${DISCORD_CLIENT_ID:-}'
+      DISCORD_CLIENT_SECRET: '${DISCORD_CLIENT_SECRET:-}'
+      DISCORD_BOT_TOKEN_ID: '${DISCORD_BOT_TOKEN_ID:-}'
+      SLACK_ID: '${SLACK_ID:-}'
+      SLACK_SECRET: '${SLACK_SECRET:-}'
+      SLACK_SIGNING_SECRET: '${SLACK_SIGNING_SECRET:-}'
+      MASTODON_URL: '${MASTODON_URL:-https://mastodon.social}'
+      MASTODON_CLIENT_ID: '${MASTODON_CLIENT_ID:-}'
+      MASTODON_CLIENT_SECRET: '${MASTODON_CLIENT_SECRET:-}'
+
+      # === AI Settings
+      OPENAI_API_KEY: '${OPENAI_API_KEY:-}'
+      ANTHROPIC_API_KEY: '${ANTHROPIC_API_KEY:-}'
+      OLLAMA_URL: '${OLLAMA_URL:-}'
+
+      # === Misc Settings
+      NX_ADD_PLUGINS: 'false'
+      API_LIMIT: '${API_LIMIT:-30}'
+      LOG_LEVEL: '${LOG_LEVEL:-info}'
+
+    volumes:
+      - postiz-uploads:/uploads/
+    networks:
+      - internal
+    depends_on:
+      postiz-postgres:
+        condition: service_healthy
+      postiz-redis:
+        condition: service_healthy
+      postiz-minio:
+        condition: service_started
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.app.entrypoints=web"
+      - "traefik.http.services.app.loadbalancer.server.port=5000"
+
+  # ─── Database ──────────────────────────────────────────────────────────────
+  postiz-postgres:
+    image: postgres:17-alpine
+    container_name: postiz-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD:-postiz-password}'
+      POSTGRES_USER: '${POSTGRES_USER:-postiz-user}'
+      POSTGRES_DB: '${POSTGRES_DB:-postiz-db-local}'
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    # NO ports: section — PostgreSQL internal only, never exposed to host
+    networks:
+      - internal
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER:-postiz-user} -d ${POSTGRES_DB:-postiz-db-local}
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ─── Cache ─────────────────────────────────────────────────────────────────
+  postiz-redis:
+    image: redis:7.2
+    container_name: postiz-redis
+    restart: unless-stopped
+    # NO ports: section — Redis internal only, never exposed to host
+    networks:
+      - internal
+    volumes:
+      - postiz-redis-data:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ─── Object Storage ────────────────────────────────────────────────────────
+  postiz-minio:
+    image: minio/minio:latest
+    container_name: postiz-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: '${MINIO_ROOT_USER:-postiz-minio}'
+      MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD:-postiz-minio-password}'
+    # NO ports: section — MinIO internal only, never exposed to host
+    # Console port 9001 is also internal only
+    networks:
+      - internal
+    volumes:
+      - minio-data:/data

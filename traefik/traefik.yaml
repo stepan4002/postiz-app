@@ -1,0 +1,24 @@
+# Traefik v3 static configuration
+# Source: Traefik v3 official docs (traefik.io/traefik)
+# TLS model: Cloudflare terminates TLS on port 443 at edge; Traefik serves HTTP on port 80.
+# Set Cloudflare SSL mode to "Full" (not "Full (strict)") since Traefik has no cert.
+
+api:
+  insecure: false    # Dashboard API not accessible
+  dashboard: false   # Dashboard disabled in production
+
+entryPoints:
+  web:
+    address: ":80"   # Traefik listens HTTP; Cloudflare delivers HTTPS to end users
+
+providers:
+  docker:
+    exposedByDefault: false  # Services must opt-in via traefik.enable=true label
+    network: internal         # Only route services on the internal Docker network
+
+log:
+  level: WARN
+  format: json
+
+accessLog:
+  format: json
