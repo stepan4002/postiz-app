@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 08-production-hardening-deployment/08-02-PLAN.md
-last_updated: "2026-03-11T02:16:03.357Z"
+stopped_at: Completed 08-production-hardening-deployment/08-01-PLAN.md
+last_updated: "2026-03-11T02:16:36.179Z"
 progress:
   total_phases: 8
   completed_phases: 7
   total_plans: 38
-  completed_plans: 35
+  completed_plans: 36
 ---
 
 ---
@@ -391,7 +391,7 @@ progress:
 
 **Phase 7: Analytics & Dashboard** — Complete (4 of 4 plans done)
 
-**Stopped at:** Completed 08-production-hardening-deployment/08-02-PLAN.md
+**Stopped at:** Completed 08-production-hardening-deployment/08-01-PLAN.md
 
 ## Phase Status
 
@@ -404,7 +404,7 @@ progress:
 | 5 | Content Generation Pipeline | complete |
 | 6 | Scheduling & Publishing Engine | complete |
 | 7 | Analytics & Dashboard | complete |
-| 8 | Production Hardening & Deployment | not_started |
+| 8 | Production Hardening & Deployment | in_progress |
 
 ## Key Decisions Made
 
@@ -519,6 +519,7 @@ None currently.
 | Phase 07 P04 | 20min | 3 tasks | 15 files |
 | Phase 07 P05 | 8min | 2 tasks | 4 files |
 | Phase 08 P02 | 7min | 3 tasks | 11 files |
+| Phase 08 P01 | 8min | 2 tasks | 18 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -635,11 +636,20 @@ None currently.
 | companyId nullable on PostVariant | Existing rows safe; backfill UPDATE in migration populates all existing rows from ContentPost before FK constraint is added | 2026-03-11 |
 | Company model gets postVariants relation | Prisma requires both sides of relation to be declared; Company.postVariants PostVariant[] added alongside PostVariant.company relation | 2026-03-11 |
 
+## Key Decisions Made (Phase 08 Plan 01)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| IPrismaService local interface | Local interface in database.indicator.ts avoids importing @gitroom/nestjs-libraries into health extension — same isolation pattern as Phase 7 ITokenEncryptionService | 2026-03-11 |
+| pino logger early registration | bufferLogs: true + app.useLogger() called before startMcp() and any other setup to ensure ALL log output is captured (avoids nestjs-pino Pitfall 3) | 2026-03-11 |
+| orchestrator pino logging | LoggerModule.forRoot() added to orchestrator AppModule — Temporal workers run via NestJS DI, so pino intercepting NestJS Logger covers all worker log output | 2026-03-11 |
+| redis indicator lazy connect | RedisHealthIndicator uses lazyConnect: true + maxRetriesPerRequest: 1 to fail fast on health checks without blocking app startup | 2026-03-11 |
+
 ## Session Continuity
 
-Last session: 2026-03-11T02:16:03.353Z
-Stopped at: Phase 7 complete, ready to plan Phase 8
-Resume file: None
+Last session: 2026-03-11T02:16:36.174Z
+Stopped at: Completed 08-production-hardening-deployment/08-01-PLAN.md
+Resume file: .planning/phases/08-production-hardening-deployment/08-02-PLAN.md
 
 ## Project Reference
 
