@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 08-production-hardening-deployment/08-03-PLAN.md
+last_updated: "2026-03-11T02:22:07.690Z"
+progress:
+  total_phases: 8
+  completed_phases: 7
+  total_plans: 38
+  completed_plans: 37
+  percent: 97
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 08-production-hardening-deployment/08-01-PLAN.md
 last_updated: "2026-03-11T02:16:36.179Z"
 progress:
-  total_phases: 8
+  [██████████] 97%
   completed_phases: 7
   total_plans: 38
   completed_plans: 36
@@ -391,7 +406,7 @@ progress:
 
 **Phase 7: Analytics & Dashboard** — Complete (4 of 4 plans done)
 
-**Stopped at:** Completed 08-production-hardening-deployment/08-01-PLAN.md
+**Stopped at:** Completed 08-production-hardening-deployment/08-03-PLAN.md
 
 ## Phase Status
 
@@ -520,6 +535,7 @@ None currently.
 | Phase 07 P05 | 8min | 2 tasks | 4 files |
 | Phase 08 P02 | 7min | 3 tasks | 11 files |
 | Phase 08 P01 | 8min | 2 tasks | 18 files |
+| Phase 08 P03 | 2min | 2 tasks | 3 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -644,12 +660,14 @@ None currently.
 | pino logger early registration | bufferLogs: true + app.useLogger() called before startMcp() and any other setup to ensure ALL log output is captured (avoids nestjs-pino Pitfall 3) | 2026-03-11 |
 | orchestrator pino logging | LoggerModule.forRoot() added to orchestrator AppModule — Temporal workers run via NestJS DI, so pino intercepting NestJS Logger covers all worker log output | 2026-03-11 |
 | redis indicator lazy connect | RedisHealthIndicator uses lazyConnect: true + maxRetriesPerRequest: 1 to fail fast on health checks without blocking app startup | 2026-03-11 |
+| Traefik port 80 (not 443) for Cloudflare origin | Cloudflare terminates TLS on 443 at edge and forwards to origin:80; VPS firewall blocks non-Cloudflare IPs from port 80; Cloudflare SSL mode = "Full" | 2026-03-11 |
+| MinIO backup path configurable via env var | MINIO_VOLUME_PATH defaults to /var/lib/docker/volumes/postiz_minio-data/_data; operator verifies with docker volume inspect on VPS | 2026-03-11 |
 
 ## Session Continuity
 
-Last session: 2026-03-11T02:16:36.174Z
+Last session: 2026-03-11T02:22:07.685Z
 Stopped at: Completed 08-production-hardening-deployment/08-01-PLAN.md
-Resume file: .planning/phases/08-production-hardening-deployment/08-02-PLAN.md
+Resume file: None
 
 ## Project Reference
 
