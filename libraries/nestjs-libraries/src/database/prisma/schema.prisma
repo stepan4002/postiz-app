@@ -75,7 +75,8 @@ model SocialAccount {
   integrationId String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  brand         Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  brand         Brand        @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  integration   Integration? @relation(fields: [integrationId], references: [id])
 
   @@unique([brandId, platform])
 }
@@ -576,6 +577,7 @@ model Integration {
   orderItems            OrderItems[]
   plugs                 Plugs[]
   posts                 Post[]
+  socialAccounts        SocialAccount[]
 
   @@unique([organizationId, internalId])
   @@index([rootInternalId])
