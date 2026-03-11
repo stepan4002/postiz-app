@@ -24,6 +24,8 @@ One person can efficiently operate 100+ social posts per week across dozens of a
 - ✓ Platform-specific caption adaptation (length, style, hashtags, CTAs) — Phase 5 (PLATFORM_CAPTION_NORMS for Instagram/Facebook/LinkedIn/X)
 - ✓ AI confidence gating: low-confidence content flagged for human review before publishing — Phase 5 (confidence scoring + threshold gating per company)
 - ✓ Input workflow: upload images/videos + optional text/source info, AI generates everything — Phase 5 (CreatePostForm with media picker, brief, and generation results)
+- ✓ Analytics: track engagement metrics per post, detect best/worst content — Phase 7 (PostMetrics ingestion at T+1h/T+24h/T+7d, per-post analytics panel)
+- ✓ Personal dashboard: scheduled today, pending review, failed posts, top performers — Phase 7 (4-widget dashboard with pre-computed DashboardCache)
 
 ### Active
 
@@ -38,13 +40,12 @@ One person can efficiently operate 100+ social posts per week across dozens of a
 - [ ] Publishing engine: auto-publish, retry failures, log everything
 - [ ] Evergreen post recycling
 - [ ] Automatic UTM tagging and link management
-- [ ] Analytics: track engagement metrics per post, detect best/worst content
 - [ ] Analytics summaries: weekly and monthly per company and platform
 - [ ] Growth detection: spot fastest-growing company, best-value platforms
 - [ ] Inbox/comment monitoring via compliant APIs
 - [ ] Enquiry categorisation: sales, complaint, question, partnership, spam
 - [ ] Content gap detection (e.g. "this brand hasn't posted on LinkedIn for 10 days")
-- [ ] Personal dashboard: today's tasks, failures, top performers, companies needing attention, content ready for review, pending replies
+- [ ] Personal dashboard enhancements: companies needing attention, content ready for review, pending replies (basic dashboard done Phase 7)
 
 ### Out of Scope
 
@@ -99,10 +100,14 @@ Primary open-source candidates to evaluate:
 | Media storage via MinIO S3 | MinioStorage with forcePathStyle, UploadFactory case 's3', Uppy multipart presigned URLs | Self-hosted media pipeline — Phase 4 |
 | @Cron media processing | 30s cron poller, 5 jobs/batch, per-job error isolation; migrate to Temporal in Phase 6 | Simpler than BullMQ — Phase 4 |
 | Company-scoped media isolation | All queries filter companyId, slug→id in controller, company-scoped S3 paths | Data isolation contract — Phase 4 |
+| Analytics as extension | @social/analytics-dashboard extension package — consistent with extension zone pattern | Phase 7 |
+| Pre-computed dashboard cache | DashboardSummaryJob cron every 15min aggregates PostMetrics + PostVariant status into DashboardCache JSON | Phase 7 |
+| Analytics adapter pattern | BaseAnalyticsAdapter → platform-specific adapters (Instagram/Facebook/LinkedIn/X) with token decryption | Phase 7 |
+| PostVariant companyId denormalization | Denormalized companyId on PostVariant with compound index for efficient dashboard queries | Phase 7 |
 | Content generation as extension | @social/content-generation extension package in extensions/ workspace — consistent with Phase 1 extension zone pattern | Phase 5 |
 | ContentType as union type | TypeScript union (not Prisma enum) — stored as string in DB, avoids enum migration friction | Phase 5 |
 | Confidence gating per company | AIConfig.confidenceThreshold + requireAllReview — company-level control over auto-approval | Phase 5 |
 | Review queue audit trail | reviewedBy, reviewAction, reviewedAt, originalCaption stored directly on PostVariant — full traceability | Phase 5 |
 
 ---
-*Last updated: 2026-03-10 after Phase 5*
+*Last updated: 2026-03-11 after Phase 7*
