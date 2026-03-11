@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 06-scheduling-publishing-engine/06-05-PLAN.md
+last_updated: "2026-03-11T00:04:12.823Z"
+progress:
+  total_phases: 8
+  completed_phases: 6
+  total_plans: 29
+  completed_plans: 29
+  percent: 100
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 06-scheduling-publishing-engine/06-04-PLAN.md
 last_updated: "2026-03-10T23:55:12.330Z"
 progress:
-  total_phases: 8
+  [██████████] 100%
   completed_phases: 5
   total_plans: 29
   completed_plans: 28
@@ -287,9 +302,9 @@ progress:
 
 ## Current Phase
 
-**Phase 6: Scheduling & Publishing Engine** — In Progress (4 of 5 plans done)
+**Phase 6: Scheduling & Publishing Engine** — Complete (5 of 5 plans done)
 
-**Stopped at:** Completed 06-scheduling-publishing-engine/06-04-PLAN.md
+**Stopped at:** Completed 06-scheduling-publishing-engine/06-05-PLAN.md
 
 ## Phase Status
 
@@ -300,7 +315,7 @@ progress:
 | 3 | AI Service Layer | complete |
 | 4 | Media Library & Processing | complete |
 | 5 | Content Generation Pipeline | complete |
-| 6 | Scheduling & Publishing Engine | in_progress |
+| 6 | Scheduling & Publishing Engine | complete |
 | 7 | Analytics & Dashboard | not_started |
 | 8 | Production Hardening & Deployment | not_started |
 
@@ -405,6 +420,7 @@ None currently.
 | Phase 06 P03 | 18min | 2 tasks | 12 files |
 | Phase 06 P02 | 18min | 2 tasks | 6 files |
 | Phase 06 P04 | 20min | 2 tasks | 10 files |
+| Phase 06 P05 | 15min | 1 tasks | 9 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -488,10 +504,19 @@ None currently.
 | FailedPostsController includes STALE status | STALE posts surface alongside FAILED in dashboard — both require operator attention even though causes differ | 2026-03-11 |
 | Retry endpoint resets publishAttempts to 0 | Fresh retry restarts the 3-attempt counter and recalculates 4-hour publish window from now | 2026-03-11 |
 
+## Key Decisions Made (Phase 06 Plan 05)
+
+| Decision | Outcome | Date |
+|----------|---------|------|
+| Route at (app)/(site)/scheduling | Project uses (app)/(site)/ route group, not (dashboard)/ as plan specified — corrected to match actual Postiz structure | 2026-03-11 |
+| CalendarDayCell shows first variant | Only first variant per post shown in cell to keep calendar compact; full form opens on click | 2026-03-11 |
+| DayView 6am-11pm slots | 18 hourly slots cover practical scheduling window without overwhelming the UI | 2026-03-11 |
+| useScheduleActions plain functions | Returns plain async functions (not SWR) — caller calls mutate() after each action, consistent with useReviewAction pattern | 2026-03-11 |
+
 ## Session Continuity
 
-Last session: 2026-03-11T00:53:00Z
-Stopped at: Completed 06-scheduling-publishing-engine/06-04-PLAN.md
+Last session: 2026-03-11T00:13:00Z
+Stopped at: Completed 06-scheduling-publishing-engine/06-05-PLAN.md
 Resume file: None
 
 ## Project Reference
@@ -499,8 +524,8 @@ Resume file: None
 See: .planning/PROJECT.md (updated 2026-03-10 after Phase 5)
 
 **Core value:** One person can efficiently operate 100+ social posts per week across dozens of accounts and 4+ languages
-**Current focus:** Phase 6 — Scheduling & Publishing Engine
+**Current focus:** Phase 7 — Analytics & Dashboard
 
 ## Next Action
 
-Plan Phase 6: Scheduling & Publishing Engine.
+Plan Phase 7: Analytics & Dashboard.
