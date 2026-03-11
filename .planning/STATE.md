@@ -4,6 +4,20 @@ milestone: v2.20
 milestone_name: milestone
 status: in_progress
 stopped_at: Completed 06-scheduling-publishing-engine/06-05-PLAN.md
+last_updated: "2026-03-11T00:11:38.881Z"
+progress:
+  total_phases: 8
+  completed_phases: 6
+  total_plans: 29
+  completed_plans: 29
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
+stopped_at: Completed 06-scheduling-publishing-engine/06-05-PLAN.md
 last_updated: "2026-03-11T00:04:12.823Z"
 progress:
   total_phases: 8
