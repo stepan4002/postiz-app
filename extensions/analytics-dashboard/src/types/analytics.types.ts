@@ -41,6 +41,7 @@ export interface AnalyticsAdapter {
   fetchPostMetrics(
     platformPostId: string,
     accessToken: string,
+    platformAccountId?: string,
   ): Promise<MetricsSnapshot>;
 }
 
