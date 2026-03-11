@@ -22,6 +22,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import mime from 'mime-types';
 import { IUploadProvider } from '@gitroom/nestjs-libraries/upload/upload.interface';
 import { makeId } from '@gitroom/nestjs-libraries/services/make.is';
+import { assertSafeUrl } from '@social/security';
 
 /**
  * Upload a buffer directly to MinIO/S3.
@@ -119,8 +120,13 @@ export class MinioStorage implements IUploadProvider {
   /**
    * Fetch a URL and upload the content to MinIO.
    * Returns the public URL of the uploaded object.
+   *
+   * SSRF protection: assertSafeUrl validates the URL against private IP ranges,
+   * internal hostnames, and non-HTTPS protocols before fetching.
    */
   async uploadSimple(url: string): Promise<string> {
+    // NF1.4: SSRF protection — block private IP ranges and internal hostnames
+    assertSafeUrl(url);
     const response = await fetch(url);
     const contentType =
       response.headers.get('content-type') ||

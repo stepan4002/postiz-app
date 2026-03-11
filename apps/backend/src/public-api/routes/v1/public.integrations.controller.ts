@@ -33,6 +33,7 @@ import { GetNotificationsDto } from '@gitroom/nestjs-libraries/dtos/notification
 import axios from 'axios';
 import { Readable } from 'stream';
 import { lookup, extension } from 'mime-types';
+import { assertSafeUrl } from '@social/security';
 import * as Sentry from '@sentry/nestjs';
 import { socialIntegrationList, IntegrationManager } from '@gitroom/nestjs-libraries/integrations/integration.manager';
 import { getValidationSchemas } from '@gitroom/nestjs-libraries/chat/validation.schemas.helper';
@@ -80,6 +81,12 @@ export class PublicIntegrationsController {
     @Body() body: UploadDto
   ) {
     Sentry.metrics.count('public_api-request', 1);
+    // NF1.4: SSRF protection — validate user-supplied URL before fetching
+    try {
+      assertSafeUrl(body.url);
+    } catch (err: any) {
+      throw new HttpException({ msg: err.message }, 400);
+    }
     const response = await axios.get(body.url, {
       responseType: 'arraybuffer',
     });
