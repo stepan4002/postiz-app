@@ -203,6 +203,14 @@ Plans:
 
 **Estimated complexity:** MEDIUM-HIGH
 
+**Plans:** 4 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Extension scaffold, type contracts, Prisma models (PostMetrics/DashboardCache), DB indexes
+- [ ] 07-02-PLAN.md — Platform analytics adapters, AnalyticsRepository, ingestion cron job, analytics controller
+- [ ] 07-03-PLAN.md — DashboardRepository, DashboardSummaryJob cron, DashboardService, dashboard controller
+- [ ] 07-04-PLAN.md — AnalyticsDashboardModule wiring, frontend per-post analytics and 4-widget dashboard
+
 ---
 
 ## Phase 8: Production Hardening & Deployment
