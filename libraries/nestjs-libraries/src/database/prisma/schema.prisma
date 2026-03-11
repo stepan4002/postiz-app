@@ -35,6 +35,8 @@ model Company {
   // SOCIAL COMMAND CENTRE -- Phase 7: Analytics & Dashboard
   postMetrics     PostMetrics[]
   dashboardCache  DashboardCache?
+  // SOCIAL COMMAND CENTRE -- Phase 7 Plan 05: denormalized relation for NF3.4 compound index
+  postVariants    PostVariant[]
 }
 
 model Brand {
@@ -437,6 +439,10 @@ model PostVariant {
   publishWindowExpiresAt DateTime?        // when the publish window closes (R10.8)
   post                   ContentPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
   publishAttemptLogs     PublishAttempt[]
+  // SOCIAL COMMAND CENTRE -- Phase 7 Plan 05: denormalized companyId for NF3.4 compound index
+  // Nullable to avoid breaking existing rows; backfill handled in migration SQL
+  companyId              String?
+  company                Company?         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   // SOCIAL COMMAND CENTRE -- Phase 7: Analytics & Dashboard
   metrics                PostMetrics[]
 
@@ -445,6 +451,7 @@ model PostVariant {
   @@index([confidenceScore])
   @@index([status, scheduledAt])           // for scheduler_tick query
   @@index([platformPostId])                // for idempotency checks
+  @@index([companyId, platform, status])   // NF3.4: compound index for dashboard queries
 }
 
 // SOCIAL COMMAND CENTRE — Phase 6: Publish Attempt audit log (R10.6)
