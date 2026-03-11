@@ -234,6 +234,14 @@ Plans:
 
 **Estimated complexity:** MEDIUM
 
+**Plans:** 4 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Health check endpoints (@nestjs/terminus) and structured JSON logging (nestjs-pino)
+- [ ] 08-02-PLAN.md — SSRF protection utility, prompt injection audit, .env.example completeness
+- [ ] 08-03-PLAN.md — Production Docker Compose with Traefik reverse proxy, backup script
+- [ ] 08-04-PLAN.md — Automated smoke test script and manual verification checklist
+
 ---
 
 ## Phase Dependencies
