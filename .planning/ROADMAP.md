@@ -203,13 +203,14 @@ Plans:
 
 **Estimated complexity:** MEDIUM-HIGH
 
-**Plans:** 4/4 plans complete
+**Plans:** 5 plans (4 complete + 1 gap closure)
 
 Plans:
-- [ ] 07-01-PLAN.md — Extension scaffold, type contracts, Prisma models (PostMetrics/DashboardCache), DB indexes
-- [ ] 07-02-PLAN.md — Platform analytics adapters, AnalyticsRepository, ingestion cron job, analytics controller
-- [ ] 07-03-PLAN.md — DashboardRepository, DashboardSummaryJob cron, DashboardService, dashboard controller
-- [ ] 07-04-PLAN.md — AnalyticsDashboardModule wiring, frontend per-post analytics and 4-widget dashboard
+- [x] 07-01-PLAN.md — Extension scaffold, type contracts, Prisma models (PostMetrics/DashboardCache), DB indexes
+- [x] 07-02-PLAN.md — Platform analytics adapters, AnalyticsRepository, ingestion cron job, analytics controller
+- [x] 07-03-PLAN.md — DashboardRepository, DashboardSummaryJob cron, DashboardService, dashboard controller
+- [x] 07-04-PLAN.md — AnalyticsDashboardModule wiring, frontend per-post analytics and 4-widget dashboard
+- [ ] 07-05-PLAN.md — Gap closure: fix lastPublishError field mismatch (R12.3), add PostVariant companyId compound index (NF3.4)
 
 ---
 
