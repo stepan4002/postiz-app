@@ -3,10 +3,25 @@ gsd_state_version: 1.0
 milestone: v2.20
 milestone_name: milestone
 status: in_progress
+stopped_at: Completed 07-analytics-dashboard/07-02-PLAN.md
+last_updated: "2026-03-11T01:06:09.018Z"
+progress:
+  total_phases: 8
+  completed_phases: 6
+  total_plans: 33
+  completed_plans: 32
+  percent: 97
+---
+
+---
+gsd_state_version: 1.0
+milestone: v2.20
+milestone_name: milestone
+status: in_progress
 stopped_at: Completed 07-analytics-dashboard/07-03-PLAN.md
 last_updated: "2026-03-11T01:01:21.436Z"
 progress:
-  total_phases: 8
+  [██████████] 97%
   completed_phases: 6
   total_plans: 33
   completed_plans: 31
@@ -318,7 +333,7 @@ progress:
 
 **Phase 7: Analytics & Dashboard** — In Progress (2 of 4 plans done)
 
-**Stopped at:** Completed 07-analytics-dashboard/07-03-PLAN.md
+**Stopped at:** Completed 07-analytics-dashboard/07-02-PLAN.md
 
 ## Phase Status
 
@@ -395,6 +410,10 @@ progress:
 | Company-scoped Uppy S3 multipart endpoints | Uppy 's3' case routes to /companies/:slug/media/multipart/:endpoint — avoids Cloudflare R2 /media/:endpoint conflict; MinioStorage exposes 5 presigned URL methods | 2026-03-10 |
 | useMediaUpload FormData approach | Direct FormData to /companies/:slug/media/upload vs Uppy — server handles sharp pipeline; storageProvider type has no 's3' value; simpler | 2026-03-10 |
 | MediaGrid MinIO URL resolution | paths stored as S3 keys in DB; resolveMediaUrl prepends MINIO_PUBLIC_URL when path not http-prefixed | 2026-03-10 |
+| ITokenEncryptionService local interface | Local interface in analytics.service.ts avoids importing @social/credential-management — same pattern as Phase 2 IRefreshIntegrationService | 2026-03-11 |
+| findDueForIngestion over-fetch JS-filter | Over-fetches batchSize*3 from DB then JS-filters elapsed time — Prisma cannot express time arithmetic in WHERE clause | 2026-03-11 |
+| XAnalyticsAdapter 403 graceful fallback | Retry with public_metrics only when non_public_metrics unavailable (posts >30 days); clicks stored as null | 2026-03-11 |
+| AnalyticsAdapter platformAccountId optional | Interface updated to add optional platformAccountId — required for page-scoped platforms (Facebook/LinkedIn) | 2026-03-11 |
 
 ## Blockers
 
@@ -438,6 +457,7 @@ None currently.
 | Phase 07 P01 | 4min | 2 tasks | 8 files |
 | 07    | 03   | 8min     | 2     | 5     |
 | Phase 07 P03 | 8min | 2 tasks | 5 files |
+| Phase 07 P02 | 7min | 2 tasks | 12 files |
 
 ## Key Decisions Made (Phase 05 Plan 04)
 
@@ -540,7 +560,7 @@ None currently.
 
 ## Session Continuity
 
-Last session: 2026-03-11T01:01:14.794Z
+Last session: 2026-03-11T01:06:09.014Z
 Stopped at: Completed 07-analytics-dashboard/07-03-PLAN.md
 Resume file: None
 
