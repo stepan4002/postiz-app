@@ -76,9 +76,9 @@ export function FailedPostsWidget({ count, posts }: FailedPostsWidgetProps) {
                     {post.caption || '(no caption)'}
                   </p>
                 </div>
-                {post.lastError && (
+                {post.lastPublishError && (
                   <p className="text-xs text-red-400 truncate pl-0.5">
-                    {post.lastError}
+                    {post.lastPublishError}
                   </p>
                 )}
               </li>

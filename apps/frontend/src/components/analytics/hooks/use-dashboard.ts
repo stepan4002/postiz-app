@@ -30,7 +30,7 @@ export interface FailedPostSummary {
   platform: string;
   caption: string;
   status: string;
-  lastError: string | null;
+  lastPublishError: string | null;
 }
 
 export interface PendingReviewSummary {
