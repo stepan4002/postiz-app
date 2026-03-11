@@ -1013,6 +1013,9 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.787.0
         version: 3.1000.0
+      '@social/security':
+        specifier: workspace:*
+        version: link:../security
       mime-types:
         specifier: ^2.1.35
         version: 2.1.35

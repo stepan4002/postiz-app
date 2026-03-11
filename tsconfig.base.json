@@ -43,7 +43,9 @@
       "@social/scheduling-publishing": ["extensions/scheduling-publishing/src/index.ts"],
       "@social/scheduling-publishing/*": ["extensions/scheduling-publishing/src/*"],
       "@social/analytics-dashboard": ["extensions/analytics-dashboard/src/index.ts"],
-      "@social/analytics-dashboard/*": ["extensions/analytics-dashboard/src/*"]
+      "@social/analytics-dashboard/*": ["extensions/analytics-dashboard/src/*"],
+      "@social/health": ["extensions/health/src/index.ts"],
+      "@social/health/*": ["extensions/health/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

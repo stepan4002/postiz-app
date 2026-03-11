@@ -33,6 +33,9 @@ import { ContentGenerationModule } from '@social/content-generation';
 import { SchedulingPublishingModule } from '@social/scheduling-publishing';
 // SOCIAL COMMAND CENTRE -- Phase 7: Analytics & Dashboard
 import { AnalyticsDashboardModule } from '@social/analytics-dashboard';
+// SOCIAL COMMAND CENTRE — Phase 8: Production Hardening — health checks + structured logging
+import { HealthModule } from '@social/health';
+import { LoggerModule } from 'nestjs-pino';
 
 @Global()
 @Module({
@@ -56,6 +59,19 @@ import { AnalyticsDashboardModule } from '@social/analytics-dashboard';
     SchedulingPublishingModule,
     // SOCIAL COMMAND CENTRE -- Phase 7: Analytics & Dashboard
     AnalyticsDashboardModule,
+    // SOCIAL COMMAND CENTRE — Phase 8: Health check endpoints (GET /health/live, GET /health/ready)
+    HealthModule,
+    // SOCIAL COMMAND CENTRE — Phase 8: Structured JSON logging via nestjs-pino
+    // Production: emits pure JSON to stdout. Development: uses pino-pretty for readable output.
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: process.env.LOG_LEVEL ?? 'info',
+        transport:
+          process.env.NODE_ENV !== 'production'
+            ? { target: 'pino-pretty' }
+            : undefined,
+      },
+    }),
     ApiModule,
     PublicApiModule,
     AgentModule,

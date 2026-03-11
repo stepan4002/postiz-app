@@ -13,6 +13,7 @@ import cookieParser from 'cookie-parser';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Logger as PinoLogger } from 'nestjs-pino';
 
 import { SubscriptionExceptionFilter } from '@gitroom/backend/services/auth/permissions/subscription.exception';
 import { HttpExceptionFilter } from '@gitroom/nestjs-libraries/services/exception.filter';
@@ -21,6 +22,8 @@ import { startMcp } from '@gitroom/nestjs-libraries/chat/start.mcp';
 
 async function start() {
   const app = await NestFactory.create(AppModule, {
+    // Suppress default NestJS logger during startup — pino takes over after useLogger call below
+    bufferLogs: true,
     rawBody: true,
     cors: {
       ...(!process.env.NOT_SECURED ? { credentials: true } : {}),
@@ -43,6 +46,11 @@ async function start() {
       ],
     },
   });
+
+  // SOCIAL COMMAND CENTRE — Phase 8: Use pino logger globally for structured JSON logging
+  // Must be called as early as possible after NestFactory.create() (before any other setup)
+  // to ensure ALL log output is structured JSON in production (NF5.4).
+  app.useLogger(app.get(PinoLogger));
 
   await startMcp(app);
 

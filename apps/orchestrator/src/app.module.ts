@@ -5,6 +5,8 @@ import { DatabaseModule } from '@gitroom/nestjs-libraries/database/prisma/databa
 import { AutopostService } from '@gitroom/nestjs-libraries/database/prisma/autopost/autopost.service';
 import { EmailActivity } from '@gitroom/orchestrator/activities/email.activity';
 import { IntegrationsActivity } from '@gitroom/orchestrator/activities/integrations.activity';
+// SOCIAL COMMAND CENTRE — Phase 8: Structured JSON logging for worker processes (NF5.4)
+import { LoggerModule } from 'nestjs-pino';
 
 const activities = [
   PostActivity,
@@ -15,6 +17,16 @@ const activities = [
 @Module({
   imports: [
     DatabaseModule,
+    // SOCIAL COMMAND CENTRE — Phase 8: Structured JSON logging for Temporal worker (NF5.4)
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: process.env.LOG_LEVEL ?? 'info',
+        transport:
+          process.env.NODE_ENV !== 'production'
+            ? { target: 'pino-pretty' }
+            : undefined,
+      },
+    }),
     getTemporalModule(true, require.resolve('./workflows'), activities),
   ],
   controllers: [],
