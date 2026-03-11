@@ -31,6 +31,8 @@ import { MediaLibraryModule } from '@social/media-library';
 import { ContentGenerationModule } from '@social/content-generation';
 // SOCIAL COMMAND CENTRE — Phase 6: Scheduling & Publishing Engine
 import { SchedulingPublishingModule } from '@social/scheduling-publishing';
+// SOCIAL COMMAND CENTRE -- Phase 7: Analytics & Dashboard
+import { AnalyticsDashboardModule } from '@social/analytics-dashboard';
 
 @Global()
 @Module({
@@ -52,6 +54,8 @@ import { SchedulingPublishingModule } from '@social/scheduling-publishing';
     ContentGenerationModule,
     // SOCIAL COMMAND CENTRE — Phase 6: Scheduling & Publishing Engine
     SchedulingPublishingModule,
+    // SOCIAL COMMAND CENTRE -- Phase 7: Analytics & Dashboard
+    AnalyticsDashboardModule,
     ApiModule,
     PublicApiModule,
     AgentModule,

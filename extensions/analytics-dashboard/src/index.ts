@@ -36,3 +36,6 @@ export type { FullDashboardData } from './dashboard/dashboard.service';
 export { DashboardService } from './dashboard/dashboard.service';
 export { DashboardSummaryJob } from './dashboard/dashboard-summary.job';
 export { DashboardController } from './dashboard/dashboard.controller';
+
+// Plan 04 — NestJS module wiring
+export { AnalyticsDashboardModule } from './analytics-dashboard.module';
