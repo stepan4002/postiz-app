@@ -12,6 +12,7 @@ import {
 import { ContentPostService } from './content-post.service';
 import { ContentPostRepository } from './content-post.repository';
 import type { CreatePostDto } from '../types/content.types';
+import { PrismaService } from '@gitroom/nestjs-libraries/database/prisma/prisma.service';
 
 /**
  * ContentPostController
@@ -32,7 +33,7 @@ export class ContentPostController {
   constructor(
     private readonly contentPostService: ContentPostService,
     private readonly contentPostRepository: ContentPostRepository,
-    private readonly prisma: any,
+    private readonly prisma: PrismaService,
   ) {}
 
   /**

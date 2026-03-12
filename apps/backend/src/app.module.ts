@@ -35,6 +35,14 @@ import { SchedulingPublishingModule } from '@social/scheduling-publishing';
 import { AnalyticsDashboardModule } from '@social/analytics-dashboard';
 // SOCIAL COMMAND CENTRE — Phase 8: Production Hardening — health checks + structured logging
 import { HealthModule } from '@social/health';
+// SOCIAL COMMAND CENTRE — Phase 9: Posting Rules Engine
+import { PostingRulesModule } from '@social/posting-rules';
+// SOCIAL COMMAND CENTRE — Phase 10: Content Ingestion / Sources
+import { ContentIngestionModule } from '@social/content-ingestion';
+// SOCIAL COMMAND CENTRE — Phase 11: Inbox Monitoring
+import { InboxMonitoringModule } from '@social/inbox-monitoring';
+// SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
+import { UploadPostModule } from '@social/upload-post';
 import { LoggerModule } from 'nestjs-pino';
 
 @Global()
@@ -61,6 +69,14 @@ import { LoggerModule } from 'nestjs-pino';
     AnalyticsDashboardModule,
     // SOCIAL COMMAND CENTRE — Phase 8: Health check endpoints (GET /health/live, GET /health/ready)
     HealthModule,
+    // SOCIAL COMMAND CENTRE — Phase 9: Posting Rules Engine
+    PostingRulesModule,
+    // SOCIAL COMMAND CENTRE — Phase 10: Content Ingestion / Sources
+    ContentIngestionModule,
+    // SOCIAL COMMAND CENTRE — Phase 11: Inbox Monitoring
+    InboxMonitoringModule,
+    // SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
+    UploadPostModule,
     // SOCIAL COMMAND CENTRE — Phase 8: Structured JSON logging via nestjs-pino
     // Production: emits pure JSON to stdout. Development: uses pino-pretty for readable output.
     LoggerModule.forRoot({

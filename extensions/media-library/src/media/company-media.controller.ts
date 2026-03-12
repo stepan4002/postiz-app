@@ -44,6 +44,7 @@ import { CompanyMediaService } from './company-media.service';
 import { UploadMediaDto } from './dtos/upload-media.dto';
 import { ListMediaQueryDto } from './dtos/list-media-query.dto';
 import { MinioStorage } from '../storage/minio.storage';
+import { PrismaService } from '@gitroom/nestjs-libraries/database/prisma/prisma.service';
 
 @Controller('companies/:companySlug/media')
 export class CompanyMediaController {
@@ -51,7 +52,7 @@ export class CompanyMediaController {
 
   constructor(
     private readonly _companyMediaService: CompanyMediaService,
-    private readonly _prisma: any,
+    private readonly _prisma: PrismaService,
     private readonly _minioStorage: MinioStorage
   ) {}
 

@@ -21,9 +21,10 @@ import { ConfigurationChecker } from '@gitroom/helpers/configuration/configurati
 import { startMcp } from '@gitroom/nestjs-libraries/chat/start.mcp';
 
 async function start() {
+  console.log('[BOOT] Creating NestJS app...');
   const app = await NestFactory.create(AppModule, {
     // Suppress default NestJS logger during startup — pino takes over after useLogger call below
-    bufferLogs: true,
+    bufferLogs: false,
     rawBody: true,
     cors: {
       ...(!process.env.NOT_SECURED ? { credentials: true } : {}),
@@ -73,6 +74,7 @@ async function start() {
 
   const port = process.env.PORT || 3000;
 
+  console.log('[BOOT] Starting HTTP server on port', port);
   try {
     await app.listen(port);
 
@@ -80,6 +82,7 @@ async function start() {
 
     Logger.log(`🚀 Backend is running on: http://localhost:${port}`);
   } catch (e) {
+    console.error('[BOOT] Backend failed to start on port', port, e);
     Logger.error(`Backend failed to start on port ${port}`, e);
   }
 }

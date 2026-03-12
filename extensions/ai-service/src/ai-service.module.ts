@@ -9,6 +9,9 @@ import { BudgetCircuitBreaker } from './cost/budget-circuit-breaker.service';
 import { BrandVoicePromptBuilder } from './brand-voice/brand-voice-prompt.builder';
 import { AIProviderRouter } from './router/ai-provider.router';
 import { AiConfigController } from './config/ai-config.controller';
+import { BatchGenerationService } from './batch/batch-generation.service';
+import { BatchGenerationController } from './batch/batch-generation.controller';
+import { TranslationService } from './translation/translation.service';
 
 /**
  * AIServiceModule
@@ -37,7 +40,7 @@ import { AiConfigController } from './config/ai-config.controller';
  * added to providers here to avoid re-registering the global singleton.
  */
 @Module({
-  controllers: [AiConfigController],
+  controllers: [AiConfigController, BatchGenerationController],
   providers: [
     // AI provider implementations (no constructor dependencies beyond SDK clients)
     OpenAIProvider,
@@ -104,20 +107,43 @@ import { AiConfigController } from './config/ai-config.controller';
       ],
     },
 
-    // AiConfigController depends on AIConfigService and PrismaService
-    // Controller is in controllers[] array above; add it as injectable too for DI resolution
+
+    // BatchGenerationService — generates posts for multiple brand x platform combinations
     {
-      provide: AiConfigController,
-      useFactory: (aiConfigService: AIConfigService, prisma: PrismaService) =>
-        new AiConfigController(aiConfigService, prisma as any),
-      inject: [AIConfigService, PrismaService],
+      provide: BatchGenerationService,
+      useFactory: (aiRouter: AIProviderRouter, prisma: PrismaService) =>
+        new BatchGenerationService(aiRouter, prisma as any),
+      inject: [AIProviderRouter, PrismaService],
     },
+
+    // BatchGenerationController — POST /companies/:companySlug/ai/batch-generate
+    {
+      provide: BatchGenerationController,
+      useFactory: (batchService: BatchGenerationService, prisma: PrismaService) => {
+        const controller = new BatchGenerationController(batchService);
+        controller.setPrisma(prisma as any);
+        return controller;
+      },
+      inject: [BatchGenerationService, PrismaService],
+    },
+
+    // TranslationService — translates post content using AI while maintaining tone
+    {
+      provide: TranslationService,
+      useFactory: (aiRouter: AIProviderRouter, prisma: PrismaService) =>
+        new TranslationService(aiRouter, prisma as any),
+      inject: [AIProviderRouter, PrismaService],
+    },
+
   ],
   exports: [
     AIProviderRouter,
     BrandVoicePromptBuilder,
     AIConfigService,
     AICostLogger,
+    // Exported for downstream consumers
+    BatchGenerationService,
+    TranslationService,
   ],
 })
 export class AIServiceModule {}

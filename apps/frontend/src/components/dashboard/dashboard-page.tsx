@@ -7,6 +7,8 @@ import { ScheduledTodayWidget } from './scheduled-today-widget';
 import { PendingReviewWidget } from './pending-review-widget';
 import { FailedPostsWidget } from './failed-posts-widget';
 import { TopPerformersWidget } from './top-performers-widget';
+import { AttentionNeededWidget } from './attention-needed.widget';
+import { ContentPipelineWidget } from './content-pipeline.widget';
 
 function formatRelativeTime(isoString: string | undefined): string {
   if (!isoString) return '';
@@ -105,6 +107,12 @@ export function DashboardPage() {
           <TopPerformersWidget posts={data.topPosts ?? []} />
         </div>
       )}
+
+      {/* Additional widgets — attention & pipeline */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <AttentionNeededWidget />
+        <ContentPipelineWidget />
+      </div>
 
       {/* Empty state when not loading, no error, but no data */}
       {!isLoading && !error && !data && (

@@ -8,6 +8,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { AIConfigService, AIConfigData } from './ai-config.service';
+import { PrismaService } from '@gitroom/nestjs-libraries/database/prisma/prisma.service';
 
 /**
  * Valid AI provider names supported by the system.
@@ -39,7 +40,7 @@ interface UpdateAIConfigDto {
 export class AiConfigController {
   constructor(
     private readonly aiConfigService: AIConfigService,
-    private readonly prisma: any,
+    private readonly prisma: PrismaService,
   ) {}
 
   /**

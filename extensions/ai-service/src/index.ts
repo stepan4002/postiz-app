@@ -29,5 +29,12 @@ export * from './config/ai-config.controller';
 // Router: AIProviderRouter — main entry point for all AI calls
 export * from './router/ai-provider.router';
 
+// Batch generation
+export * from './batch/batch-generation.service';
+export * from './batch/batch-generation.controller';
+
+// Translation
+export * from './translation/translation.service';
+
 // Module: AIServiceModule — NestJS module for registration in AppModule
 export * from './ai-service.module';

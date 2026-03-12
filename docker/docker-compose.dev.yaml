@@ -1,7 +1,5 @@
-# Custom dev Docker Compose — lightweight, no Temporal (~saves 4GB RAM vs upstream)
-# Provides: PostgreSQL 17, Redis 7.2, MinIO for local S3 storage
+# Dev Docker Compose — PostgreSQL, Redis, MinIO, Temporal
 # Usage: docker compose -f docker/docker-compose.dev.yaml up -d
-# Credentials: copy docker/.env.dev.example to docker/.env.dev and fill values
 
 services:
   postiz-postgres:
@@ -47,8 +45,8 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-postiz-minio-user}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-postiz-minio-password}
     ports:
-      - "9000:9000"   # S3 API endpoint
-      - "9001:9001"   # MinIO web console
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio-data:/data
     healthcheck:
@@ -58,7 +56,59 @@ services:
       retries: 3
       start_period: 15s
 
+  temporal-db:
+    image: postgres:16-alpine
+    container_name: temporal-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: temporal
+    volumes:
+      - temporal-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  temporal:
+    image: temporalio/auto-setup:1.28.1
+    container_name: temporal
+    restart: unless-stopped
+    depends_on:
+      temporal-db:
+        condition: service_healthy
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-db
+      - TEMPORAL_NAMESPACE=default
+    ports:
+      - "7233:7233"
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "temporal:7233", "cluster", "health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 45s
+
+  temporal-ui:
+    image: temporalio/ui:2.34.0
+    container_name: temporal-ui
+    restart: unless-stopped
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:4200,http://localhost:3001
+    ports:
+      - "8080:8080"
+
 volumes:
   postgres-data:
   redis-data:
   minio-data:
+  temporal-db-data:

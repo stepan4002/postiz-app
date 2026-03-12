@@ -9,6 +9,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ReviewQueueService } from './review-queue.service';
+import { PrismaService } from '@gitroom/nestjs-libraries/database/prisma/prisma.service';
 
 /**
  * ReviewQueueController
@@ -30,7 +31,7 @@ import { ReviewQueueService } from './review-queue.service';
 export class ReviewQueueController {
   constructor(
     private readonly reviewQueueService: ReviewQueueService,
-    private readonly prisma: any,
+    private readonly prisma: PrismaService,
   ) {}
 
   /**

@@ -90,27 +90,6 @@ import { ReviewQueueController } from './review/review-queue.controller';
       inject: [ContentPostRepository, ContentPostService, PrismaService],
     },
 
-    // ContentPostController: DI-injected via useFactory
-    // Controller is in controllers[] array above; also here for DI resolution
-    {
-      provide: ContentPostController,
-      useFactory: (
-        contentPostService: ContentPostService,
-        contentPostRepository: ContentPostRepository,
-        prisma: PrismaService,
-      ) => new ContentPostController(contentPostService, contentPostRepository, prisma as any),
-      inject: [ContentPostService, ContentPostRepository, PrismaService],
-    },
-
-    // ReviewQueueController: DI-injected via useFactory
-    {
-      provide: ReviewQueueController,
-      useFactory: (
-        reviewQueueService: ReviewQueueService,
-        prisma: PrismaService,
-      ) => new ReviewQueueController(reviewQueueService, prisma as any),
-      inject: [ReviewQueueService, PrismaService],
-    },
   ],
   exports: [
     ContentPostService,

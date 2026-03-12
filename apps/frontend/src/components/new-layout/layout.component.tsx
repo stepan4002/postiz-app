@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useCallback } from 'react';
+import React, { Component, ReactNode, useCallback } from 'react';
 import { Logo } from '@gitroom/frontend/components/new-layout/logo';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 const ModeComponent = dynamic(
@@ -42,6 +42,39 @@ import { AttachToFeedbackIcon } from '@gitroom/frontend/components/new-layout/se
 import { FirstBillingComponent } from '@gitroom/frontend/components/billing/first.billing.component';
 import { CompanySwitcher, CompanyProvider } from '@gitroom/frontend/components/company-switcher';
 
+// Error boundary so CopilotKit errors (e.g. missing/invalid OpenAI key) don't
+// crash the entire layout — the rest of the app keeps working.
+class CopilotErrorBoundary extends Component<
+  { children: ReactNode; runtimeUrl: string },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode; runtimeUrl: string }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: Error) {
+    console.warn('[CopilotKit] Caught error — AI chat disabled:', error.message);
+  }
+  render() {
+    if (this.state.hasError) {
+      // Render children without the CopilotKit wrapper
+      return <>{this.props.children}</>;
+    }
+    return (
+      <CopilotKit
+        credentials="include"
+        runtimeUrl={this.props.runtimeUrl}
+        showDevConsole={false}
+      >
+        {this.props.children}
+      </CopilotKit>
+    );
+  }
+}
+
 const jakartaSans = Plus_Jakarta_Sans({
   weight: ['600', '500', '700'],
   style: ['normal', 'italic'],
@@ -70,11 +103,7 @@ export const LayoutComponent = ({ children }: { children: ReactNode }) => {
 
   return (
     <ContextWrapper user={user}>
-      <CopilotKit
-        credentials="include"
-        runtimeUrl={backendUrl + '/copilot/chat'}
-        showDevConsole={false}
-      >
+      <CopilotErrorBoundary runtimeUrl={backendUrl + '/copilot/chat'}>
         <MantineWrapper>
           <ToolTip />
           <Toaster />
@@ -111,38 +140,38 @@ export const LayoutComponent = ({ children }: { children: ReactNode }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex-1 bg-newBgLineColor rounded-[12px] overflow-hidden flex flex-col gap-[1px] blurMe">
-                    <div className="flex bg-newBgColorInner h-[80px] px-[20px] items-center">
-                      <div className="text-[24px] font-[600] flex flex-1">
-                        <Title />
-                      </div>
-                      <div className="flex gap-[20px] text-textItemBlur items-center">
-                        <CompanySwitcher />
-                        <div className="w-[1px] h-[20px] bg-blockSeparator" />
-                        <StreakComponent />
-                        <div className="w-[1px] h-[20px] bg-blockSeparator" />
-                        <OrganizationSelector />
-                        <div className="hover:text-newTextColor">
-                          <ModeComponent />
+                  <CompanyProvider>
+                    <div className="flex-1 bg-newBgLineColor rounded-[12px] overflow-hidden flex flex-col gap-[1px] blurMe">
+                      <div className="flex bg-newBgColorInner h-[80px] px-[20px] items-center">
+                        <div className="text-[24px] font-[600] flex flex-1">
+                          <Title />
                         </div>
-                        <div className="w-[1px] h-[20px] bg-blockSeparator" />
-                        <LanguageComponent />
-                        <ChromeExtensionComponent />
-                        <div className="w-[1px] h-[20px] bg-blockSeparator" />
-                        <AttachToFeedbackIcon />
-                        <NotificationComponent />
+                        <div className="flex gap-[20px] text-textItemBlur items-center">
+                          <CompanySwitcher />
+                          <div className="w-[1px] h-[20px] bg-blockSeparator" />
+                          <StreakComponent />
+                          <div className="w-[1px] h-[20px] bg-blockSeparator" />
+                          <OrganizationSelector />
+                          <div className="hover:text-newTextColor">
+                            <ModeComponent />
+                          </div>
+                          <div className="w-[1px] h-[20px] bg-blockSeparator" />
+                          <LanguageComponent />
+                          <ChromeExtensionComponent />
+                          <div className="w-[1px] h-[20px] bg-blockSeparator" />
+                          <AttachToFeedbackIcon />
+                          <NotificationComponent />
+                        </div>
                       </div>
-                    </div>
-                    <CompanyProvider>
                       <div className="flex flex-1 gap-[1px]">{children}</div>
-                    </CompanyProvider>
-                  </div>
+                    </div>
+                  </CompanyProvider>
                 </div>
               )}
             </div>
           </CheckPayment>
         </MantineWrapper>
-      </CopilotKit>
+      </CopilotErrorBoundary>
     </ContextWrapper>
   );
 };

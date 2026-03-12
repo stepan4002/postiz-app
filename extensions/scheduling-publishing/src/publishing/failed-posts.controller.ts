@@ -18,10 +18,11 @@ import {
   Query,
   NotFoundException,
 } from '@nestjs/common';
+import { PrismaService } from '@gitroom/nestjs-libraries/database/prisma/prisma.service';
 
 @Controller('companies/:companySlug/failed-posts')
 export class FailedPostsController {
-  constructor(private readonly prisma: any) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   /**
    * Resolve a company slug to a company ID.

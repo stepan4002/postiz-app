@@ -28,13 +28,14 @@ import {
 } from '@nestjs/common';
 import { ScheduleResolverService } from './schedule-resolver.service';
 import { SchedulingRepository } from './scheduling.repository';
+import { PrismaService } from '@gitroom/nestjs-libraries/database/prisma/prisma.service';
 
 @Controller('companies/:companySlug')
 export class SchedulingController {
   constructor(
     private readonly scheduleResolverService: ScheduleResolverService,
     private readonly schedulingRepository: SchedulingRepository,
-    private readonly prisma: any,
+    private readonly prisma: PrismaService,
   ) {}
 
   /**

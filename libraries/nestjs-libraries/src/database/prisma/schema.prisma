@@ -37,6 +37,13 @@ model Company {
   dashboardCache  DashboardCache?
   // SOCIAL COMMAND CENTRE -- Phase 7 Plan 05: denormalized relation for NF3.4 compound index
   postVariants    PostVariant[]
+  // SOCIAL COMMAND CENTRE -- Phase 9: Missing Features
+  postingRules    PostingRule[]
+  contentSources  ContentSource[]
+  inboxItems      InboxItem[]
+  reportSummaries ReportSummary[]
+  // SOCIAL COMMAND CENTRE -- Phase 12: Upload-Post Gateway
+  uploadPostProfiles UploadPostProfile[]
 }
 
 model Brand {
@@ -52,6 +59,8 @@ model Brand {
   brandVoice     BrandVoice?
   socialAccounts SocialAccount[]
   contentPosts   ContentPost[]
+  // SOCIAL COMMAND CENTRE -- Phase 12: Upload-Post Gateway
+  uploadPostProfiles UploadPostProfile[]
 
   @@unique([companyId, slug])
 }
@@ -119,6 +128,104 @@ model AICostLog {
   @@index([companyId, taskType])
 }
 
+// SOCIAL COMMAND CENTRE -- Phase 9: Posting Rules Engine
+model PostingRule {
+  id           String   @id @default(uuid())
+  companyId    String
+  name         String
+  platformId   String
+  accountIds   String[] @default([])
+  frequency    Int      @default(1)
+  timeSlots    Json     @default("[]")
+  contentTypes String[] @default([])
+  hashtags     String[] @default([])
+  enabled      Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, enabled])
+}
+
+// SOCIAL COMMAND CENTRE -- Phase 9: Content Ingestion / Sources
+model ContentSource {
+  id            String       @id @default(uuid())
+  companyId     String
+  name          String
+  type          String
+  url           String?
+  config        Json         @default("{}")
+  enabled       Boolean      @default(true)
+  lastFetchedAt DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  company       Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  items         SourceItem[]
+
+  @@index([companyId])
+  @@index([enabled, lastFetchedAt])
+}
+
+model SourceItem {
+  id         String        @id @default(uuid())
+  sourceId   String
+  externalId String?
+  title      String
+  content    String        @db.Text
+  url        String?
+  imageUrl   String?
+  status     String        @default("new")
+  metadata   Json          @default("{}")
+  fetchedAt  DateTime      @default(now())
+  source     ContentSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, externalId])
+  @@index([sourceId, status])
+}
+
+// SOCIAL COMMAND CENTRE -- Phase 9: Inbox Monitoring
+model InboxItem {
+  id           String   @id @default(uuid())
+  companyId    String
+  platform     String
+  accountId    String
+  type         String
+  externalId   String
+  authorName   String?
+  authorAvatar String?
+  content      String   @db.Text
+  postId       String?
+  parentId     String?
+  sentiment    String?
+  status       String   @default("unread")
+  repliedWith  String?  @db.Text
+  receivedAt   DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([platform, externalId])
+  @@index([companyId, status])
+  @@index([companyId, platform])
+}
+
+// SOCIAL COMMAND CENTRE -- Phase 9: Weekly/Monthly Report Summaries
+model ReportSummary {
+  id          String   @id @default(uuid())
+  companyId   String
+  type        String
+  periodStart DateTime
+  periodEnd   DateTime
+  data        Json
+  aiSummary   String?  @db.Text
+  createdAt   DateTime @default(now())
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, type])
+  @@index([companyId, periodStart])
+}
+
 // ============================================================================
 // END SOCIAL COMMAND CENTRE Custom Models
 // ============================================================================
@@ -161,6 +268,9 @@ model Organization {
   webhooks          Webhooks[]
   oauthApp          OAuthApp?
   oauthAuthorizations OAuthAuthorization[]
+  // SOCIAL COMMAND CENTRE -- Phase 12: Upload-Post Gateway
+  uploadPostConfig      UploadPostConfig?
+  uploadPostProfiles    UploadPostProfile[]
 
   @@index([apiKey])
   @@index([streakSince])
@@ -407,10 +517,15 @@ model ContentPost {
   publishAttempts PublishAttempt[]
   // SOCIAL COMMAND CENTRE -- Phase 7: Analytics & Dashboard
   postMetrics     PostMetrics[]
+  // SOCIAL COMMAND CENTRE -- Phase 9: Evergreen Recycling & UTM Tagging
+  isEvergreen      Boolean          @default(false)
+  evergreenLastUsed DateTime?
+  utmParams        Json?
 
   @@index([companyId, status])
   @@index([companyId, createdAt])
   @@index([brandId])
+  @@index([isEvergreen, evergreenLastUsed])
 }
 
 model PostVariant {
@@ -643,6 +758,8 @@ model Integration {
   plugs                 Plugs[]
   posts                 Post[]
   socialAccounts        SocialAccount[]
+  // SOCIAL COMMAND CENTRE -- Phase 12: Upload-Post Gateway
+  uploadPostProfile     UploadPostProfile?
 
   @@unique([organizationId, internalId])
   @@index([rootInternalId])
@@ -1186,6 +1303,77 @@ model OAuthAuthorization {
   @@index([organizationId])
   @@index([revokedAt])
 }
+
+// ============================================================================
+// SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
+// ============================================================================
+
+// Upload-Post gateway account configuration (one per Organization)
+model UploadPostConfig {
+  id              String       @id @default(uuid())
+  organizationId  String       @unique
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  apiKey          String
+  apiKeyEncrypted Boolean      @default(false)
+  planType        String       @default("professional")
+  maxProfiles     Int          @default(25)
+  enabled         Boolean      @default(true)
+  lastVerifiedAt  DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// Maps a Company+Language combination to one Upload-Post profile
+model UploadPostProfile {
+  id               String             @id @default(uuid())
+  companyId        String
+  company          Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  organizationId   String
+  organization     Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  profileUsername  String             @unique
+  languageCode     String
+  languageName     String
+  brandId          String?
+  brand            Brand?             @relation(fields: [brandId], references: [id])
+  platforms        String[]
+  platformSettings Json               @default("{}")
+  integrationId    String?            @unique
+  integration      Integration?       @relation(fields: [integrationId], references: [id])
+  enabled          Boolean            @default(true)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  logs             UploadPostLog[]
+
+  @@unique([companyId, languageCode])
+  @@index([organizationId])
+  @@index([companyId])
+}
+
+// Tracks each Upload-Post API call for auditing and status polling
+model UploadPostLog {
+  id              String            @id @default(uuid())
+  profileId       String
+  profile         UploadPostProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  postVariantId   String?
+  endpoint        String
+  requestPayload  Json
+  responseCode    Int?
+  responseBody    Json?
+  requestId       String?
+  jobId           String?
+  status          String            @default("pending")
+  errorMessage    String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([profileId])
+  @@index([requestId])
+  @@index([status])
+}
+
+// ============================================================================
+// END Phase 12: Upload-Post Gateway
+// ============================================================================
 
 enum OrderStatus {
   PENDING

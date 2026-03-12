@@ -43,18 +43,25 @@ export class CopilotController {
       process.env.OPENAI_API_KEY === ''
     ) {
       Logger.warn('OpenAI API key not set, chat functionality will not work');
-      return;
+      return res.status(503).json({
+        error: 'OpenAI API key not configured. Set OPENAI_API_KEY in your .env file.',
+      });
     }
 
-    const copilotRuntimeHandler = copilotRuntimeNodeHttpEndpoint({
-      endpoint: '/copilot/chat',
-      runtime: new CopilotRuntime(),
-      serviceAdapter: new OpenAIAdapter({
-        model: 'gpt-4.1',
-      }),
-    });
+    try {
+      const copilotRuntimeHandler = copilotRuntimeNodeHttpEndpoint({
+        endpoint: '/copilot/chat',
+        runtime: new CopilotRuntime(),
+        serviceAdapter: new OpenAIAdapter({
+          model: 'gpt-4.1',
+        }),
+      });
 
-    return copilotRuntimeHandler(req, res);
+      return copilotRuntimeHandler(req, res);
+    } catch (err) {
+      Logger.error('CopilotKit chat error', err);
+      return res.status(500).json({ error: 'AI chat service encountered an error.' });
+    }
   }
 
   @Post('/agent')
@@ -69,7 +76,9 @@ export class CopilotController {
       process.env.OPENAI_API_KEY === ''
     ) {
       Logger.warn('OpenAI API key not set, chat functionality will not work');
-      return;
+      return res.status(503).json({
+        error: 'OpenAI API key not configured. Set OPENAI_API_KEY in your .env file.',
+      });
     }
     const mastra = await this._mastraService.mastra();
     const runtimeContext = new RuntimeContext<ChannelsContext>();

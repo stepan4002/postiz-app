@@ -37,5 +37,10 @@ export { DashboardService } from './dashboard/dashboard.service';
 export { DashboardSummaryJob } from './dashboard/dashboard-summary.job';
 export { DashboardController } from './dashboard/dashboard.controller';
 
+// Plan 05 — Weekly/Monthly Report Summaries
+export { ReportService } from './reports/report.service';
+export { ReportCronJob } from './reports/report.cron';
+export { ReportController } from './reports/report.controller';
+
 // Plan 04 — NestJS module wiring
 export { AnalyticsDashboardModule } from './analytics-dashboard.module';

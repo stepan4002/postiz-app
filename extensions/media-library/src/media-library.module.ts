@@ -104,16 +104,6 @@ import { PlatformMediaValidator } from './processing/platform-media-validator';
       inject: [MediaProcessingService, PrismaService],
     },
 
-    // CompanyMediaController depends on CompanyMediaService + PrismaService + MinioStorage
-    {
-      provide: CompanyMediaController,
-      useFactory: (
-        service: CompanyMediaService,
-        prisma: PrismaService,
-        minio: MinioStorage
-      ) => new CompanyMediaController(service, prisma, minio),
-      inject: [CompanyMediaService, PrismaService, MinioStorage],
-    },
   ],
   exports: [
     CompanyMediaService,

@@ -19,5 +19,14 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "outDir": "./dist"
+  },
+  "watchOptions": {
+    "excludeDirectories": [
+      "**/node_modules",
+      "**/dist",
+      "../backend",
+      "../frontend",
+      "../extension"
+    ]
   }
 }

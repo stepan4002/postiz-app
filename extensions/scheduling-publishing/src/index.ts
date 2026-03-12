@@ -54,5 +54,13 @@ export { PublishingWorkerJob } from './publishing/publishing-worker.job';
 export { SchedulingController } from './scheduling/scheduling.controller';
 export { FailedPostsController } from './publishing/failed-posts.controller';
 
+// UTM tagging service
+export { UTMService } from './utm/utm.service';
+export type { UTMTemplate, UTMContext } from './utm/utm.service';
+
+// Evergreen recycling
+export { EvergreenService } from './evergreen/evergreen.service';
+export { EvergreenRecyclingJob } from './evergreen/evergreen.cron';
+
 // Module
 export { SchedulingPublishingModule } from './scheduling-publishing.module';

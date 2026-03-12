@@ -48,6 +48,9 @@ import { SchedulerTickJob } from './scheduling/scheduler-tick.job';
 import { PublishingWorkerJob } from './publishing/publishing-worker.job';
 import { SchedulingController } from './scheduling/scheduling.controller';
 import { FailedPostsController } from './publishing/failed-posts.controller';
+import { UTMService } from './utm/utm.service';
+import { EvergreenService } from './evergreen/evergreen.service';
+import { EvergreenRecyclingJob } from './evergreen/evergreen.cron';
 
 @Module({
   imports: [
@@ -153,35 +156,37 @@ import { FailedPostsController } from './publishing/failed-posts.controller';
       inject: [PublishingRepository, PublishingService, PublishAttemptLogger, PrismaService],
     },
 
-    // SchedulingController: REST endpoints for scheduling operations
+    // UTMService: pure service — appends UTM tracking params to post URLs before publishing
     {
-      provide: SchedulingController,
-      useFactory: (
-        scheduleResolverService: ScheduleResolverService,
-        schedulingRepo: SchedulingRepository,
-        prisma: PrismaService,
-      ) =>
-        new SchedulingController(
-          scheduleResolverService,
-          schedulingRepo,
-          prisma as any,
-        ),
-      inject: [ScheduleResolverService, SchedulingRepository, PrismaService],
+      provide: UTMService,
+      useFactory: () => new UTMService(),
+      inject: [],
     },
 
-    // FailedPostsController: REST endpoints for failed post listing and attempt history
+    // EvergreenService: identifies and recycles top-performing evergreen posts
     {
-      provide: FailedPostsController,
-      useFactory: (prisma: PrismaService) =>
-        new FailedPostsController(prisma as any),
+      provide: EvergreenService,
+      useFactory: (prisma: PrismaService) => new EvergreenService(prisma as any),
       inject: [PrismaService],
     },
+
+    // EvergreenRecyclingJob: daily cron (2am) — finds recyclable evergreen posts per company
+    {
+      provide: EvergreenRecyclingJob,
+      useFactory: (evergreenService: EvergreenService, prisma: PrismaService) =>
+        new EvergreenRecyclingJob(evergreenService, prisma as any),
+      inject: [EvergreenService, PrismaService],
+    },
+
   ],
   exports: [
     // Exported for Phase 7 Analytics & Dashboard
     ScheduleResolverService,
     PublishingService,
     SchedulingRepository,
+    // UTM and Evergreen exported for downstream consumers
+    UTMService,
+    EvergreenService,
   ],
 })
 export class SchedulingPublishingModule {}

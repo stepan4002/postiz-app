@@ -36,8 +36,17 @@ import { MoltbookProvider } from '@gitroom/nestjs-libraries/integrations/social/
 import { SkoolProvider } from '@gitroom/nestjs-libraries/integrations/social/skool.provider';
 import { WhopProvider } from '@gitroom/nestjs-libraries/integrations/social/whop.provider';
 import { MeweProvider } from '@gitroom/nestjs-libraries/integrations/social/mewe.provider';
+// SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
+import { UploadPostProvider } from '@gitroom/nestjs-libraries/integrations/social/upload-post.provider';
 
-export const socialIntegrationList: Array<SocialAbstract & SocialProvider> = [
+// SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
+// Feature flags:
+//   ENABLE_UPLOADPOST_GATEWAY=true|false  — show/hide Upload-Post provider (default: true)
+//   ENABLE_NATIVE_PROVIDERS=true|false    — show/hide native OAuth providers (default: true)
+const enableUploadPost = process.env.ENABLE_UPLOADPOST_GATEWAY !== 'false';
+const enableNativeProviders = process.env.ENABLE_NATIVE_PROVIDERS !== 'false';
+
+const nativeProviders: Array<SocialAbstract & SocialProvider> = [
   new XProvider(),
   new LinkedinProvider(),
   new LinkedinPageProvider(),
@@ -72,6 +81,13 @@ export const socialIntegrationList: Array<SocialAbstract & SocialProvider> = [
   new SkoolProvider(),
   // new MeweProvider(),
   // new MastodonCustomProvider(),
+];
+
+export const socialIntegrationList: Array<SocialAbstract & SocialProvider> = [
+  // Include native providers unless explicitly disabled
+  ...(enableNativeProviders ? nativeProviders : []),
+  // Include Upload-Post provider unless explicitly disabled
+  ...(enableUploadPost ? [new UploadPostProvider()] : []),
 ];
 
 @Injectable()

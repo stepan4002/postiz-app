@@ -46,6 +46,11 @@ import { DashboardService } from './dashboard/dashboard.service';
 import { DashboardSummaryJob } from './dashboard/dashboard-summary.job';
 import { DashboardController } from './dashboard/dashboard.controller';
 
+// Report pipeline
+import { ReportService } from './reports/report.service';
+import { ReportCronJob } from './reports/report.cron';
+import { ReportController } from './reports/report.controller';
+
 @Module({
   imports: [
     // Required for @Cron support in AnalyticsIngestionJob and DashboardSummaryJob
@@ -53,7 +58,7 @@ import { DashboardController } from './dashboard/dashboard.controller';
     // Provides TokenEncryptionService for decrypting OAuth access tokens before adapter dispatch
     CredentialManagementModule,
   ],
-  controllers: [AnalyticsController, DashboardController],
+  controllers: [AnalyticsController, DashboardController, ReportController],
   providers: [
     // AnalyticsRepository: Prisma data layer — PostMetrics upsert, findDueForIngestion, findByPostId
     {
@@ -128,12 +133,41 @@ import { DashboardController } from './dashboard/dashboard.controller';
         new DashboardController(dashboardService),
       inject: [DashboardService],
     },
+
+    // ReportService: aggregates weekly/monthly metrics and upserts ReportSummary records
+    {
+      provide: ReportService,
+      useFactory: (prisma: PrismaService) => new ReportService(prisma as any),
+      inject: [PrismaService],
+    },
+
+    // ReportCronJob: weekly (Sun midnight) and monthly (1st at 1am) report generation
+    {
+      provide: ReportCronJob,
+      useFactory: (reportService: ReportService, prisma: PrismaService) =>
+        new ReportCronJob(reportService, prisma as any),
+      inject: [ReportService, PrismaService],
+    },
+
+    // ReportController: GET /companies/:companySlug/reports and GET /companies/:companySlug/reports/:reportId
+    {
+      provide: ReportController,
+      useFactory: (reportService: ReportService, prisma: PrismaService) => {
+        const controller = new ReportController(reportService);
+        controller.setPrisma(prisma as any);
+        return controller;
+      },
+      inject: [ReportService, PrismaService],
+    },
+
   ],
   exports: [
     // Exported for potential downstream consumers
     AnalyticsService,
     DashboardService,
     AnalyticsRepository,
+    // Report service exported for downstream consumers
+    ReportService,
   ],
 })
 export class AnalyticsDashboardModule {}
