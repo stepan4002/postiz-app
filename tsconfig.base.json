@@ -54,7 +54,9 @@
       "@social/inbox-monitoring": ["extensions/inbox-monitoring/src/index"],
       "@social/inbox-monitoring/*": ["extensions/inbox-monitoring/src/*"],
       "@social/upload-post": ["extensions/upload-post/src/index"],
-      "@social/upload-post/*": ["extensions/upload-post/src/*"]
+      "@social/upload-post/*": ["extensions/upload-post/src/*"],
+      "@social/ayrshare": ["extensions/ayrshare/src/index"],
+      "@social/ayrshare/*": ["extensions/ayrshare/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

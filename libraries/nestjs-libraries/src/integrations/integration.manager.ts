@@ -38,12 +38,21 @@ import { WhopProvider } from '@gitroom/nestjs-libraries/integrations/social/whop
 import { MeweProvider } from '@gitroom/nestjs-libraries/integrations/social/mewe.provider';
 // SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
 import { UploadPostProvider } from '@gitroom/nestjs-libraries/integrations/social/upload-post.provider';
+// SOCIAL COMMAND CENTRE — Phase 13: AyrShare API Gateway
+import { AyrShareProvider } from '@gitroom/nestjs-libraries/integrations/social/ayrshare.provider';
+import { AYRSHARE_MANAGED_IDENTIFIERS } from '@social/ayrshare/client/ayrshare.types';
 
-// SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
-// Feature flags:
-//   ENABLE_UPLOADPOST_GATEWAY=true|false  — show/hide Upload-Post provider (default: true)
-//   ENABLE_NATIVE_PROVIDERS=true|false    — show/hide native OAuth providers (default: true)
+// SOCIAL COMMAND CENTRE — Feature flags:
+//   ENABLE_UPLOADPOST_GATEWAY=true|false   — show/hide Upload-Post provider (default: true)
+//   ENABLE_AYRSHARE_GATEWAY=true|false     — show/hide AyrShare provider (default: false)
+//   ENABLE_NATIVE_PROVIDERS=true|false     — show/hide native OAuth providers (default: true)
+//
+// When AyrShare is enabled, native providers for platforms it manages are automatically
+// filtered out (X, Facebook, Instagram, LinkedIn, YouTube, TikTok, Pinterest, Reddit,
+// Threads, Bluesky, GMB, Telegram). Non-AyrShare platforms (Discord, Slack, Mastodon,
+// Medium, Dev.to, Hashnode, WordPress, etc.) remain as native providers.
 const enableUploadPost = process.env.ENABLE_UPLOADPOST_GATEWAY !== 'false';
+const enableAyrShare = process.env.ENABLE_AYRSHARE_GATEWAY === 'true';
 const enableNativeProviders = process.env.ENABLE_NATIVE_PROVIDERS !== 'false';
 
 const nativeProviders: Array<SocialAbstract & SocialProvider> = [
@@ -83,11 +92,19 @@ const nativeProviders: Array<SocialAbstract & SocialProvider> = [
   // new MastodonCustomProvider(),
 ];
 
+// When AyrShare is enabled, filter out platforms it manages from the native list
+const filteredNativeProviders: Array<SocialAbstract & SocialProvider> = enableAyrShare
+  ? nativeProviders.filter((p) => !AYRSHARE_MANAGED_IDENTIFIERS.has(p.identifier))
+  : nativeProviders;
+
 export const socialIntegrationList: Array<SocialAbstract & SocialProvider> = [
   // Include native providers unless explicitly disabled
-  ...(enableNativeProviders ? nativeProviders : []),
+  // (filtered to exclude AyrShare-managed platforms when AyrShare is enabled)
+  ...(enableNativeProviders ? filteredNativeProviders : []),
   // Include Upload-Post provider unless explicitly disabled
-  ...(enableUploadPost ? [new UploadPostProvider()] : []),
+  ...(enableUploadPost && !enableAyrShare ? [new UploadPostProvider()] : []),
+  // Include AyrShare provider when explicitly enabled
+  ...(enableAyrShare ? [new AyrShareProvider()] : []),
 ];
 
 @Injectable()

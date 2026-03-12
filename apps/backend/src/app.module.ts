@@ -43,6 +43,8 @@ import { ContentIngestionModule } from '@social/content-ingestion';
 import { InboxMonitoringModule } from '@social/inbox-monitoring';
 // SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
 import { UploadPostModule } from '@social/upload-post';
+// SOCIAL COMMAND CENTRE — Phase 13: AyrShare Unified API Gateway
+import { AyrShareModule } from '@social/ayrshare';
 import { LoggerModule } from 'nestjs-pino';
 
 @Global()
@@ -77,6 +79,8 @@ import { LoggerModule } from 'nestjs-pino';
     InboxMonitoringModule,
     // SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
     UploadPostModule,
+    // SOCIAL COMMAND CENTRE — Phase 13: AyrShare Unified API Gateway
+    AyrShareModule,
     // SOCIAL COMMAND CENTRE — Phase 8: Structured JSON logging via nestjs-pino
     // Production: emits pure JSON to stdout. Development: uses pino-pretty for readable output.
     LoggerModule.forRoot({

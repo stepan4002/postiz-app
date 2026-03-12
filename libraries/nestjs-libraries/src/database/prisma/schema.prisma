@@ -44,6 +44,8 @@ model Company {
   reportSummaries ReportSummary[]
   // SOCIAL COMMAND CENTRE -- Phase 12: Upload-Post Gateway
   uploadPostProfiles UploadPostProfile[]
+  // SOCIAL COMMAND CENTRE -- Phase 13: AyrShare API Gateway
+  ayrShareProfiles   AyrShareProfile[]
 }
 
 model Brand {
@@ -61,6 +63,8 @@ model Brand {
   contentPosts   ContentPost[]
   // SOCIAL COMMAND CENTRE -- Phase 12: Upload-Post Gateway
   uploadPostProfiles UploadPostProfile[]
+  // SOCIAL COMMAND CENTRE -- Phase 13: AyrShare API Gateway
+  ayrShareProfiles   AyrShareProfile[]
 
   @@unique([companyId, slug])
 }
@@ -271,6 +275,9 @@ model Organization {
   // SOCIAL COMMAND CENTRE -- Phase 12: Upload-Post Gateway
   uploadPostConfig      UploadPostConfig?
   uploadPostProfiles    UploadPostProfile[]
+  // SOCIAL COMMAND CENTRE -- Phase 13: AyrShare API Gateway
+  ayrShareConfig        AyrShareConfig?
+  ayrShareProfiles      AyrShareProfile[]
 
   @@index([apiKey])
   @@index([streakSince])
@@ -760,6 +767,8 @@ model Integration {
   socialAccounts        SocialAccount[]
   // SOCIAL COMMAND CENTRE -- Phase 12: Upload-Post Gateway
   uploadPostProfile     UploadPostProfile?
+  // SOCIAL COMMAND CENTRE -- Phase 13: AyrShare API Gateway
+  ayrShareProfile       AyrShareProfile?
 
   @@unique([organizationId, internalId])
   @@index([rootInternalId])
@@ -1306,9 +1315,15 @@ model OAuthAuthorization {
 
 // ============================================================================
 // SOCIAL COMMAND CENTRE — Phase 12: Upload-Post Gateway
+// DEPRECATED: Replaced by Phase 13 (AyrShare API Gateway).
+// Data migration: 20260312100000_migrate_uploadpost_to_ayrshare
+// Table drop: 20260312200000_drop_uploadpost_tables
+// These models are kept until the drop migration is run. After that,
+// remove these models and all uploadPost* relation fields from
+// Organization, Company, Brand, and Integration models.
 // ============================================================================
 
-// Upload-Post gateway account configuration (one per Organization)
+// @deprecated — Use AyrShareConfig instead
 model UploadPostConfig {
   id              String       @id @default(uuid())
   organizationId  String       @unique
@@ -1323,7 +1338,7 @@ model UploadPostConfig {
   updatedAt       DateTime     @updatedAt
 }
 
-// Maps a Company+Language combination to one Upload-Post profile
+// @deprecated — Use AyrShareProfile instead
 model UploadPostProfile {
   id               String             @id @default(uuid())
   companyId        String
@@ -1349,7 +1364,7 @@ model UploadPostProfile {
   @@index([companyId])
 }
 
-// Tracks each Upload-Post API call for auditing and status polling
+// @deprecated — Use AyrShareLog instead
 model UploadPostLog {
   id              String            @id @default(uuid())
   profileId       String
@@ -1372,7 +1387,125 @@ model UploadPostLog {
 }
 
 // ============================================================================
-// END Phase 12: Upload-Post Gateway
+// END Phase 12: Upload-Post Gateway (DEPRECATED — see Phase 13)
+// ============================================================================
+
+// ============================================================================
+// SOCIAL COMMAND CENTRE — Phase 13: AyrShare API Gateway
+// Replaces Upload-Post with AyrShare's unified social media API.
+// Supports 13 platforms: bluesky, facebook, gmb, instagram, linkedin,
+// pinterest, reddit, snapchat, telegram, threads, tiktok, twitter, youtube
+// ============================================================================
+
+// AyrShare account configuration (one per Organization)
+model AyrShareConfig {
+  id              String       @id @default(uuid())
+  organizationId  String       @unique
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  apiKey          String
+  apiKeyEncrypted Boolean      @default(false)
+  planType        String       @default("launch")
+  maxProfiles     Int          @default(10)
+  enabled         Boolean      @default(true)
+  lastVerifiedAt  DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// Maps a Company+Brand+Language combination to one AyrShare profile
+// Each profile represents a sub-account in AyrShare with its own linked socials
+model AyrShareProfile {
+  id               String                      @id @default(uuid())
+  companyId        String
+  company          Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  organizationId   String
+  organization     Organization                @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  profileKey       String                      @unique
+  title            String
+  languageCode     String
+  languageName     String
+  brandId          String?
+  brand            Brand?                      @relation(fields: [brandId], references: [id])
+  platforms        String[]
+  integrationId    String?                     @unique
+  integration      Integration?                @relation(fields: [integrationId], references: [id])
+  enabled          Boolean                     @default(true)
+  createdAt        DateTime                    @default(now())
+  updatedAt        DateTime                    @updatedAt
+  logs             AyrShareLog[]
+  webhookSubscriptions AyrShareWebhookSubscription[]
+  messages         AyrShareMessage[]
+
+  @@unique([companyId, languageCode])
+  @@index([organizationId])
+  @@index([companyId])
+}
+
+// Tracks each AyrShare API call for auditing and debugging
+model AyrShareLog {
+  id              String          @id @default(uuid())
+  profileId       String
+  profile         AyrShareProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  postVariantId   String?
+  endpoint        String
+  method          String          @default("POST")
+  requestPayload  Json
+  responseCode    Int?
+  responseBody    Json?
+  ayrsharePostId  String?
+  status          String          @default("pending")
+  errorMessage    String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([profileId])
+  @@index([ayrsharePostId])
+  @@index([status])
+}
+
+// Tracks registered webhooks per profile (post status, social linking, DMs)
+model AyrShareWebhookSubscription {
+  id                String          @id @default(uuid())
+  profileId         String
+  profile           AyrShareProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  webhookType       String
+  ayrshareWebhookId String?
+  callbackUrl       String
+  active            Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@unique([profileId, webhookType])
+  @@index([active])
+}
+
+// Tracks DMs sent/received through AyrShare (Facebook, Instagram, X)
+model AyrShareMessage {
+  id              String          @id @default(uuid())
+  profileId       String
+  profile         AyrShareProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  organizationId  String
+  platform        String
+  direction       String
+  externalId      String?
+  senderId        String?
+  senderName      String?
+  recipientId     String?
+  content         String          @db.Text
+  mediaUrls       String[]
+  status          String          @default("delivered")
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([profileId])
+  @@index([organizationId])
+  @@index([platform])
+  @@index([direction])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// END Phase 13: AyrShare API Gateway
 // ============================================================================
 
 enum OrderStatus {

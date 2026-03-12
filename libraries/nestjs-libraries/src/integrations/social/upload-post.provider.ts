@@ -1,4 +1,8 @@
 /**
+ * @deprecated Use AyrShareProvider instead. This provider is kept for backward
+ * compatibility during the migration period. Set ENABLE_AYRSHARE_GATEWAY=true
+ * to switch to the AyrShare provider.
+ *
  * UploadPostProvider
  *
  * SocialProvider implementation for the Upload-Post.com publishing gateway.
