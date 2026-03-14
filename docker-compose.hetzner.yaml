@@ -1,0 +1,132 @@
+# docker-compose.hetzner.yaml — Hetzner VPS production deployment
+# Runs on port 9001, always-on, self-contained stack.
+#
+# Prerequisites:
+#   1. Copy .env.hetzner.example to .env and fill in your values
+#   2. Build and start:
+#      docker compose -f docker-compose.hetzner.yaml up -d --build
+#
+# Architecture:
+#   Host:9001 -> Nginx:5000 -> Backend:3000 + Frontend:4200
+#   Orchestrator -> Temporal:7233 (background scheduling)
+#   All services on isolated Docker bridge network (no external exposure except 9001)
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  postgres-volume:
+    external: false
+  postiz-redis-data:
+    external: false
+  postiz-uploads:
+    external: false
+  temporal-postgres-volume:
+    external: false
+
+services:
+  # ─── Application (Backend + Frontend + Orchestrator) ──────────────────────
+  postiz:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: postiz
+    restart: always
+    env_file: .env
+    environment:
+      # Docker-internal overrides (these override .env values at runtime)
+      DATABASE_URL: 'postgresql://postiz-user:postiz-password@postiz-postgres:5432/postiz-db-local'
+      REDIS_URL: 'redis://postiz-redis:6379'
+      TEMPORAL_ADDRESS: 'temporal:7233'
+      BACKEND_INTERNAL_URL: 'http://localhost:3000'
+      NODE_ENV: 'production'
+      IS_GENERAL: 'true'
+      STORAGE_PROVIDER: 'local'
+      UPLOAD_DIRECTORY: '/uploads'
+      NEXT_PUBLIC_UPLOAD_DIRECTORY: '/uploads'
+    ports:
+      - "9001:5000"
+    volumes:
+      - postiz-uploads:/uploads
+    depends_on:
+      postiz-postgres:
+        condition: service_healthy
+      postiz-redis:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    networks:
+      - internal
+
+  # ─── Database ─────────────────────────────────────────────────────────────
+  postiz-postgres:
+    image: postgres:17-alpine
+    container_name: postiz-postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 'postiz-password'
+      POSTGRES_USER: 'postiz-user'
+      POSTGRES_DB: 'postiz-db-local'
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: pg_isready -U postiz-user -d postiz-db-local
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ─── Cache ────────────────────────────────────────────────────────────────
+  postiz-redis:
+    image: redis:7.2
+    container_name: postiz-redis
+    restart: always
+    networks:
+      - internal
+    volumes:
+      - postiz-redis-data:/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ─── Temporal Server (Background Job Scheduling) ─────────────────────────
+  temporal:
+    image: temporalio/auto-setup:1.28.1
+    container_name: temporal
+    restart: always
+    environment:
+      DB: postgresql
+      DB_PORT: 5432
+      POSTGRES_USER: temporal
+      POSTGRES_PWD: temporal
+      POSTGRES_SEEDS: temporal-postgres
+      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/development-sql.yaml
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+    depends_on:
+      temporal-postgres:
+        condition: service_healthy
+    networks:
+      - internal
+
+  # ─── Temporal Database ───────────────────────────────────────────────────
+  temporal-postgres:
+    image: postgres:16-alpine
+    container_name: temporal-postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    volumes:
+      - temporal-postgres-volume:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: pg_isready -U temporal
+      interval: 10s
+      timeout: 3s
+      retries: 3
