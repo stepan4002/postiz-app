@@ -32,6 +32,24 @@ export class AuthController {
     private _emailService: EmailService
   ) {}
 
+  @Get('/auto-login')
+  async autoLogin(@Res({ passthrough: false }) response: Response) {
+    if (process.env.SKIP_AUTH !== 'true') {
+      return response.status(404).send('Not found');
+    }
+
+    const jwt = await this._authService.autoLogin();
+
+    response.cookie('auth', jwt, {
+      domain: getCookieUrlFromDomain(process.env.FRONTEND_URL!),
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+      path: '/',
+    });
+
+    response.header('auth', jwt);
+    return response.redirect(process.env.FRONTEND_URL || '/');
+  }
+
   @Get('/can-register')
   async canRegister() {
     return {

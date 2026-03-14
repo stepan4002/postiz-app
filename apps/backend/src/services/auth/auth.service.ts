@@ -308,6 +308,37 @@ export class AuthService {
     return { token };
   }
 
+  /**
+   * SKIP_AUTH auto-login: find or create admin user, return JWT.
+   * For Tailscale/VPN internal deployments only.
+   */
+  async autoLogin() {
+    let user = await this._userService.getUserByEmail('admin@internal');
+
+    if (!user) {
+      const result = await this._organizationService.createOrgAndUser(
+        {
+          email: 'admin@internal',
+          password: 'skip-auth-not-used',
+          provider: 'LOCAL' as any,
+          company: 'Internal',
+          providerToken: '',
+          datafast_visitor_id: '',
+        },
+        '127.0.0.1',
+        'skip-auth'
+      );
+      user = result.users[0].user;
+    }
+
+    if (!user.activated) {
+      await this._userService.activateUser(user.id);
+      user.activated = true;
+    }
+
+    return this.jwt(user);
+  }
+
   private async jwt(user: User) {
     return AuthChecker.signJWT(user);
   }
