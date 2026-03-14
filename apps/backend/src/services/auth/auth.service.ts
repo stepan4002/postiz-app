@@ -322,13 +322,12 @@ export class AuthService {
           password: 'skip-auth-not-used',
           provider: 'LOCAL' as any,
           company: 'Internal',
-          providerToken: '',
           datafast_visitor_id: '',
-        },
+        } as any,
         '127.0.0.1',
         'skip-auth'
       );
-      user = result.users[0].user;
+      user = result.users[0].user as any;
     }
 
     if (!user.activated) {
